@@ -38,8 +38,8 @@ public class PreInterviewController {
     }
 
     @GetMapping("/{preInterview_id}")
-    public ResponseEntity<PreInterviewDTO> read(@PathVariable Long interviewGroup_id,
-                                                @PathVariable Long preInterview_id,
+    public ResponseEntity<PreInterviewDTO> read(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+                                                @PathVariable("preInterview_id") Long preInterview_id,
                                                 @AuthenticationPrincipal CustomUserDetails customUserDetails){
         PreInterviewDTO preInterviewDTO = preInterviewService.readOne(customUserDetails.getCompany().getId(), interviewGroup_id, preInterview_id);
 
@@ -52,8 +52,8 @@ public class PreInterviewController {
     }
 
     @GetMapping("/readAll")
-    public ResponseEntity<List<PreInterviewDTO>> readAll(@PathVariable Long interviewGroup_id,
-                                                           @AuthenticationPrincipal CustomUserDetails customUserDetails){
+    public ResponseEntity<List<PreInterviewDTO>> readAll(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+                                                         @AuthenticationPrincipal CustomUserDetails customUserDetails){
         List<PreInterviewDTO> preInterviewDTOS = preInterviewService.readAll(customUserDetails.getCompany().getId(), interviewGroup_id);
 
         if (preInterviewDTOS != null){
@@ -67,7 +67,7 @@ public class PreInterviewController {
     // 내 면접 그룹들만 페이지 별로 불러오기 ex) localhost:8888/interviewGroup/{interviewGroup_id}/preInterview/read?page=0&size=5
     @GetMapping("/read")
     public ResponseEntity<Page<PreInterviewDTO>> readPage(@PageableDefault(size = 5) Pageable pageable,
-                                                          @PathVariable Long interviewGroup_id,
+                                                          @PathVariable("interviewGroup_id") Long interviewGroup_id,
                                                           @AuthenticationPrincipal CustomUserDetails customUserDetails){
         Page<PreInterviewDTO> preInterviewDTOS = preInterviewService.readAllPageable(customUserDetails.getCompany().getId(), interviewGroup_id, pageable);
 
@@ -80,8 +80,8 @@ public class PreInterviewController {
     }
 
     @PutMapping("/{preInterview_id}/update")
-    public ResponseEntity<PreInterviewDTO> update(@PathVariable Long interviewGroup_id,
-                                                  @PathVariable Long preInterview_id,
+    public ResponseEntity<PreInterviewDTO> update(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+                                                  @PathVariable("preInterview_id") Long preInterview_id,
                                                   @RequestBody PreInterviewDTO preInterviewDTO,
                                                   @AuthenticationPrincipal CustomUserDetails customUserDetails){
         PreInterviewDTO updatedPreInterviewDTO = preInterviewService.update(customUserDetails.getCompany().getId(), interviewGroup_id, preInterview_id, preInterviewDTO);
@@ -95,9 +95,9 @@ public class PreInterviewController {
     }
 
     @DeleteMapping("/{preInterview_id}/delete")
-    public ResponseEntity<PreInterviewDTO> delete(@PathVariable Long interviewGroup_id,
-                                                    @PathVariable Long preInterview_id,
-                                                    @AuthenticationPrincipal CustomUserDetails customUserDetails){
+    public ResponseEntity<PreInterviewDTO> delete(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+                                                  @PathVariable("preInterview_id") Long preInterview_id,
+                                                  @AuthenticationPrincipal CustomUserDetails customUserDetails){
         PreInterviewDTO deletedPreInterviewDTO = preInterviewService.delete(customUserDetails.getCompany().getId(), interviewGroup_id, preInterview_id);
 
         if (deletedPreInterviewDTO != null){
