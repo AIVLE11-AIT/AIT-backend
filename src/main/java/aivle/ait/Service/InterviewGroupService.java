@@ -33,15 +33,15 @@ public class InterviewGroupService {
         interviewGroup.setDtoToObject(interviewGroupDTO);
         interviewGroup.setCompany(company.get());
 
-        InterviewGroup createdQuestion = interviewGroupRepository.save(interviewGroup);
-        InterviewGroupDTO createdInterviewGroupDTO = new InterviewGroupDTO(createdQuestion);
+        InterviewGroup createdInterviewGroup = interviewGroupRepository.save(interviewGroup);
+        InterviewGroupDTO createdInterviewGroupDTO = new InterviewGroupDTO(createdInterviewGroup);
 
         return createdInterviewGroupDTO;
     }
 
-    public InterviewGroupDTO readOne(Long company_id, Long interviewGroup_id){
-        Optional<InterviewGroup> interviewGroup = interviewGroupRepository.findById(interviewGroup_id);
-        if (interviewGroup.isEmpty() || interviewGroup.get().getCompany().getId() != company_id) {
+    public InterviewGroupDTO readOne(Long companyId, Long interviewGroupId){
+        Optional<InterviewGroup> interviewGroup = interviewGroupRepository.findInterviewGroupByIdAndCompanyId(interviewGroupId, companyId);
+        if (interviewGroup.isEmpty()) {
             return null;
         }
 
@@ -59,19 +59,15 @@ public class InterviewGroupService {
     }
 
     public Page<InterviewGroupDTO> readAllPageable(Long companyId, Pageable pageable){
-        Optional<Company> company = companyRepository.findById(companyId);
-        if (company.isEmpty()) {
-            return null;
-        }
-        Page<InterviewGroup> interviewGroups = interviewGroupRepository.findByCompany(company.get(), pageable);
+        Page<InterviewGroup> interviewGroups = interviewGroupRepository.findByCompanyId(companyId, pageable);
         Page<InterviewGroupDTO> interviewGroupDTOS = InterviewGroupDTO.toDtoPage(interviewGroups);
         return interviewGroupDTOS;
     }
 
     @Transactional
     public InterviewGroupDTO update(Long companyId, Long interviewGroupId, InterviewGroupDTO interviewGroupDTO){
-        Optional<InterviewGroup> interviewGroups = interviewGroupRepository.findById(interviewGroupId);
-        if (interviewGroups.isEmpty() || interviewGroups.get().getCompany().getId() != companyId){
+        Optional<InterviewGroup> interviewGroups = interviewGroupRepository.findInterviewGroupByIdAndCompanyId(interviewGroupId, companyId);
+        if (interviewGroups.isEmpty()){
             return null;
         }
 
@@ -84,8 +80,8 @@ public class InterviewGroupService {
 
     @Transactional
     public InterviewGroupDTO delete(Long companyId, Long interviewGroupId){
-        Optional<InterviewGroup> interviewGroups = interviewGroupRepository.findById(interviewGroupId);
-        if (interviewGroups.isEmpty() || interviewGroups.get().getCompany().getId() != companyId){
+        Optional<InterviewGroup> interviewGroups = interviewGroupRepository.findInterviewGroupByIdAndCompanyId(interviewGroupId, companyId);
+        if (interviewGroups.isEmpty()){
             return null;
         }
 

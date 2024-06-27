@@ -1,5 +1,6 @@
 package aivle.ait.Entity;
 
+import aivle.ait.Dto.PreInterviewDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,4 +24,9 @@ public class PreInterview extends Time {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interview_group_id")
     private InterviewGroup interviewgroup;
+
+    public void setDtoToObject(PreInterviewDTO preInterviewDTO){
+        this.setQuestion(preInterviewDTO.getQuestion());
+        this.setAnswer(preInterviewDTO.getAnswer());
+    }
 }

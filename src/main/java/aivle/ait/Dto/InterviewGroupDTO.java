@@ -43,16 +43,16 @@ public class InterviewGroupDTO {
         this.company = interviewgroup.getCompany().getName();
     }
 
-    /* Object -> Dto 변환처리 */
-    public static List<InterviewGroupDTO> convertToDto(List<InterviewGroup> questions) {
-        return questions.stream()
+    /* List<Object> -> List<Dto> 변환처리 */
+    public static List<InterviewGroupDTO> convertToDto(List<InterviewGroup> objectList) {
+        return objectList.stream()
                 .map(InterviewGroupDTO::new)
                 .collect(Collectors.toList());
     }
 
     /* Page<Object> -> Page<Dto> 변환처리 */
     public static Page<InterviewGroupDTO> toDtoPage(Page<InterviewGroup> objectPage) {
-        Page<InterviewGroupDTO> interviewGroupDTOS = objectPage.map(InterviewGroupDTO::new);
-        return interviewGroupDTOS;
+        Page<InterviewGroupDTO> dtos = objectPage.map(InterviewGroupDTO::new);
+        return dtos;
     }
 }

@@ -20,16 +20,15 @@ import java.util.List;
 @RequestMapping(value = "/interviewGroup", produces = MediaType.APPLICATION_JSON_VALUE)
 public class InterviewGroupController {
     private final InterviewGroupService interviewGroupService;
-    
-    
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
     public ResponseEntity<InterviewGroupDTO> create(@RequestBody InterviewGroupDTO interviewGroupDTO,
                                                     @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        InterviewGroupDTO createdBoard = interviewGroupService.create(customUserDetails.getCompany().getId(), interviewGroupDTO);
+        InterviewGroupDTO createdInterviewGroupDTO = interviewGroupService.create(customUserDetails.getCompany().getId(), interviewGroupDTO);
 
-        if (createdBoard != null){
-            return ResponseEntity.ok(createdBoard);
+        if (createdInterviewGroupDTO != null){
+            return ResponseEntity.ok(createdInterviewGroupDTO);
         }
         else{
             return ResponseEntity.badRequest().body(null);
@@ -53,7 +52,7 @@ public class InterviewGroupController {
     public ResponseEntity<List<InterviewGroupDTO>> readAll(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         List<InterviewGroupDTO> interviewGroupDTOS = interviewGroupService.readAll(customUserDetails.getCompany().getId());
 
-        if (!interviewGroupDTOS.isEmpty()){
+        if (interviewGroupDTOS != null){
             return ResponseEntity.ok(interviewGroupDTOS);
         }
         else{

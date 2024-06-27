@@ -29,16 +29,16 @@ public class QuestionDTO {
         this.company = question.getCompany().getName();
     }
 
-    /* Object -> Dto 변환처리 */
-    public static List<QuestionDTO> convertToDto(List<Question> questions) {
-        return questions.stream()
+    /* List<Object> -> List<Dto> 변환처리 */
+    public static List<QuestionDTO> convertToDto(List<Question> objectList) {
+        return objectList.stream()
                 .map(QuestionDTO::new)
                 .collect(Collectors.toList());
     }
 
     /* Page<Object> -> Page<Dto> 변환처리 */
     public static Page<QuestionDTO> toDtoPage(Page<Question> objectPage) {
-        Page<QuestionDTO> questionDTOS = objectPage.map(QuestionDTO::new);
-        return questionDTOS;
+        Page<QuestionDTO> dtos = objectPage.map(QuestionDTO::new);
+        return dtos;
     }
 }
