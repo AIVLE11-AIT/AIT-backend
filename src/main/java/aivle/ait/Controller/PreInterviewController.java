@@ -1,6 +1,5 @@
 package aivle.ait.Controller;
 
-import aivle.ait.Dto.InterviewGroupDTO;
 import aivle.ait.Dto.PreInterviewDTO;
 import aivle.ait.Security.Auth.CustomUserDetails;
 import aivle.ait.Service.PreInterviewService;

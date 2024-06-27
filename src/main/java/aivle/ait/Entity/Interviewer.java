@@ -1,5 +1,7 @@
 package aivle.ait.Entity;
 
+import aivle.ait.Dto.InterviewerDTO;
+import aivle.ait.Dto.PreInterviewDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,4 +49,13 @@ public class Interviewer extends Time {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interview_group_id")
     private InterviewGroup interviewgroup;
+
+    public void setDtoToObject(InterviewerDTO interviewerDTO){
+        this.setName(interviewerDTO.getName());
+        this.setEmail(interviewerDTO.getEmail());
+        this.setBirth(interviewerDTO.getBirth());
+        this.setImage_path(interviewerDTO.getImage_path());
+        this.setVideo_path(interviewerDTO.getVideo_path());
+        this.setCover_letter(interviewerDTO.getCover_letter());
+    }
 }

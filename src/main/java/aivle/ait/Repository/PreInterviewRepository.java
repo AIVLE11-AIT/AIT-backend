@@ -1,6 +1,5 @@
 package aivle.ait.Repository;
 
-import aivle.ait.Entity.InterviewGroup;
 import aivle.ait.Entity.PreInterview;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
