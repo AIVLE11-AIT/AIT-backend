@@ -28,11 +28,7 @@ public class Interviewer extends Time {
 
     @Column(nullable = false)
     private String image_path;
-
-    @Column(nullable = false)
     private String video_path;
-
-    @Column(nullable = false)
     private String voice_path;
 
     @Column(nullable = false)

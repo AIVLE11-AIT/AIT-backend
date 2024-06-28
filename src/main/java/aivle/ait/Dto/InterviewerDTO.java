@@ -38,14 +38,14 @@ public class InterviewerDTO {
         this.email = interviewer.getEmail();
         this.birth = interviewer.getBirth();
         this.image_path = interviewer.getImage_path();
-        this.video_path = interviewer.getVideo_path();
-        this.voice_path = interviewer.getVoice_path();
         this.cover_letter = interviewer.getCover_letter();
         this.voice_default = interviewer.getVoice_default();
         this.distance_default = interviewer.getDistance_default();
 
-        this.result_id = interviewer.getResult().getId();
-        this.result = interviewer.getResult().getTotal_report();
+        if (interviewer.getResult() != null){
+            this.result_id = interviewer.getResult().getId();
+            this.result = interviewer.getResult().getTotal_report();
+        }
         this.interview_group_id = interviewer.getInterviewgroup().getId();
         this.interview_group = interviewer.getInterviewgroup().getName();
     }
