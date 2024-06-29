@@ -17,9 +17,17 @@ public class ContextResult extends Time {
     private double similarity_score;
 
     @Column(nullable = false)
+    private double munmek_score;
+
+    @Column(nullable = false)
     private double context_score;
 
-    // 읽기 전용
-    @OneToOne(mappedBy = "context_result")
+    // Result:ContextResult = 1:N
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "result_id")
     private Result result;
+
+    @OneToOne
+    @JoinColumn(name = "file_id")
+    private File file;
 }

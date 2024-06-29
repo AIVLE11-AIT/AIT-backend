@@ -14,18 +14,23 @@ public class VoiceResult extends Time {
     private Long id;
 
     @Column(nullable = false)
-    private double voice_size;
-
-    @Column(nullable = false)
-    private double voice_frequency;
+    private double voice_level;
 
     @Column(nullable = false)
     private double voice_speed;
 
     @Column(nullable = false)
-    private double voice_wow;
+    private double voice_intj;
 
-    // 읽기 전용
-    @OneToOne(mappedBy = "voice_result")
+    @Column(nullable = false)
+    private double voice_score;
+
+    // Result:VoiceResult = 1:N
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "result_id")
     private Result result;
+
+    @OneToOne
+    @JoinColumn(name = "file_id")
+    private File file;
 }

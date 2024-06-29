@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "interviewer")
 @Entity
@@ -39,6 +41,9 @@ public class Interviewer extends Time {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interview_group_id")
     private InterviewGroup interviewgroup;
+
+    @OneToMany(mappedBy = "interviewer", cascade = CascadeType.ALL)
+    private List<File> files = new ArrayList<>();
 
     public void setDtoToObject(InterviewerDTO interviewerDTO){
         this.setName(interviewerDTO.getName());

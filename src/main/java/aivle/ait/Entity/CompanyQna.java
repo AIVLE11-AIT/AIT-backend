@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Table(name = "company_qna")
 @Entity
 @Getter
@@ -20,10 +23,13 @@ public class CompanyQna extends Time {
     @Column(nullable = false)
     private String answer;
 
-    // Interview_group:Pre_interview = 1:N
+    // Interview_group:company_qna = 1:N
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interview_group_id")
     private InterviewGroup interviewgroup;
+
+    @OneToMany(mappedBy = "companyQna", cascade = CascadeType.ALL)
+    private List<File> files = new ArrayList<>();
 
     public void setDtoToObject(CompanyQnaDTO companyQnaDTO){
         this.setQuestion(companyQnaDTO.getQuestion());

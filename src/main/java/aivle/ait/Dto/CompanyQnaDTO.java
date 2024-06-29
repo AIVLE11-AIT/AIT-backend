@@ -18,6 +18,7 @@ public class CompanyQnaDTO {
     private String answer;
     private Long interview_group_id;
     private String interview_group;
+    private List<FileDTO> files;
 
     public CompanyQnaDTO(CompanyQna companyQna) {
         this.id = companyQna.getId();
@@ -26,6 +27,8 @@ public class CompanyQnaDTO {
 
         this.interview_group_id = companyQna.getInterviewgroup().getId();
         this.interview_group = companyQna.getInterviewgroup().getName();
+
+        this.files = companyQna.getFiles().stream().map(FileDTO::new).collect(Collectors.toList());
     }
 
     /* List<Object> -> List<Dto> 변환처리 */

@@ -46,7 +46,12 @@ public class ActionResult extends Time {
     @Column(nullable = false)
     private double hand_count_score;
 
-    // 읽기 전용
-    @OneToOne(mappedBy = "action_result")
+    // Result:ActionResult = 1:N
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "result_id")
     private Result result;
+
+    @OneToOne
+    @JoinColumn(name = "file_id")
+    private File file;
 }

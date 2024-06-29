@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
+
 @Table(name = "result")
 @Entity
 @Getter
@@ -28,18 +32,14 @@ public class Result extends Time {
     @Column(nullable = false)
     private int action_score;
 
-    // 외래키 소유
-    @OneToOne
-    @JoinColumn(name = "context_result_id")
-    private ContextResult context_result;
+    @OneToMany(mappedBy = "result", cascade = CascadeType.ALL)
+    private List<ContextResult> contextResults = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn(name = "voice_result_id")
-    private VoiceResult voice_result;
+    @OneToMany(mappedBy = "result", cascade = CascadeType.ALL)
+    private List<VoiceResult> voiceResults = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn(name = "action_result_id")
-    private ActionResult action_result;
+    @OneToMany(mappedBy = "result", cascade = CascadeType.ALL)
+    private List<ActionResult> actionResults = new ArrayList<>();
 
     // 읽기 전용
     @OneToOne(mappedBy = "result")

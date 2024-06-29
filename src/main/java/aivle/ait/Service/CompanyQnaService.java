@@ -39,8 +39,8 @@ public class CompanyQnaService {
         return createdCompanyQnaDTO;
     }
 
-    public CompanyQnaDTO readOne(Long companyId, Long interviewGroupId, Long preInterviewId){
-        Optional<CompanyQna> preInterviews = companyQnaRepository.findCompanyQnaByIdAndInterviewgroupId(preInterviewId, interviewGroupId);
+    public CompanyQnaDTO readOne(Long companyId, Long interviewGroupId, Long companyQna_id){
+        Optional<CompanyQna> preInterviews = companyQnaRepository.findCompanyQnaByIdAndInterviewgroupId(companyQna_id, interviewGroupId);
         if (preInterviews.isEmpty() || preInterviews.get().getInterviewgroup().getCompany().getId() != companyId) {
             return null;
         }
@@ -54,7 +54,7 @@ public class CompanyQnaService {
         if (interviewGroup.isEmpty() || interviewGroup.get().getCompany().getId() != companyId) {
             return null;
         }
-        List<CompanyQnaDTO> companyQnaDTOS = CompanyQnaDTO.convertToDto(interviewGroup.get().getPre_interviews());
+        List<CompanyQnaDTO> companyQnaDTOS = CompanyQnaDTO.convertToDto(interviewGroup.get().getCompanyQnas());
         return companyQnaDTOS;
     }
 
@@ -70,8 +70,8 @@ public class CompanyQnaService {
     }
 
     @Transactional
-    public CompanyQnaDTO update(Long companyId, Long interviewGroupId, Long preInterviewId, CompanyQnaDTO companyQnaDTO){
-        Optional<CompanyQna> preInterviews = companyQnaRepository.findCompanyQnaByIdAndInterviewgroupId(preInterviewId, interviewGroupId);
+    public CompanyQnaDTO update(Long companyId, Long interviewGroupId, Long companyQna_id, CompanyQnaDTO companyQnaDTO){
+        Optional<CompanyQna> preInterviews = companyQnaRepository.findCompanyQnaByIdAndInterviewgroupId(companyQna_id, interviewGroupId);
         if (preInterviews.isEmpty() || preInterviews.get().getInterviewgroup().getCompany().getId() != companyId){
             return null;
         }
@@ -84,8 +84,8 @@ public class CompanyQnaService {
     }
 
     @Transactional
-    public CompanyQnaDTO delete(Long companyId, Long interviewGroupId, Long preInterviewId){
-        Optional<CompanyQna> preInterviews = companyQnaRepository.findCompanyQnaByIdAndInterviewgroupId(preInterviewId, interviewGroupId);
+    public CompanyQnaDTO delete(Long companyId, Long interviewGroupId, Long companyQna_id){
+        Optional<CompanyQna> preInterviews = companyQnaRepository.findCompanyQnaByIdAndInterviewgroupId(companyQna_id, interviewGroupId);
         if (preInterviews.isEmpty() || preInterviews.get().getInterviewgroup().getCompany().getId() != companyId){
             return null;
         }

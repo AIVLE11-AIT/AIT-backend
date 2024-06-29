@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/interviewGroup/{interviewGroup_id}/preInterview", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/interviewGroup/{interviewGroup_id}/companyQna", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CompanyQnaController {
     private final CompanyQnaService companyQnaService;
 
@@ -36,11 +36,11 @@ public class CompanyQnaController {
         }
     }
 
-    @GetMapping("/{preInterview_id}")
+    @GetMapping("/{companyQna_id}")
     public ResponseEntity<CompanyQnaDTO> read(@PathVariable("interviewGroup_id") Long interviewGroup_id,
-                                              @PathVariable("preInterview_id") Long preInterview_id,
+                                              @PathVariable("companyQna_id") Long companyQna_id,
                                               @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        CompanyQnaDTO companyQnaDTO = companyQnaService.readOne(customUserDetails.getCompany().getId(), interviewGroup_id, preInterview_id);
+        CompanyQnaDTO companyQnaDTO = companyQnaService.readOne(customUserDetails.getCompany().getId(), interviewGroup_id, companyQna_id);
 
         if (companyQnaDTO != null){
             return ResponseEntity.ok(companyQnaDTO);
@@ -78,12 +78,12 @@ public class CompanyQnaController {
         }
     }
 
-    @PutMapping("/{preInterview_id}/update")
+    @PutMapping("/{companyQna_id}/update")
     public ResponseEntity<CompanyQnaDTO> update(@PathVariable("interviewGroup_id") Long interviewGroup_id,
-                                                @PathVariable("preInterview_id") Long preInterview_id,
+                                                @PathVariable("companyQna_id") Long companyQna_id,
                                                 @RequestBody CompanyQnaDTO companyQnaDTO,
                                                 @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        CompanyQnaDTO updatedCompanyQnaDTO = companyQnaService.update(customUserDetails.getCompany().getId(), interviewGroup_id, preInterview_id, companyQnaDTO);
+        CompanyQnaDTO updatedCompanyQnaDTO = companyQnaService.update(customUserDetails.getCompany().getId(), interviewGroup_id, companyQna_id, companyQnaDTO);
 
         if (updatedCompanyQnaDTO != null){
             return ResponseEntity.ok(updatedCompanyQnaDTO);
@@ -93,11 +93,11 @@ public class CompanyQnaController {
         }
     }
 
-    @DeleteMapping("/{preInterview_id}/delete")
+    @DeleteMapping("/{companyQna_id}/delete")
     public ResponseEntity<CompanyQnaDTO> delete(@PathVariable("interviewGroup_id") Long interviewGroup_id,
-                                                @PathVariable("preInterview_id") Long preInterview_id,
+                                                @PathVariable("companyQna_id") Long companyQna_id,
                                                 @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        CompanyQnaDTO deletedCompanyQnaDTO = companyQnaService.delete(customUserDetails.getCompany().getId(), interviewGroup_id, preInterview_id);
+        CompanyQnaDTO deletedCompanyQnaDTO = companyQnaService.delete(customUserDetails.getCompany().getId(), interviewGroup_id, companyQna_id);
 
         if (deletedCompanyQnaDTO != null){
             return ResponseEntity.ok(deletedCompanyQnaDTO);

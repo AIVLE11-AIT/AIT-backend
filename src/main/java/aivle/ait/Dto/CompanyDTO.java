@@ -21,8 +21,6 @@ public class CompanyDTO {
     private List<InterviewGroupDTO> interview_groups;
     private List<QuestionDTO> questions;
 
-    private String roles;
-
     public CompanyDTO(Company company) {
         this.id = company.getId();
         this.name = company.getName();
