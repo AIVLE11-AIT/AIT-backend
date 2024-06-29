@@ -38,8 +38,11 @@ public class InterviewGroup extends Time {
     @Column(nullable = false)
     private int action_per;
 
+    @Column(nullable = false)
+    private String language;
+
     @OneToMany(mappedBy = "interviewgroup", cascade = CascadeType.ALL)
-    private List<PreInterview> pre_interviews = new ArrayList<>();
+    private List<CompanyQna> companyQnas = new ArrayList<>();
 
     @OneToMany(mappedBy = "interviewgroup", cascade = CascadeType.ALL)
     private List<Interviewer> interviewers = new ArrayList<>();
@@ -56,5 +59,6 @@ public class InterviewGroup extends Time {
         this.setContext_per(interviewGroupDTO.getContext_per());
         this.setVoice_per(interviewGroupDTO.getVoice_per());
         this.setAction_per(interviewGroupDTO.getAction_per());
+        this.setLanguage(interviewGroupDTO.getLanguage());
     }
 }

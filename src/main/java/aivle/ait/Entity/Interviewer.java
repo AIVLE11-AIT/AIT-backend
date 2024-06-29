@@ -1,7 +1,6 @@
 package aivle.ait.Entity;
 
 import aivle.ait.Dto.InterviewerDTO;
-import aivle.ait.Dto.PreInterviewDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,14 +27,9 @@ public class Interviewer extends Time {
 
     @Column(nullable = false)
     private String image_path;
-    private String video_path;
-    private String voice_path;
 
     @Column(nullable = false)
     private String cover_letter;
-
-    private String voice_default;
-    private String distance_default;
 
     @OneToOne
     @JoinColumn(name = "result_id")
@@ -51,7 +45,6 @@ public class Interviewer extends Time {
         this.setEmail(interviewerDTO.getEmail());
         this.setBirth(interviewerDTO.getBirth());
         this.setImage_path(interviewerDTO.getImage_path());
-        this.setVideo_path(interviewerDTO.getVideo_path());
         this.setCover_letter(interviewerDTO.getCover_letter());
     }
 }

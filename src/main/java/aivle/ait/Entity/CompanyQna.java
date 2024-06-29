@@ -1,15 +1,15 @@
 package aivle.ait.Entity;
 
-import aivle.ait.Dto.PreInterviewDTO;
+import aivle.ait.Dto.CompanyQnaDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Table(name = "pre_interview")
+@Table(name = "company_qna")
 @Entity
 @Getter
 @Setter
-public class PreInterview extends Time {
+public class CompanyQna extends Time {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
@@ -25,8 +25,8 @@ public class PreInterview extends Time {
     @JoinColumn(name = "interview_group_id")
     private InterviewGroup interviewgroup;
 
-    public void setDtoToObject(PreInterviewDTO preInterviewDTO){
-        this.setQuestion(preInterviewDTO.getQuestion());
-        this.setAnswer(preInterviewDTO.getAnswer());
+    public void setDtoToObject(CompanyQnaDTO companyQnaDTO){
+        this.setQuestion(companyQnaDTO.getQuestion());
+        this.setAnswer(companyQnaDTO.getAnswer());
     }
 }

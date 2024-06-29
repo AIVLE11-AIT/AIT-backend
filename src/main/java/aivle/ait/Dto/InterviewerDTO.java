@@ -1,7 +1,6 @@
 package aivle.ait.Dto;
 
 import aivle.ait.Entity.Interviewer;
-import aivle.ait.Entity.PreInterview;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,12 +19,7 @@ public class InterviewerDTO {
     private String email;
     private LocalDateTime birth;
     private String image_path;
-    private String video_path;
-    private String voice_path;
     private String cover_letter;
-    private String voice_default;
-    private String distance_default;
-
 
     private Long result_id;
     private String result;
@@ -39,8 +33,6 @@ public class InterviewerDTO {
         this.birth = interviewer.getBirth();
         this.image_path = interviewer.getImage_path();
         this.cover_letter = interviewer.getCover_letter();
-        this.voice_default = interviewer.getVoice_default();
-        this.distance_default = interviewer.getDistance_default();
 
         if (interviewer.getResult() != null){
             this.result_id = interviewer.getResult().getId();

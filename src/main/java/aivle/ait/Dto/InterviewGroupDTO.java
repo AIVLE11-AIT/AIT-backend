@@ -21,8 +21,9 @@ public class InterviewGroupDTO {
     private int context_per;
     private int voice_per;
     private int action_per;
+    private String language;
 
-    private List<PreInterviewDTO> pre_interviews;
+    private List<CompanyQnaDTO> companyQnas;
     private List<InterviewerDTO> interviewers;
     private Long company_id;
     private String company;
@@ -35,8 +36,9 @@ public class InterviewGroupDTO {
         this.context_per = interviewgroup.getContext_per();
         this.voice_per = interviewgroup.getVoice_per();
         this.action_per = interviewgroup.getAction_per();
+        this.language = interviewgroup.getLanguage();
 
-        this.pre_interviews = interviewgroup.getPre_interviews().stream().map(PreInterviewDTO::new).collect(Collectors.toList());
+        this.companyQnas = interviewgroup.getCompanyQnas().stream().map(CompanyQnaDTO::new).collect(Collectors.toList());
         this.interviewers = interviewgroup.getInterviewers().stream().map(InterviewerDTO::new).collect(Collectors.toList());
 
         this.company_id = interviewgroup.getCompany().getId();
