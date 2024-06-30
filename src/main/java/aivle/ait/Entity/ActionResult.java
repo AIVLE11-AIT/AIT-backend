@@ -54,4 +54,14 @@ public class ActionResult extends Time {
     @OneToOne
     @JoinColumn(name = "file_id")
     private File file;
+
+    // =====연관관계 메서드=====
+    public void setResult(Result result) {
+        this.result = result;
+        result.getActionResults().add(this);
+    }
+    public void setFile(File file) {
+        this.file = file;
+        file.setActionResult(this);
+    }
 }

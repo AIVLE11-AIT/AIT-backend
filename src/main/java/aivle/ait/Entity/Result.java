@@ -42,6 +42,13 @@ public class Result extends Time {
     private List<ActionResult> actionResults = new ArrayList<>();
 
     // 읽기 전용
-    @OneToOne(mappedBy = "result")
+    @OneToOne
+    @JoinColumn(name = "interviewer_id")
     private Interviewer interviewer;
+
+    // =====연관관계 메서드=====
+    public void setInterviewer(Interviewer interviewer) {
+        this.interviewer = interviewer;
+        interviewer.setResult(this);
+    }
 }

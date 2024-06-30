@@ -61,4 +61,10 @@ public class InterviewGroup extends Time {
         this.setAction_per(interviewGroupDTO.getAction_per());
         this.setLanguage(interviewGroupDTO.getLanguage());
     }
+
+    // =====연관관계 메서드=====
+    public void setCompany(Company company) {
+        this.company = company;
+        company.getInterviewGroups().add(this);
+    }
 }

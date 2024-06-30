@@ -30,4 +30,14 @@ public class ContextResult extends Time {
     @OneToOne
     @JoinColumn(name = "file_id")
     private File file;
+
+    // =====연관관계 메서드=====
+    public void setResult(Result result) {
+        this.result = result;
+        result.getContextResults().add(this);
+    }
+    public void setFile(File file) {
+        this.file = file;
+        file.setContextResult(this);
+    }
 }

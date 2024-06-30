@@ -33,8 +33,8 @@ public class Interviewer extends Time {
     @Column(nullable = false)
     private String cover_letter;
 
-    @OneToOne
-    @JoinColumn(name = "result_id")
+    // 읽기 전용
+    @OneToOne(mappedBy = "interviewer")
     private Result result;
 
     // Interview_group:Interviewer = 1:N
@@ -51,5 +51,11 @@ public class Interviewer extends Time {
         this.setBirth(interviewerDTO.getBirth());
         this.setImage_path(interviewerDTO.getImage_path());
         this.setCover_letter(interviewerDTO.getCover_letter());
+    }
+
+    // =====연관관계 메서드=====
+    public void setInterviewgroup(InterviewGroup interviewgroup) {
+        this.interviewgroup = interviewgroup;
+        interviewgroup.getInterviewers().add(this);
     }
 }

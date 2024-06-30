@@ -1,5 +1,6 @@
 package aivle.ait.Entity;
 
+import aivle.ait.Dto.QuestionDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,4 +29,15 @@ public class Question extends Time {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+
+    public void setDtoToObject(QuestionDTO questionDTO){
+        this.title = questionDTO.getTitle();
+        this.content = questionDTO.getContent();
+    }
+
+    // =====연관관계 메서드=====
+    public void setCompany(Company company) {
+        this.company = company;
+        company.getQuestions().add(this);
+    }
 }

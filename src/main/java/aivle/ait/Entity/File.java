@@ -34,4 +34,14 @@ public class File extends Time {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interviewer_id")
     private Interviewer interviewer;
+
+    // =====연관관계 메서드=====
+    public void setCompanyQna(CompanyQna companyQna) {
+        this.companyQna = companyQna;
+        companyQna.getFiles().add(this);
+    }
+    public void setInterviewer(Interviewer interviewer) {
+        this.interviewer = interviewer;
+        interviewer.getFiles().add(this);
+    }
 }

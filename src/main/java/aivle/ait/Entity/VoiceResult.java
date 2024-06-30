@@ -33,4 +33,14 @@ public class VoiceResult extends Time {
     @OneToOne
     @JoinColumn(name = "file_id")
     private File file;
+
+    // =====연관관계 메서드=====
+    public void setResult(Result result) {
+        this.result = result;
+        result.getVoiceResults().add(this);
+    }
+    public void setFile(File file) {
+        this.file = file;
+        file.setVoiceResult(this);
+    }
 }

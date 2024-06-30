@@ -28,6 +28,7 @@ public class AnswerService {
         Question question = questions.get();
 
         Answer answer = new Answer();
+        answer.setDtoToObject(answerDto);
         answer.setQuestion(question);
 
         Answer createdAnswer = answerRepository.save(answer);

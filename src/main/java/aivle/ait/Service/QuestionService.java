@@ -30,8 +30,7 @@ public class QuestionService {
         }
 
         Question question = new Question();
-        question.setTitle(questionDto.getTitle());
-        question.setContent(questionDto.getContent());
+        question.setDtoToObject(questionDto);
         question.setCompany(company.get());
 
         Question createdQuestion = questionRepository.save(question);

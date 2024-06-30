@@ -35,4 +35,10 @@ public class CompanyQna extends Time {
         this.setQuestion(companyQnaDTO.getQuestion());
         this.setAnswer(companyQnaDTO.getAnswer());
     }
+
+    // =====연관관계 메서드=====
+    public void setInterviewgroup(InterviewGroup interviewgroup) {
+        this.interviewgroup = interviewgroup;
+        interviewgroup.getCompanyQnas().add(this);
+    }
 }
