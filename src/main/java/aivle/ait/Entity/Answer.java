@@ -17,8 +17,9 @@ public class Answer extends Time{
     @Column(nullable = false)
     private String content;
 
-    // 읽기 전용
-    @OneToOne(mappedBy = "answer")
+    // 외래키 소유
+    @OneToOne
+    @JoinColumn(name = "question_id")
     private Question question;
 
     public void setDtoToObject(AnswerDTO answerDTO){

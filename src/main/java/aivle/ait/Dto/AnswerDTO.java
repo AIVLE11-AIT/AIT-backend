@@ -2,10 +2,12 @@ package aivle.ait.Dto;
 
 import aivle.ait.Entity.Answer;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class AnswerDTO {
     private Long id;
     private String content;

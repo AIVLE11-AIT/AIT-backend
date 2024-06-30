@@ -1,5 +1,6 @@
 package aivle.ait.Dto;
 
+import aivle.ait.Entity.File;
 import aivle.ait.Entity.Interviewer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,8 +24,11 @@ public class InterviewerDTO {
 
     private Long result_id;
     private String result;
+
     private Long interview_group_id;
     private String interview_group;
+
+    private List<FileDTO> files;
 
     public InterviewerDTO(Interviewer interviewer) {
         this.id = interviewer.getId();
@@ -33,13 +37,15 @@ public class InterviewerDTO {
         this.birth = interviewer.getBirth();
         this.image_path = interviewer.getImage_path();
         this.cover_letter = interviewer.getCover_letter();
+        this.interview_group_id = interviewer.getInterviewgroup().getId();
+        this.interview_group = interviewer.getInterviewgroup().getName();
+
+        this.files = interviewer.getFiles().stream().map(FileDTO::new).collect(Collectors.toList());
 
         if (interviewer.getResult() != null){
             this.result_id = interviewer.getResult().getId();
             this.result = interviewer.getResult().getTotal_report();
         }
-        this.interview_group_id = interviewer.getInterviewgroup().getId();
-        this.interview_group = interviewer.getInterviewgroup().getName();
     }
 
     /* List<Object> -> List<Dto> 변환처리 */

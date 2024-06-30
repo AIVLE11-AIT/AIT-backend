@@ -2,6 +2,7 @@ package aivle.ait.Dto;
 
 import aivle.ait.Entity.Question;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
 
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class QuestionDTO {
     private Long id;
     private String title;
@@ -23,10 +25,13 @@ public class QuestionDTO {
         this.id = question.getId();
         this.title = question.getTitle();
         this.content = question.getContent();
-        this.answer_id = question.getAnswer().getId();
-        this.answer = question.getAnswer().getContent();
         this.company_id = question.getCompany().getId();
         this.company = question.getCompany().getName();
+
+        if (question.getAnswer() != null) {
+            this.answer_id = question.getAnswer().getId();
+            this.answer = question.getAnswer().getContent();
+        }
     }
 
     /* List<Object> -> List<Dto> 변환처리 */

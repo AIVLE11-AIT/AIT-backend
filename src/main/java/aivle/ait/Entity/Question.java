@@ -20,9 +20,8 @@ public class Question extends Time {
     @Column(nullable = false)
     private String content;
 
-    // 외래키 소유
-    @OneToOne
-    @JoinColumn(name = "answer_id")
+    // 읽기 전용
+    @OneToOne(mappedBy = "question")
     private Answer answer;
 
     // Company:Question = 1:N
