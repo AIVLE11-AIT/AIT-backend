@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,5 +60,18 @@ public class InterviewerDTO {
     public static Page<InterviewerDTO> toDtoPage(Page<Interviewer> objectPage) {
         Page<InterviewerDTO> dtos = objectPage.map(InterviewerDTO::new);
         return dtos;
+    }
+
+    /* CSV 파일을 바탕으로 InterviewerDTO 생성 */
+    public static InterviewerDTO fromCsv(String[] data) {
+        InterviewerDTO interviewerDTO = new InterviewerDTO();
+        interviewerDTO.setName(data[0]);
+        interviewerDTO.setEmail(data[1]);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        interviewerDTO.setBirth(LocalDateTime.parse(data[2], formatter));
+        interviewerDTO.setImage_path(data[3]);
+        interviewerDTO.setCover_letter(data[4]);
+
+        return interviewerDTO;
     }
 }

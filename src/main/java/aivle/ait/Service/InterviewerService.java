@@ -14,7 +14,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +47,39 @@ public class InterviewerService {
         InterviewerDTO createdInterviewerDTO = new InterviewerDTO(createdInterviewer);
 
         return createdInterviewerDTO;
+    }
+
+    // csv 파일 저장
+    @Transactional
+    public List<Interviewer> saveCsvData(MultipartFile file, Long companyId, Long interviewGroupId) {
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
+            List<Interviewer> interviewers = new ArrayList<>();
+            String line;
+            boolean isFirstLine = true;
+
+            Optional<InterviewGroup> interviewGroup = interviewGroupRepository.findById(interviewGroupId);
+            if (interviewGroup.isEmpty() || interviewGroup.get().getCompany().getId() != companyId) {
+                return null;
+            }
+
+            while ((line = reader.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+                String[] data = line.split(",");
+                InterviewerDTO dto = InterviewerDTO.fromCsv(data);
+                Interviewer interviewer = new Interviewer();
+                interviewer.setDtoToObject(dto);
+                interviewer.setInterviewgroup(interviewGroup.get());
+
+                interviewers.add(interviewer);
+            }
+            return interviewerRepository.saveAll(interviewers);
+        } catch (Exception e) {
+            throw new RuntimeException("CSV 데이터 저장 중 오류 발생: " + e.getMessage());
+        }
     }
 
     public InterviewerDTO readOne(Long companyId, Long interviewGroupId, Long interviewerId){
@@ -127,4 +165,5 @@ public class InterviewerService {
         helper.setText(emailContent.toString(), true);
         javaMailSender.send(message);
     }
+
 }
