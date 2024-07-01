@@ -72,7 +72,8 @@ public class CompanyService {
             emailContent.append("<html>");
             emailContent.append("<body>");
             emailContent.append("<h2>AIT 회원가입 인증번호 안내</h2>");
-            emailContent.append("<p>안녕하세요. AIT 입니다.\n 회원가입을 위한 인증번호는 다음과 같습니다:</p>");
+            emailContent.append("<p>안녕하세요. AIT 입니다.</p>");
+            emailContent.append("<p>회원가입을 위한 인증번호는 다음과 같습니다:</p>");
             emailContent.append("<h3>" + checkNum + "</h3>");
             emailContent.append("<p>인증번호를 입력하여 회원가입을 완료해 주세요.</p>");
             emailContent.append("<p>감사합니다.</p>");
