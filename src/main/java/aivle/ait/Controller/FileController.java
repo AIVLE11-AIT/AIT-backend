@@ -40,7 +40,7 @@ public class FileController {
     }
 
     @PostMapping("/{companyQna_id}")
-    public ResponseEntity<FileDTO> uploadAudioFile(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+    public ResponseEntity<FileDTO> uploadFile(@PathVariable("interviewGroup_id") Long interviewGroup_id,
                                                   @PathVariable("interviewer_id") Long interview_id,
                                                   @PathVariable("companyQna_id") Long companyQna_id,
                                                   @RequestParam("file") MultipartFile file,
