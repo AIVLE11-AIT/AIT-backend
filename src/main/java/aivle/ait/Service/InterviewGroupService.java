@@ -1,8 +1,12 @@
 package aivle.ait.Service;
 
+import aivle.ait.Dto.CompanyQnaDTO;
 import aivle.ait.Dto.InterviewGroupDTO;
+import aivle.ait.Dto.InterviewerDTO;
 import aivle.ait.Entity.Company;
+import aivle.ait.Entity.CompanyQna;
 import aivle.ait.Entity.InterviewGroup;
+import aivle.ait.Entity.Interviewer;
 import aivle.ait.Repository.CompanyRepository;
 import aivle.ait.Repository.InterviewGroupRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +36,20 @@ public class InterviewGroupService {
         InterviewGroup interviewGroup = new InterviewGroup();
         interviewGroup.setDtoToObject(interviewGroupDTO);
         interviewGroup.setCompany(company.get());
+
+        // company_qna 연관 관계 설정
+        for (CompanyQnaDTO companyQnaDTO : interviewGroupDTO.getCompanyQnas()){
+            CompanyQna companyQna = new CompanyQna();
+            companyQna.setDtoToObject(companyQnaDTO);
+            companyQna.setInterviewgroup(interviewGroup);
+        }
+
+        // interviewer 연관 관계 설정
+        for (InterviewerDTO interviewerDTO : interviewGroupDTO.getInterviewers()){
+            Interviewer interviewer = new Interviewer();
+            interviewer.setDtoToObject(interviewerDTO);
+            interviewer.setInterviewgroup(interviewGroup);
+        }
 
         InterviewGroup createdInterviewGroup = interviewGroupRepository.save(interviewGroup);
         InterviewGroupDTO createdInterviewGroupDTO = new InterviewGroupDTO(createdInterviewGroup);
