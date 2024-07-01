@@ -52,4 +52,31 @@ public class CompanyController {
         return company.getEmail();
     }
 
+    // 인증번호 메일 전송
+    @GetMapping("/send/{email}")
+    public ResponseEntity<String> sendEmail(@PathVariable String email) {
+        try {
+            companyService.sendEmail(email);
+            return ResponseEntity.ok("Send mail success");
+        } catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error sending email: " + e.getMessage());
+        }
+    }
+
+    // 인증번호 확인
+    @PostMapping("/verify/{email}")
+    public ResponseEntity<String> verifyCode(@PathVariable String email, @RequestParam("code") String code) {
+        try {
+            if (companyService.verifyCode(email, code)) {
+                return ResponseEntity.ok("Verifying success");
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Verifying fail");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
 }
