@@ -1,5 +1,6 @@
 package aivle.ait.Entity;
 
+import aivle.ait.Dto.FileDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,4 +45,5 @@ public class File extends Time {
         this.interviewer = interviewer;
         interviewer.getFiles().add(this);
     }
+
 }

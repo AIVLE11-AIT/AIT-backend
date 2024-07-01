@@ -4,6 +4,7 @@ import aivle.ait.Dto.InterviewerDTO;
 import aivle.ait.Security.Auth.CustomUserDetails;
 import aivle.ait.Service.InterviewerService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -101,6 +102,28 @@ public class InterviewerController {
 
         if (deletedInterviewerDTO != null){
             return ResponseEntity.ok(deletedInterviewerDTO);
+        }
+        else{
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    // 지원자에게 면접 링크 메일 전송
+    @GetMapping("/{interviewer_id}/send")
+    public ResponseEntity<InterviewerDTO> sendEmail(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+                                               @PathVariable("interviewer_id") Long preInterview_id,
+                                               @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        InterviewerDTO InterviewerDTO = interviewerService.readOne(customUserDetails.getCompany().getId(), interviewGroup_id, preInterview_id);
+
+        if (InterviewerDTO != null){
+            String url = "http://localhost:8080/" + customUserDetails.getCompany().getId() + "/" + interviewGroup_id + "/" + preInterview_id;
+            try {
+                System.out.println(customUserDetails.getCompany().getName());
+                interviewerService.sendEmail(InterviewerDTO, InterviewerDTO.getInterview_group(), url);
+                return ResponseEntity.ok(InterviewerDTO);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(InterviewerDTO);
+            }
         }
         else{
             return ResponseEntity.badRequest().body(null);
