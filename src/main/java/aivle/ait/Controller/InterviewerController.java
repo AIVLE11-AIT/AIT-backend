@@ -1,6 +1,7 @@
 package aivle.ait.Controller;
 
 import aivle.ait.Dto.InterviewerDTO;
+import aivle.ait.Entity.Interviewer;
 import aivle.ait.Security.Auth.CustomUserDetails;
 import aivle.ait.Service.InterviewerService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -36,6 +38,21 @@ public class InterviewerController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+    //csv 파일 업로드
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/upload_csv")
+    public ResponseEntity<?> createWithCsv(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+                                                           @RequestParam("file") MultipartFile file,
+                                                           @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        try {
+            List<Interviewer> createdInterviewers = interviewerService.saveCsvData(file, customUserDetails.getCompany().getId(), interviewGroup_id);
+            return ResponseEntity.ok(createdInterviewers);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("CSV 데이터 저장 중 오류 발생: " + e.getMessage());
+        }
+    }
+
 
     @GetMapping("/{interviewer_id}")
     public ResponseEntity<InterviewerDTO> read(@PathVariable("interviewGroup_id") Long interviewGroup_id,

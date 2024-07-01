@@ -3,6 +3,7 @@ package aivle.ait.Controller;
 import aivle.ait.Dto.InterviewGroupDTO;
 import aivle.ait.Security.Auth.CustomUserDetails;
 import aivle.ait.Service.InterviewGroupService;
+import aivle.ait.Service.InterviewerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 

@@ -57,4 +57,5 @@ public class InterviewGroupDTO {
         Page<InterviewGroupDTO> dtos = objectPage.map(InterviewGroupDTO::new);
         return dtos;
     }
+
 }
