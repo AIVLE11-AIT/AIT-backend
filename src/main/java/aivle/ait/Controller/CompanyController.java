@@ -6,12 +6,14 @@ import aivle.ait.Security.Auth.CustomUserDetails;
 import aivle.ait.Service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping(value = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CompanyController {
 
     private final CompanyService companyService;
