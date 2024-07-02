@@ -47,8 +47,7 @@ public class FileController {
     public ResponseEntity<FileDTO> uploadFile(@PathVariable("interviewGroup_id") Long interviewGroup_id,
                                                   @PathVariable("interviewer_id") Long interview_id,
                                                   @PathVariable("companyQna_id") Long companyQna_id,
-                                                  @RequestParam("file") MultipartFile file,
-                                                  @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+                                                  @RequestParam("file") MultipartFile file) {
         try {
             // 파일 저장 경로 설정
             Path path = Paths.get("files");

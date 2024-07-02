@@ -39,21 +39,6 @@ public class InterviewerController {
         }
     }
 
-    //csv 파일 업로드
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/upload_csv")
-    public ResponseEntity<?> createWithCsv(@PathVariable("interviewGroup_id") Long interviewGroup_id,
-                                                           @RequestParam("file") MultipartFile file,
-                                                           @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        try {
-            List<Interviewer> createdInterviewers = interviewerService.saveCsvData(file, customUserDetails.getCompany().getId(), interviewGroup_id);
-            return ResponseEntity.ok(createdInterviewers);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("CSV 데이터 저장 중 오류 발생: " + e.getMessage());
-        }
-    }
-
-
     @GetMapping("/{interviewer_id}")
     public ResponseEntity<InterviewerDTO> read(@PathVariable("interviewGroup_id") Long interviewGroup_id,
                                                 @PathVariable("interviewer_id") Long preInterview_id,

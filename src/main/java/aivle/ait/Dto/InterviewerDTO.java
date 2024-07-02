@@ -5,8 +5,10 @@ import aivle.ait.Entity.Interviewer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -67,8 +69,11 @@ public class InterviewerDTO {
         InterviewerDTO interviewerDTO = new InterviewerDTO();
         interviewerDTO.setName(data[0]);
         interviewerDTO.setEmail(data[1]);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        interviewerDTO.setBirth(LocalDateTime.parse(data[2], formatter));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate birthDate = LocalDate.parse(data[2], formatter);
+        interviewerDTO.setBirth(birthDate.atStartOfDay());
+
         interviewerDTO.setImage_path(data[3]);
         interviewerDTO.setCover_letter(data[4]);
 

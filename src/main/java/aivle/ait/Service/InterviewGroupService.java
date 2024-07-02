@@ -14,9 +14,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +33,7 @@ public class InterviewGroupService {
     private final InterviewGroupRepository interviewGroupRepository;
 
     @Transactional
-    public InterviewGroupDTO create(Long companyId, InterviewGroupDTO interviewGroupDTO){
+    public InterviewGroupDTO create(Long companyId, InterviewGroupDTO interviewGroupDTO, MultipartFile file){
         Optional<Company> company = companyRepository.findById(companyId);
 
         if (company.isEmpty()) {
@@ -44,6 +51,9 @@ public class InterviewGroupService {
             companyQna.setInterviewgroup(interviewGroup);
         }
 
+        List<InterviewerDTO> interviewerDTOS = getInterviewerDTOsFromCsv(file);
+        interviewGroupDTO.setInterviewers(interviewerDTOS);
+
         // interviewer 연관 관계 설정
         for (InterviewerDTO interviewerDTO : interviewGroupDTO.getInterviewers()){
             Interviewer interviewer = new Interviewer();
@@ -55,6 +65,60 @@ public class InterviewGroupService {
         InterviewGroupDTO createdInterviewGroupDTO = new InterviewGroupDTO(createdInterviewGroup);
 
         return createdInterviewGroupDTO;
+    }
+
+    public List<InterviewerDTO> getInterviewerDTOsFromCsv(MultipartFile file) {
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
+            List<InterviewerDTO> interviewerDTOS = new ArrayList<>();
+            String line;
+            boolean isFirstLine = true;
+
+            while ((line = reader.readLine()) != null){
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+
+                String[] data = line.split(",");
+                for(String field : data) {
+                    if (field.isEmpty()) {
+                        throw new RuntimeException("CSV 데이터 저장 중 오류 발생: null error");
+                    }
+                }
+                // email, birth 검사
+                if (!isValidEmail(data[1])) {
+                    throw new RuntimeException("CSV 데이터 저장 중 오류 발생: email 형식 error");
+                }
+                if (!isValidBirth(data[2])) {
+                    throw new RuntimeException("CSV 데이터 저장 중 오류 발생: birth 형식 error");
+                }
+
+                InterviewerDTO dto = InterviewerDTO.fromCsv(data);
+                interviewerDTOS.add(dto);
+            }
+
+            return interviewerDTOS;
+
+        } catch (Exception e) {
+            throw new RuntimeException("CSV 데이터 저장 중 오류 발생: " + e.getMessage());
+        }
+    }
+
+    // 이메일 유효성 검사
+    public static boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    // 생년월일 유효성 검사
+    public static boolean isValidBirth(String birth) {
+        String birthDateRegex = "^\\d{4}-\\d{2}-\\d{2}$";
+        Pattern pattern = Pattern.compile(birthDateRegex);
+        Matcher matcher = pattern.matcher(birth);
+        return matcher.matches();
     }
 
     public InterviewGroupDTO readOne(Long companyId, Long interviewGroupId){
