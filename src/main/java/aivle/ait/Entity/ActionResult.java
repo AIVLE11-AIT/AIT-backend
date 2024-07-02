@@ -1,5 +1,7 @@
 package aivle.ait.Entity;
 
+import aivle.ait.Dto.ActionResultDTO;
+import aivle.ait.Dto.VoiceResultDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,25 +16,7 @@ public class ActionResult extends Time {
     private Long id;
 
     @Column(nullable = false)
-    private double angry;
-
-    @Column(nullable = false)
-    private double disgust;
-
-    @Column(nullable = false)
-    private double fear;
-
-    @Column(nullable = false)
-    private double happy;
-
-    @Column(nullable = false)
-    private double sad;
-
-    @Column(nullable = false)
-    private double surprise;
-
-    @Column(nullable = false)
-    private double neutral;
+    private double emotion_score;
 
     @Column(nullable = false)
     private double face_gesture_score;
@@ -46,6 +30,9 @@ public class ActionResult extends Time {
     @Column(nullable = false)
     private double hand_count_score;
 
+    @Column(nullable = false)
+    private double action_score;
+
     // Result:ActionResult = 1:N
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "result_id")
@@ -54,6 +41,15 @@ public class ActionResult extends Time {
     @OneToOne
     @JoinColumn(name = "file_id")
     private File file;
+
+    public void setDtoToObject(ActionResultDTO actionResultDTO){
+        this.emotion_score = actionResultDTO.getEmotion_score();
+        this.face_gesture_score = actionResultDTO.getFace_gesture_score();
+        this.eyetrack_gesture_score = actionResultDTO.getEyetrack_gesture_score();
+        this.body_gesture_score = actionResultDTO.getBody_gesture_score();
+        this.hand_count_score = actionResultDTO.getHand_count_score();
+        this.action_score = actionResultDTO.getAction_score();
+    }
 
     // =====연관관계 메서드=====
     public void setResult(Result result) {

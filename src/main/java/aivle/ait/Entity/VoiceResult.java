@@ -1,5 +1,6 @@
 package aivle.ait.Entity;
 
+import aivle.ait.Dto.VoiceResultDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,6 +34,13 @@ public class VoiceResult extends Time {
     @OneToOne
     @JoinColumn(name = "file_id")
     private File file;
+
+    public void setDtoToObject(VoiceResultDTO voiceResultDTO){
+        this.voice_level = voiceResultDTO.getVoice_level();
+        this.voice_speed = voiceResultDTO.getVoice_speed();
+        this.voice_intj = voiceResultDTO.getVoice_intj();
+        this.voice_score = voiceResultDTO.getVoice_score();
+    }
 
     // =====연관관계 메서드=====
     public void setResult(Result result) {
