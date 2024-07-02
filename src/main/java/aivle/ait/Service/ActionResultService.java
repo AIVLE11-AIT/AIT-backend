@@ -19,6 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -93,5 +94,15 @@ public class ActionResultService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public ActionResultDTO readOne(Long id){
+        Optional<ActionResult> actionResults = actionResultRepository.findById(id);
+        if (actionResults.isEmpty()){
+            return null;
+        }
+        ActionResultDTO actionResultDTO = new ActionResultDTO(actionResults.get());
+
+        return actionResultDTO;
     }
 }

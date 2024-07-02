@@ -95,4 +95,13 @@ public class VoiceResultService {
             return null;
         }
     }
+
+    public VoiceResultDTO readOne(Long id){
+        Optional<VoiceResult> voiceResult = voiceResultRepository.findById(id);
+        if (voiceResult.isEmpty()){
+            return null;
+        }
+        VoiceResultDTO voiceResultDTO = new VoiceResultDTO(voiceResult.get());
+        return voiceResultDTO;
+    }
 }
