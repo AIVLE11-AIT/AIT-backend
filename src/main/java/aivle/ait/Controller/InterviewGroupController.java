@@ -25,9 +25,10 @@ public class InterviewGroupController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
-    public ResponseEntity<InterviewGroupDTO> create(@RequestBody InterviewGroupDTO interviewGroupDTO,
+    public ResponseEntity<InterviewGroupDTO> create(@RequestPart(value="InterviewGroupDTO") InterviewGroupDTO interviewGroupDTO,
+                                                    @RequestPart(value="file") MultipartFile file,
                                                     @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        InterviewGroupDTO createdInterviewGroupDTO = interviewGroupService.create(customUserDetails.getCompany().getId(), interviewGroupDTO);
+        InterviewGroupDTO createdInterviewGroupDTO = interviewGroupService.create(customUserDetails.getCompany().getId(), interviewGroupDTO, file);
 
         if (createdInterviewGroupDTO != null){
             return ResponseEntity.ok(createdInterviewGroupDTO);
