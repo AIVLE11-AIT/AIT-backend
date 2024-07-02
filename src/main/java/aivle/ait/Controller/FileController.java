@@ -3,8 +3,10 @@ package aivle.ait.Controller;
 import aivle.ait.Dto.FileDTO;
 import aivle.ait.Dto.InterviewerDTO;
 import aivle.ait.Security.Auth.CustomUserDetails;
+import aivle.ait.Service.ActionResultService;
 import aivle.ait.Service.FileService;
 import aivle.ait.Service.InterviewerService;
+import aivle.ait.Service.VoiceResultService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,8 @@ import java.nio.file.Paths;
 @RequestMapping(value = "/interviewGroup/{interviewGroup_id}/interviewer/{interviewer_id}/file", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FileController {
     private final FileService fileService;
+    private final VoiceResultService voiceResultService;
+    private final ActionResultService actionResultService;
 
     @PostConstruct
     // files 폴더 생성
@@ -64,6 +68,10 @@ public class FileController {
             Files.write(filePath, file.getBytes()); // files 로컬 폴더에 저장
 
             FileDTO created_file = fileService.save(interviewGroup_id, interview_id, companyQna_id, filePath.toString());
+
+            // 영상분석
+            voiceResultService.sendToVoice(created_file);
+            actionResultService.sendToAction(created_file);
 
             return ResponseEntity.ok(created_file);
         } catch (IOException e) {
