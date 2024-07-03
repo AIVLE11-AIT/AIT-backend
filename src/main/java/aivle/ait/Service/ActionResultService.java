@@ -9,6 +9,7 @@ import aivle.ait.Repository.FileRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,8 +33,8 @@ public class ActionResultService {
     private final FileRepository fileRepository;
 
     // 행동 처리
-    @Transactional
-    public ActionResultDTO sendToAction(FileDTO fileDTO) {
+    @Async
+    public void sendToAction(FileDTO fileDTO) {
         try {
             String filePath = fileDTO.getVideo_path();
             String videoUrl = "http://192.168.0.3:3000/process-video";
@@ -98,7 +99,7 @@ public class ActionResultService {
                 // Action_result(double): face_gesture, eyetrack_gesture, body_gesture, hand_count_score, emotion_score, action_score
                 Optional<File> file = fileRepository.findById(fileDTO.getId());
                 if (file.isEmpty()) {
-                    return null;
+                    return;
                 }
                 ActionResult actionResult = new ActionResult();
                 actionResult.setEmotion_score(jsonResponse.get("emotion_score").asDouble());
@@ -112,14 +113,12 @@ public class ActionResultService {
                 actionResultRepository.save(actionResult);
 
                 connection.disconnect();
-                return null;
+
             } else {
                 System.out.println("Python server request failed with response code: " + responseCode);
-                return null;
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
         }
     }
 
