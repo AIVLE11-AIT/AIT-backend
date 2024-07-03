@@ -13,6 +13,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -74,9 +75,9 @@ public class FileController {
             Files.write(filePath, file.getBytes()); // files 로컬 폴더에 저장
 
             FileDTO created_file = fileService.save(interviewGroup_id, interview_id, companyQna_id, filePath.toString());
-            // 영상분석
-//            voiceResultService.sendToVoice(created_file);
-//            actionResultService.sendToAction(created_file);
+
+            // 비동기로 영상분석 서비스 호출
+            asyncProcessVideoAnalysis(created_file);
 
             return ResponseEntity.ok("save success!");
         } catch (IOException e) {
@@ -84,19 +85,10 @@ public class FileController {
                     .body(null);
         }
     }
-
-    @PostMapping("/finish")
-    public ResponseEntity<?> finishInterview(@PathVariable("interviewGroup_id") Long interviewGroup_id,
-                                             @PathVariable("interviewer_id") Long interviewer_id) {
-        try {
-            List<FileDTO> fileDTOS = fileService.loadFiles(interviewer_id);
-            if (fileDTOS.isEmpty()) return ResponseEntity.badRequest().body("영상 파일 없음");
-            else {
-                fileService.sendToActionAndVoice(fileDTOS);
-            }
-            return ResponseEntity.ok("send success!");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    // 비동기 메서드로 영상분석 서비스 호출
+    @Async
+    public void asyncProcessVideoAnalysis(FileDTO fileDTO) {
+        voiceResultService.sendToVoice(fileDTO);
+        actionResultService.sendToAction(fileDTO);
     }
 }

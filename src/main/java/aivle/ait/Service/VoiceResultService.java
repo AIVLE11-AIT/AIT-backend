@@ -9,6 +9,7 @@ import aivle.ait.Repository.VoiceResultRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +31,9 @@ public class VoiceResultService {
     private final FileRepository fileRepository;
 
     // 음성
+    @Async
     @Transactional
-    public VoiceResultDTO sendToVoice(FileDTO fileDTO) {
+    public void sendToVoice(FileDTO fileDTO) {
         try {
             String filePath = fileDTO.getVideo_path();
 
@@ -72,7 +74,7 @@ public class VoiceResultService {
                 // Voice_result(double): voice_level, voice_speed, voice_intj, voice_score
                 Optional<File> file = fileRepository.findById(fileDTO.getId());
                 if (file.isEmpty()) {
-                    return null;
+                    return;
                 }
                 VoiceResult voiceResult = new VoiceResult();
                 voiceResult.setVoice_level(jsonResponse.get("voice_level").asDouble());
@@ -85,14 +87,12 @@ public class VoiceResultService {
                 VoiceResultDTO voiceResultDTO = new VoiceResultDTO(voiceResult);
 
                 connection.disconnect();
-                return voiceResultDTO;
+                return;
             } else {
                 System.out.println("Python server request failed with response code: " + responseCode);
-                return null;
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
         }
     }
 
