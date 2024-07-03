@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -31,21 +32,47 @@ public class ActionResultService {
     private final FileRepository fileRepository;
 
     // 행동 처리
+    @Transactional
     public ActionResultDTO sendToAction(FileDTO fileDTO) {
         try {
             String filePath = fileDTO.getVideo_path();
-            String videoUrl = "http://localhost:3000/receive";
+            String videoUrl = "http://192.168.0.3:3000/process-video";
+            String boundary = "*****"; // 바운더리 문자열 설정
 
             URL url = new URL(videoUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            // HTTP 연결 설정
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
             connection.setRequestMethod("POST");
-            connection.setDoOutput(true); // 출력 스트림 사용
+            connection.setRequestProperty("Connection", "Keep-Alive");
+            connection.setRequestProperty("Cache-Control", "no-cache");
+            connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
 
             // 파일 압축
             byte[] fileBytes = Files.readAllBytes(Paths.get(filePath));
+            String fileName = Paths.get(filePath).getFileName().toString();
 
             // 바이트 배열을 전송
-            connection.getOutputStream().write(fileBytes);
+            // 바이트 배열을 전송
+            // 데이터 출력 스트림 생성
+            DataOutputStream request = new DataOutputStream(connection.getOutputStream());
+
+            // 멀티파트 폼 데이터 구성
+            request.writeBytes("--" + boundary + "\r\n");
+            request.writeBytes("Content-Disposition: form-data; name=\"video\";filename=\"" + fileName + "\"" + "\r\n");
+            request.writeBytes("\r\n");
+
+            // 파일 데이터를 바이트 배열로 전송
+            request.write(fileBytes);
+
+            // 멀티파트 폼 데이터 종료
+            request.writeBytes("\r\n");
+            request.writeBytes("--" + boundary + "--" + "\r\n");
+
+            // 스트림 닫기
+            request.flush();
+            request.close();
 
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) { // 200
@@ -61,7 +88,7 @@ public class ActionResultService {
 
                 // json 응답 파싱
                 JsonNode jsonResponse = objectMapper.readTree(response.toString());
-                int totalActionScore = jsonResponse.get("action_score").asInt();
+                double totalActionScore = jsonResponse.get("action_score").asDouble();
                 System.out.println("total action score: " + totalActionScore);
 
 
