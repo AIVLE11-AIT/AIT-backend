@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -65,36 +66,4 @@ public class FileService {
         return createFileDto;
     }
 
-    public List<FileDTO> loadFiles(Long interviewer_id) {
-        Optional<List<File>> filesOptional = fileRepository.findByInterviewerId(interviewer_id);
-        if (filesOptional.isEmpty()) return null;
-
-        List<File> files = filesOptional.get();
-        List<FileDTO> fileDTOS = new ArrayList<>();
-
-        for(File file: files) {
-            System.out.println(file.getId() + file.getVideo_path());
-            FileDTO dto = new FileDTO(file);
-            fileDTOS.add(dto);
-        }
-        return fileDTOS;
-    }
-
-    @Async
-    public void sendToActionAndVoice(List<FileDTO> fileDTOS) {
-        for (FileDTO file : fileDTOS) {
-            // 파일 처리 로직 예제
-            voiceResultService.sendToVoice(file);
-            actionResultService.sendToAction(file);
-            System.out.println("Send success: " + file.getVideo_path());
-        }
-
-        try {
-            Thread.sleep(5000); // 5초 후 함수 종료
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
-        System.out.println("finish send!");
-    }
 }
