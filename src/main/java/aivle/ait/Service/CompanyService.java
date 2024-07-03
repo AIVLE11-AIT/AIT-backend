@@ -82,7 +82,12 @@ public class CompanyService {
 
             helper.setText(emailContent.toString(), true);
             javaMailSender.send(message);
-            redisUtil.setDataExpire(checkNum, to, 60*5L); // 유효시간 5분 설정
+
+            if (redisUtil.getData(to) != null) {
+                System.out.println("codeFoundByEmail: " + redisUtil.getData(to));
+                redisUtil.deleteData(to);
+            }
+            redisUtil.setDataExpire(to, checkNum, 60*5L); // 유효시간 5분 설정
 
         } catch(MessagingException e) {
             e.printStackTrace();
@@ -92,11 +97,11 @@ public class CompanyService {
 
     // 인증번호 확인
     public boolean verifyCode(String email, String code) {
-        String emailFounByCode = redisUtil.getData(code);
+        String codeFoundByEmail = redisUtil.getData(email);
 
-        if (emailFounByCode == null) {
+        if (codeFoundByEmail == null) {
             return false;
         }
-        return emailFounByCode.equals(email);
+        return codeFoundByEmail.equals(code);
     }
 }
