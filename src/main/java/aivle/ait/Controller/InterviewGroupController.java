@@ -37,7 +37,6 @@ public class InterviewGroupController {
             return ResponseEntity.badRequest().body(null);
         }
     }
-
     @GetMapping("/{interviewGroup_id}")
     public ResponseEntity<InterviewGroupDTO> read(@PathVariable Long interviewGroup_id,
                                                   @AuthenticationPrincipal CustomUserDetails customUserDetails){

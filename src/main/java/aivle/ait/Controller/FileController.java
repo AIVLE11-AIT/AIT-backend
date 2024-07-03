@@ -9,6 +9,7 @@ import aivle.ait.Service.InterviewerService;
 import aivle.ait.Service.VoiceResultService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,16 +46,21 @@ public class FileController {
     }
 
     @PostMapping("/{companyQna_id}")
-    public ResponseEntity<FileDTO> uploadFile(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+    public ResponseEntity<String> uploadFile(@PathVariable("interviewGroup_id") Long interviewGroup_id,
                                                   @PathVariable("interviewer_id") Long interview_id,
                                                   @PathVariable("companyQna_id") Long companyQna_id,
                                                   @RequestParam("file") MultipartFile file) {
         try {
             // 파일 저장 경로 설정
             Path path = Paths.get("files");
-            Path uploadPath = path.resolve(String.valueOf(interviewGroup_id));
+            Path path2 = path.resolve(String.valueOf(interviewGroup_id));
+            Path uploadPath = path2.resolve(String.valueOf(interview_id));
 
-            if (!Files.exists(uploadPath)) { // /files/interviewGroupid 폴더 생성
+            if (!Files.exists(path2)) { ///files/interviewGroup_id 폴더 생성
+                Files.createDirectory(path2);
+            }
+
+            if (!Files.exists(uploadPath)) { // /files/interviewGroup_id/interview_id 폴더 생성
                 Files.createDirectory(uploadPath);
             }
 
@@ -63,20 +70,33 @@ public class FileController {
             String fileExtension = parts[parts.length - 1];
             String newFileName = String.format("%s_%s.%s", interview_id, companyQna_id, fileExtension);
 
-            Path filePath = Paths.get("files/" + String.valueOf(interviewGroup_id), newFileName);
+            Path filePath = Paths.get("files/" + String.valueOf(interviewGroup_id) + "/" + String.valueOf(interview_id), newFileName);
             Files.write(filePath, file.getBytes()); // files 로컬 폴더에 저장
 
             FileDTO created_file = fileService.save(interviewGroup_id, interview_id, companyQna_id, filePath.toString());
-
             // 영상분석
-            voiceResultService.sendToVoice(created_file);
-            actionResultService.sendToAction(created_file);
+//            voiceResultService.sendToVoice(created_file);
+//            actionResultService.sendToAction(created_file);
 
-            return ResponseEntity.ok(created_file);
+            return ResponseEntity.ok("save success!");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(null);
         }
     }
 
+    @PostMapping("/finish")
+    public ResponseEntity<?> finishInterview(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+                                             @PathVariable("interviewer_id") Long interviewer_id) {
+        try {
+            List<FileDTO> fileDTOS = fileService.loadFiles(interviewer_id);
+            if (fileDTOS.isEmpty()) return ResponseEntity.badRequest().body("영상 파일 없음");
+            else {
+                fileService.sendToActionAndVoice(fileDTOS);
+            }
+            return ResponseEntity.ok("send success!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

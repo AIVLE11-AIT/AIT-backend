@@ -3,6 +3,9 @@ package aivle.ait.Repository;
 import aivle.ait.Entity.File;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface FileRepository extends JpaRepository<File, Long> {
+import java.util.List;
+import java.util.Optional;
 
+public interface FileRepository extends JpaRepository<File, Long> {
+    Optional<List<File>> findByInterviewerId(Long interviewerId);
 }
