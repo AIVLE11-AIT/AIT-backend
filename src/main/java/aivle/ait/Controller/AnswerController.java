@@ -41,8 +41,8 @@ public class AnswerController {
         }
     }
 
-    @PutMapping("/update/{commentId}")
-    public ResponseEntity<AnswerDTO> update(@PathVariable("commentId") Long commentId, @RequestBody Answer answer){
+    @PutMapping("/update/{answerId}")
+    public ResponseEntity<AnswerDTO> update(@PathVariable("answerId") Long commentId, @RequestBody Answer answer){
         AnswerDTO updatedComment = answerService.update(commentId, answer.getContent());
 
         if (updatedComment != null){
@@ -53,8 +53,8 @@ public class AnswerController {
         }
     }
 
-    @DeleteMapping("/delete/{commentId}")
-    public ResponseEntity<AnswerDTO> delete(@PathVariable("commentId") Long commentId){
+    @DeleteMapping("/delete/{answerId}")
+    public ResponseEntity<AnswerDTO> delete(@PathVariable("answerId") Long commentId){
         AnswerDTO deletedComment = answerService.delete(commentId);
 
         if (deletedComment != null){
