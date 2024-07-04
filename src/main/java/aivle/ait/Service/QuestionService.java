@@ -56,8 +56,8 @@ public class QuestionService {
         return questionDTOs;
     }
 
-    public Page<QuestionDTO> readAllPageable(Pageable pageable){
-        Page<Question> questions = questionRepository.findAll(pageable);
+    public Page<QuestionDTO> readAllPageable(Long companyId, Pageable pageable){
+        Page<Question> questions = questionRepository.findByCompanyId(companyId, pageable);
         Page<QuestionDTO> questionDTOS = QuestionDTO.toDtoPage(questions);
         return questionDTOS;
     }

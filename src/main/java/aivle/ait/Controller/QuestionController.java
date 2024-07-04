@@ -50,8 +50,9 @@ public class QuestionController {
 
     // 페이지 별로 불러오기 ex) localhost:8888/qustion/read?page=0&size=5
     @GetMapping("/read")
-    public ResponseEntity<Page<QuestionDTO>> readPage(@PageableDefault(size = 5) Pageable pageable){
-        Page<QuestionDTO> questionDTOs = questionService.readAllPageable(pageable);
+    public ResponseEntity<Page<QuestionDTO>> readPage(@PageableDefault(size = 5) Pageable pageable,
+                                                      @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        Page<QuestionDTO> questionDTOs = questionService.readAllPageable(customUserDetails.getCompany().getId(), pageable);
 
         if (!questionDTOs.isEmpty()){
             return ResponseEntity.ok(questionDTOs);
