@@ -13,6 +13,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 //    List<Board> findByTitleContaining(String keyword);
 
     List<Question> findCustomByTitleContaining(String title);
-    List<Question> findByCompany(Company company);
+    Page<Question> findByCompanyId(Long companyId, Pageable pageable);
     Page<Question> findAll(Pageable pageable);
 }
