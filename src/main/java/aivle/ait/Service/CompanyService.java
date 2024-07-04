@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -103,5 +105,69 @@ public class CompanyService {
             return false;
         }
         return codeFoundByEmail.equals(code);
+    }
+
+    // update
+    @Transactional
+    public CompanyDTO update(Long companyId, CompanyDTO companyDTO) {
+        Optional<Company> companyOptional = companyRepository.findById(companyId);
+
+        if (companyOptional.isEmpty()) return null;
+
+        companyDTO.setRole("ROLE_USER");
+        String encodedPassword = passwordEncoder.encode(companyDTO.getPassword());
+        companyDTO.setPassword(encodedPassword);
+
+        Company company = companyOptional.get();
+        company.setDtoToObject(companyDTO); // update
+
+        CompanyDTO updatedCompanyDTO = new CompanyDTO(company);
+        return updatedCompanyDTO;
+    }
+
+    // 임시 비번 생성
+    public String generateTemporalPassword() {
+        char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+                'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+        String str = "";
+
+        // 랜덤으로 10개를 chatSet에서 뽑아서 임시 비번 생성
+        int idx = 0;
+        for (int i=0;i<10;i++) {
+            idx = (int) (charSet.length * Math.random());
+            str += charSet[idx];
+        }
+        return str;
+    }
+
+    public String sendEmailForTemporalPassword(String to, String password) {
+        try {
+            // 메일 전송
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setTo(to);
+            helper.setSubject("AIT: 임시 비밀번호 안내");
+
+            StringBuilder emailContent = new StringBuilder();
+            emailContent.append("<html>");
+            emailContent.append("<body>");
+            emailContent.append("<h2>AIT 임시 비밀번호 안내</h2>");
+            emailContent.append("<p>안녕하세요. AIT 입니다.</p>");
+            emailContent.append("<p>임시 비밀번호를 안내해 드립니다:</p>");
+            emailContent.append("<h3>" + password + "</h3>");
+            emailContent.append("<p>로그인 후에 비밀번호를 변경해 주세요!</p>");
+            emailContent.append("<p>감사합니다.</p>");
+            emailContent.append("</body>");
+            emailContent.append("</html>");
+
+            helper.setText(emailContent.toString(), true);
+            javaMailSender.send(message);
+
+
+        } catch(MessagingException e) {
+            e.printStackTrace();
+        }
+        return password;
     }
 }

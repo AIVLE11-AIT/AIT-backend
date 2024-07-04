@@ -1,5 +1,6 @@
 package aivle.ait.Entity;
 
+import aivle.ait.Dto.CompanyDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,4 +32,11 @@ public class Company extends Time{
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     private List<Question> questions = new ArrayList<>();
+
+    public void setDtoToObject(CompanyDTO companyDTO) {
+        this.setName(companyDTO.getName());
+        this.setEmail(companyDTO.getEmail());
+        this.setPassword(companyDTO.getPassword());
+        this.setRole(companyDTO.getRole());
+    }
 }
