@@ -85,14 +85,15 @@ public class QuestionService {
     }
 
     @Transactional
-    public QuestionDTO update(Long id, String content){
+    public QuestionDTO update(Long id, QuestionDTO questionDTO){
         Optional<Question> questions = questionRepository.findById(id);
         if (questions.isEmpty()){
             return null;
         }
 
         Question question = questions.get();
-        question.setContent(content); // update
+        question.setTitle(questionDTO.getTitle());
+        question.setContent(questionDTO.getContent()); // update
 
         QuestionDTO questionDto = new QuestionDTO(question);
         return questionDto;

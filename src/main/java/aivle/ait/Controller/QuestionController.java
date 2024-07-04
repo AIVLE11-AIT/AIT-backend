@@ -91,7 +91,7 @@ public class QuestionController {
 
     @PutMapping("/{question_id}/update")
     public ResponseEntity<QuestionDTO> update(@PathVariable Long question_id, @RequestBody QuestionDTO questionDTO){
-        QuestionDTO updatedQuestions = questionService.update(question_id, questionDTO.getContent());
+        QuestionDTO updatedQuestions = questionService.update(question_id, questionDTO);
 
         if (updatedQuestions != null){
             return ResponseEntity.ok(updatedQuestions);
