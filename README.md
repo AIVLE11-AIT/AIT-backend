@@ -14,3 +14,6 @@
 
 # 카리나 너무 이쁘다...
 ![ka](https://github.com/AIVLE11-AIT/AIT-backend/assets/87623609/ab1a2e09-bd01-4fc9-aad3-1a5bd3c92146)
+
+# 나는 섹시가이
+![ㅇㅇㅇ](https://github.com/AIVLE11-AIT/AIT-backend/assets/162882540/073ef5f7-04df-47a8-bbb7-4b525f11faed)
