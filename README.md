@@ -1,4 +1,3 @@
-![dfdfdf](https://github.com/AIVLE11-AIT/AIT-backend/assets/87623609/b177183a-84cf-4ac2-bd1e-1bc143fbe3c3)# 이한영은바보다 # 윤영인은가오나시
 # 이한영은 나영석PD
 # 윤영인은 카리나
 # 둘이 똑같이 생겼다
@@ -7,8 +6,6 @@
 # 성공적인 닮은꼴 찾기!~~~~~
 ![image](https://github.com/AIVLE11-AIT/AIT-backend/assets/87623609/cd61533a-6ca4-468f-8db5-bc147af2f58d)
 ![dfdfdf](https://github.com/AIVLE11-AIT/AIT-backend/assets/87623609/53b6716e-1e24-479a-8c55-1e61ba0bf2b6)
-
-
 
 # 성공적인 닮은꼴 찾기222222222222222222222!~~~~~
 ![ㅇㄹㅇㄹㅇ](https://github.com/AIVLE11-AIT/AIT-backend/assets/87623609/7d400cfd-2f53-447c-add1-002136392afd)
