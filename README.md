@@ -4,6 +4,11 @@
 # 둘이 똑같이 생겼다
 # 아함 ~ 쉽다 쉬워 ~
 
+# 성공적인 닮은꼴 찾기!~~~~~
+![image](https://github.com/AIVLE11-AIT/AIT-backend/assets/87623609/cd61533a-6ca4-468f-8db5-bc147af2f58d)
+![Uploading image.png…]()
+
+
 ![ㅇㄹㅇㄹㅇ](https://github.com/AIVLE11-AIT/AIT-backend/assets/87623609/7d400cfd-2f53-447c-add1-002136392afd)
 ![sadfds](https://github.com/AIVLE11-AIT/AIT-backend/assets/87623609/e795ed0b-59bc-4f51-aa5d-935fa352bc2e)
 ![image](https://github.com/AIVLE11-AIT/AIT-backend/assets/92067715/f0171193-4a30-40cd-9068-018e73701106)
@@ -21,3 +26,4 @@
 
 # 칙칙폭폭 영인기차 추울발
 ![22222222222222](https://github.com/AIVLE11-AIT/AIT-backend/assets/172003139/17f06ca4-c3d6-4036-bd1f-a97663cbb29b)
+
