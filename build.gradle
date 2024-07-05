@@ -51,6 +51,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 	runtimeOnly 'mysql:mysql-connector-java'
+	implementation 'com.ibm.icu:icu4j:72.1'
+	implementation 'org.apache.commons:commons-csv:1.10.0'
 }
 
 tasks.named('test') {

@@ -134,4 +134,20 @@ public class InterviewerService {
         javaMailSender.send(message);
     }
 
+    @Transactional
+    public InterviewerDTO sendImagePath(Long interviewGroupId, Long interviewerId, String image_path) {
+        Optional<Interviewer> interviewers = interviewerRepository.findInterviewerByIdAndInterviewgroupId(interviewerId, interviewGroupId);
+
+        if (interviewers.isEmpty()) {
+            return null;
+        }
+
+        Interviewer interviewer = interviewers.get();
+        InterviewerDTO interviewerDTO = new InterviewerDTO(interviewer);
+        interviewerDTO.setImage_path(image_path);
+        interviewer.setDtoToObject(interviewerDTO);
+
+
+        return interviewerDTO;
+    }
 }

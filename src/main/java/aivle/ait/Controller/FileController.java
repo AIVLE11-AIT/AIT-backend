@@ -54,14 +54,19 @@ public class FileController {
         try {
             // 파일 저장 경로 설정
             Path path = Paths.get("files");
-            Path path2 = path.resolve(String.valueOf(interviewGroup_id));
-            Path uploadPath = path2.resolve(String.valueOf(interview_id));
+            Path path2 = path.resolve("videos");
+            Path path3 = path2.resolve(String.valueOf(interviewGroup_id));
+            Path uploadPath = path3.resolve(String.valueOf(interview_id));
 
-            if (!Files.exists(path2)) { ///files/interviewGroup_id 폴더 생성
+
+            if (!Files.exists(path2)) { // /files/videos 폴더 생성
                 Files.createDirectory(path2);
             }
 
-            if (!Files.exists(uploadPath)) { // /files/interviewGroup_id/interview_id 폴더 생성
+            if (!Files.exists(path3)) { // /files/videos/{interviewGroup_id}
+                Files.createDirectory(path3);
+            }
+            if (!Files.exists(uploadPath)) { // /files/videos/{interviewGroup_id}/interview_id 폴더 생성
                 Files.createDirectory(uploadPath);
             }
 
@@ -71,7 +76,7 @@ public class FileController {
             String fileExtension = parts[parts.length - 1];
             String newFileName = String.format("%s_%s.%s", interview_id, companyQna_id, fileExtension);
 
-            Path filePath = Paths.get("files/" + String.valueOf(interviewGroup_id) + "/" + String.valueOf(interview_id), newFileName);
+            Path filePath = Paths.get(uploadPath.toString(), newFileName);
             Files.write(filePath, file.getBytes()); // files 로컬 폴더에 저장
 
             FileDTO created_file = fileService.save(interviewGroup_id, interview_id, companyQna_id, filePath.toString());

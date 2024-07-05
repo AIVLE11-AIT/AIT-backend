@@ -74,8 +74,8 @@ public class InterviewerDTO {
         LocalDate birthDate = LocalDate.parse(data[2], formatter);
         interviewerDTO.setBirth(birthDate.atStartOfDay());
 
-        interviewerDTO.setImage_path(data[3]);
-        interviewerDTO.setCover_letter(data[4]);
+        interviewerDTO.setImage_path("");
+        interviewerDTO.setCover_letter(data[3]);
 
         return interviewerDTO;
     }
