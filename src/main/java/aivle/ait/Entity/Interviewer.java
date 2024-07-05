@@ -27,7 +27,7 @@ public class Interviewer extends Time {
     @Column(nullable = false)
     private LocalDateTime birth;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String image_path;
 
     @Column(nullable = false)

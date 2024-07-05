@@ -16,6 +16,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -131,5 +135,46 @@ public class InterviewerController {
         }
 
         return ResponseEntity.ok(InterviewerDTOs);
+    }
+
+    // 사진 파일 전송
+    @PostMapping("/{interviewer_id}/image")
+    public ResponseEntity<?> sendImage(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+                                       @PathVariable("interviewer_id") Long interview_id,
+                                       @RequestPart(value="file") MultipartFile file) {
+        try {
+            Path path = Paths.get("files");
+            Path path2 = path.resolve("images");
+            Path path3 = path2.resolve(String.valueOf(interviewGroup_id));
+            Path uploadPath = path3.resolve(String.valueOf(interview_id));
+
+            if (!Files.exists(path2)) { // /files/images 폴더 생성
+                Files.createDirectory(path2);
+            }
+
+            if (!Files.exists(path3)) { // /files/images/{interviewGroup_id}
+                Files.createDirectory(path3);
+            }
+            if (!Files.exists(uploadPath)) { // /files/images/{interviewGroup_id}/{interview_id} 폴더 생성
+                Files.createDirectory(uploadPath);
+            }
+
+            // 지원자 정보로 파일 이름 변경 예정
+            String originalFileName = file.getOriginalFilename();
+            String[] parts = originalFileName.split("\\.");
+            String fileExtension = parts[parts.length - 1];
+            String newFileName = String.format("%s_%s.%s", interviewGroup_id, interview_id, fileExtension);
+
+            Path filePath = Paths.get(uploadPath.toString(), newFileName);
+            Files.write(filePath, file.getBytes()); // files 로컬 폴더에 저장
+
+            InterviewerDTO interviewerDTO = interviewerService.sendImagePath(interviewGroup_id, interview_id, filePath.toString());
+
+            return ResponseEntity.ok(interviewerDTO);
+
+        } catch(IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
     }
 }

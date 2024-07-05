@@ -9,7 +9,12 @@ import aivle.ait.Entity.InterviewGroup;
 import aivle.ait.Entity.Interviewer;
 import aivle.ait.Repository.CompanyRepository;
 import aivle.ait.Repository.InterviewGroupRepository;
+import com.ibm.icu.text.CharsetDetector;
+import com.ibm.icu.text.CharsetMatch;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -44,6 +50,7 @@ public class InterviewGroupService {
         interviewGroup.setDtoToObject(interviewGroupDTO);
         interviewGroup.setCompany(company.get());
 
+        System.out.println("company qna start");
         // company_qna 연관 관계 설정
         for (CompanyQnaDTO companyQnaDTO : interviewGroupDTO.getCompanyQnas()){
             CompanyQna companyQna = new CompanyQna();
@@ -51,7 +58,9 @@ public class InterviewGroupService {
             companyQna.setInterviewgroup(interviewGroup);
         }
 
+        System.out.println("create");
         List<InterviewerDTO> interviewerDTOS = getInterviewerDTOsFromCsv(file);
+        System.out.println("please");
         interviewGroupDTO.setInterviewers(interviewerDTOS);
 
         // interviewer 연관 관계 설정
@@ -80,7 +89,7 @@ public class InterviewGroupService {
                     continue;
                 }
 
-                String[] data = line.split(",");
+                String[] data = line.split(",", 4);
                 for(String field : data) {
                     if (field.isEmpty()) {
                         throw new RuntimeException("CSV 데이터 저장 중 오류 발생: null error");
