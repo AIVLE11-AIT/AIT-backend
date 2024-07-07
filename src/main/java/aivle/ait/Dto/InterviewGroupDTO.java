@@ -22,6 +22,7 @@ public class InterviewGroupDTO {
     private int voice_per;
     private int action_per;
     private String language;
+    private String occupation;
 
     private List<CompanyQnaDTO> companyQnas;
     private List<InterviewerDTO> interviewers;
@@ -37,6 +38,7 @@ public class InterviewGroupDTO {
         this.voice_per = interviewgroup.getVoice_per();
         this.action_per = interviewgroup.getAction_per();
         this.language = interviewgroup.getLanguage();
+        this.occupation = interviewgroup.getOccupation();
 
         this.companyQnas = interviewgroup.getCompanyQnas().stream().map(CompanyQnaDTO::new).collect(Collectors.toList());
         this.interviewers = interviewgroup.getInterviewers().stream().map(InterviewerDTO::new).collect(Collectors.toList());

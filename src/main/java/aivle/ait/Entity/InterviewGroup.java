@@ -41,6 +41,9 @@ public class InterviewGroup extends Time {
     @Column(nullable = false)
     private String language;
 
+    @Column(nullable = false)
+    private String occupation;
+
     @OneToMany(mappedBy = "interviewgroup", cascade = CascadeType.ALL)
     private List<CompanyQna> companyQnas = new ArrayList<>();
 
@@ -60,6 +63,7 @@ public class InterviewGroup extends Time {
         this.setVoice_per(interviewGroupDTO.getVoice_per());
         this.setAction_per(interviewGroupDTO.getAction_per());
         this.setLanguage(interviewGroupDTO.getLanguage());
+        this.setOccupation(interviewGroupDTO.getOccupation());
     }
 
     // =====연관관계 메서드=====

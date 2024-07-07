@@ -45,6 +45,9 @@ public class Interviewer extends Time {
     @OneToMany(mappedBy = "interviewer", cascade = CascadeType.ALL)
     private List<File> files = new ArrayList<>();
 
+    @OneToMany(mappedBy = "interviewer", cascade = CascadeType.ALL)
+    private List<InterviewerQna> interviewerQnas = new ArrayList<>();
+
     public void setDtoToObject(InterviewerDTO interviewerDTO){
         this.setName(interviewerDTO.getName());
         this.setEmail(interviewerDTO.getEmail());

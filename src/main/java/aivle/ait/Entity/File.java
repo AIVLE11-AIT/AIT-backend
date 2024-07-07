@@ -1,6 +1,5 @@
 package aivle.ait.Entity;
 
-import aivle.ait.Dto.FileDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +15,9 @@ public class File extends Time {
 
     @Column(nullable = false)
     private String video_path;
+
+    @Column(nullable = false)
+    private Boolean isGroup;
 
     @OneToOne(mappedBy = "file")
     private ContextResult contextResult;
@@ -36,6 +38,10 @@ public class File extends Time {
     @JoinColumn(name = "interviewer_id")
     private Interviewer interviewer;
 
+    @OneToOne
+    @JoinColumn(name = "interviewer_qnd_id")
+    private InterviewerQna interviewerQna;
+
     // =====연관관계 메서드=====
     public void setCompanyQna(CompanyQna companyQna) {
         this.companyQna = companyQna;
@@ -44,6 +50,10 @@ public class File extends Time {
     public void setInterviewer(Interviewer interviewer) {
         this.interviewer = interviewer;
         interviewer.getFiles().add(this);
+    }
+    public void setInterviewerQna(InterviewerQna interviewerQna) {
+        this.interviewerQna = interviewerQna;
+        interviewerQna.setFile(this);
     }
 
 }

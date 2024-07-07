@@ -46,40 +46,15 @@ public class FileController {
         }
     }
 
-    @PostMapping("/{companyQna_id}")
-    public ResponseEntity<String> uploadFile(@PathVariable("interviewGroup_id") Long interviewGroup_id,
-                                                  @PathVariable("interviewer_id") Long interview_id,
+    @PostMapping("/companyQna/{companyQna_id}")
+    public ResponseEntity<String> uploadFileByCompanyQna(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+                                                  @PathVariable("interviewer_id") Long interviewer_id,
                                                   @PathVariable("companyQna_id") Long companyQna_id,
                                                   @RequestParam("file") MultipartFile file) {
         try {
-            // 파일 저장 경로 설정
-            Path path = Paths.get("files");
-            Path path2 = path.resolve("videos");
-            Path path3 = path2.resolve(String.valueOf(interviewGroup_id));
-            Path uploadPath = path3.resolve(String.valueOf(interview_id));
+            String filePath = saveFile(true, interviewGroup_id, interviewer_id, companyQna_id, file);
 
-
-            if (!Files.exists(path2)) { // /files/videos 폴더 생성
-                Files.createDirectory(path2);
-            }
-
-            if (!Files.exists(path3)) { // /files/videos/{interviewGroup_id}
-                Files.createDirectory(path3);
-            }
-            if (!Files.exists(uploadPath)) { // /files/videos/{interviewGroup_id}/interview_id 폴더 생성
-                Files.createDirectory(uploadPath);
-            }
-
-            // 지원자 정보로 파일 이름 변경 예정
-            String originalFileName = file.getOriginalFilename();
-            String[] parts = originalFileName.split("\\.");
-            String fileExtension = parts[parts.length - 1];
-            String newFileName = String.format("%s_%s.%s", interview_id, companyQna_id, fileExtension);
-
-            Path filePath = Paths.get(uploadPath.toString(), newFileName);
-            Files.write(filePath, file.getBytes()); // files 로컬 폴더에 저장
-
-            FileDTO created_file = fileService.save(interviewGroup_id, interview_id, companyQna_id, filePath.toString());
+            FileDTO created_file = fileService.saveByCompanyQna(interviewGroup_id, interviewer_id, companyQna_id, filePath);
 
             // 비동기로 영상분석 서비스 호출
             asyncProcessVideoAnalysis(created_file);
@@ -90,6 +65,66 @@ public class FileController {
                     .body(null);
         }
     }
+
+    // 자소서 기반 질문인지 구분 필요
+    @PostMapping("/interviewerQna/{interviewerQna_id}")
+    public ResponseEntity<String> uploadFileByInterviewerQna(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+                                                         @PathVariable("interviewer_id") Long interviewer_id,
+                                                         @PathVariable("interviewerQna_id") Long interviewerQna_id,
+                                                         @RequestParam("file") MultipartFile file) {
+        try {
+            String filePath = saveFile(false, interviewGroup_id, interviewer_id, interviewerQna_id, file);
+
+            FileDTO created_file = fileService.saveByInterviewerQna(interviewGroup_id, interviewer_id, interviewerQna_id, filePath);
+
+            // 비동기로 영상분석 서비스 호출
+            asyncProcessVideoAnalysis(created_file);
+
+            return ResponseEntity.ok("save success!");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
+    }
+
+    // 파일 저장 기능 메서드로 분리
+    public String saveFile(boolean isGroup, Long interviewGroup_id, Long interviewer_id, Long qna_id, MultipartFile file) throws IOException {
+        // 파일 저장 경로 설정
+        Path path = Paths.get("files");
+        Path path2 = path.resolve("videos");
+        Path path3 = path2.resolve(String.valueOf(interviewGroup_id));
+        Path uploadPath = path3.resolve(String.valueOf(interviewer_id));
+
+
+        if (!Files.exists(path2)) { // /files/videos 폴더 생성
+            Files.createDirectory(path2);
+        }
+
+        if (!Files.exists(path3)) { // /files/videos/{interviewGroup_id}
+            Files.createDirectory(path3);
+        }
+        if (!Files.exists(uploadPath)) { // /files/videos/{interviewGroup_id}/interview_id 폴더 생성
+            Files.createDirectory(uploadPath);
+        }
+
+        // 지원자 정보로 파일 이름 변경 예정
+        String originalFileName = file.getOriginalFilename();
+        String[] parts = originalFileName.split("\\.");
+        String fileExtension = parts[parts.length - 1];
+
+        // publicOrPrivate 기업 질문인지 자소서 기반 질문인지 구분. 파일 이름 중복될 위험 방지. ex) 기업 공통 질문: 1_public-1.mp4, 개인 자소서 기반 질문: 1_private-1.mp4
+        String newFileName;
+        if (isGroup)
+            newFileName = String.format("%s_public-%s.%s", interviewer_id, qna_id, fileExtension);
+        else
+            newFileName = String.format("%s_private-%s.%s", interviewer_id, qna_id, fileExtension);
+
+        Path filePath = Paths.get(uploadPath.toString(), newFileName);
+        Files.write(filePath, file.getBytes()); // files 로컬 폴더에 저장
+
+        return filePath.toString();
+    }
+
     // 비동기 메서드로 영상분석 서비스 호출
     @Async
     public void asyncProcessVideoAnalysis(FileDTO fileDTO) {

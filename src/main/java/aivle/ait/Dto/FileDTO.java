@@ -15,17 +15,21 @@ import java.util.stream.Collectors;
 public class FileDTO {
     private Long id;
     private String video_path;
+    private Boolean isGroup;
     private Long companyQna_id;
     private Long interviewer_id;
     private Long context_result_id;
     private Long voice_result_id;
     private Long action_result_id;
+    private Long interviewerQna_id;
 
     public FileDTO(File file) {
         this.id = file.getId();
         this.video_path = file.getVideo_path();
+        this.isGroup = file.getIsGroup();
         this.companyQna_id = file.getCompanyQna().getId();
         this.interviewer_id = file.getInterviewer().getId();
+        this.interviewerQna_id = file.getInterviewerQna().getId();
 
         if (file.getContextResult() != null)
             this.context_result_id = file.getContextResult().getId();
