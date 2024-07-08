@@ -17,6 +17,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -206,5 +207,14 @@ public class InterviewGroupService {
 
         InterviewGroupDTO interviewGroupDTO = new InterviewGroupDTO(interviewGroup);
         return interviewGroupDTO;
+    }
+
+    public List<InterviewGroupDTO> sortByCreatedAt(Long companyId){
+        List<InterviewGroup> interviewGroups = interviewGroupRepository.findByCompanyIdOrderByCreatedDateDesc(companyId);
+        if (interviewGroups.isEmpty()){
+            return null;
+        }
+
+        return InterviewGroupDTO.convertToDto(interviewGroups);
     }
 }
