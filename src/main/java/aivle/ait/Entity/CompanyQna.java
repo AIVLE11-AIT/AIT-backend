@@ -20,9 +20,6 @@ public class CompanyQna extends Time {
     @Column(nullable = false)
     private String question;
 
-    @Column(nullable = false)
-    private String answer;
-
     // Interview_group:company_qna = 1:N
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interview_group_id")
@@ -33,7 +30,6 @@ public class CompanyQna extends Time {
 
     public void setDtoToObject(CompanyQnaDTO companyQnaDTO){
         this.setQuestion(companyQnaDTO.getQuestion());
-        this.setAnswer(companyQnaDTO.getAnswer());
     }
 
     // =====연관관계 메서드=====
