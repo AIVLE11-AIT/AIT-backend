@@ -122,7 +122,7 @@ public class CompanyQnaService {
                     ResponseEntity<String> response = restTemplate.postForEntity(llmUrl, request, String.class);
                     String answer = response.getBody();
 
-                    if ((response.getStatusCode().is2xxSuccessful()) && (answer != null || answer == "")) {
+                    if ((response.getStatusCode().is2xxSuccessful()) && (answer != null || answer != "")) {
                         CompanyQnaDTO dto = new CompanyQnaDTO(qna);
                         dto.setAnswer(answer);
                         qna.setDtoToObject(dto);
