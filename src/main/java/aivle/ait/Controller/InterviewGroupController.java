@@ -101,4 +101,15 @@ public class InterviewGroupController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+    @GetMapping("/check")
+    public ResponseEntity<?> check(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        List<InterviewGroupDTO> interviewGroupDTOS = interviewGroupService.sortByCreatedAt(customUserDetails.getCompany().getId());
+
+        if (interviewGroupDTOS == null || interviewGroupDTOS.isEmpty()){
+            return ResponseEntity.badRequest().body("NOT EXISTS");
+        }
+
+        return ResponseEntity.ok(interviewGroupDTOS.get(0).getCompanyQnas());
+    }
 }
