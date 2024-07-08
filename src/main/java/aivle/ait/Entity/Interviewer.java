@@ -30,9 +30,8 @@ public class Interviewer extends Time {
     @Column(nullable = true)
     private String image_path;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String cover_letter;
-
     // 읽기 전용
     @OneToOne(mappedBy = "interviewer")
     private Result result;
