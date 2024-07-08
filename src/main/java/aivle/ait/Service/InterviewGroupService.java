@@ -110,28 +110,6 @@ public class InterviewGroupService {
                 InterviewerDTO dto = InterviewerDTO.fromCsv(data);
                 interviewerDTOS.add(dto);
             }
-//            while ((line = reader.readLine()) != null){
-//                if (isFirstLine) {
-//                    isFirstLine = false;
-//                    continue;
-//                }
-//                System.out.println(line);
-//                String[] data = line.split(",", 4);
-//                for(String field : data) {
-//                    if (field.isEmpty()) {
-//                        throw new RuntimeException("CSV 데이터 저장 중 오류 발생: null error");
-//                    }
-//                }
-//                // email, birth 검사
-//                if (!isValidEmail(data[1])) {
-//                    throw new RuntimeException("CSV 데이터 저장 중 오류 발생: email 형식 error");
-//                }
-//                if (!isValidBirth(data[2])) {
-//                    throw new RuntimeException("CSV 데이터 저장 중 오류 발생: birth 형식 error");
-//                }
-//
-//
-//            }
 
             return interviewerDTOS;
 
