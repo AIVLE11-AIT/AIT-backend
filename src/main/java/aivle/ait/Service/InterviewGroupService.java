@@ -38,6 +38,8 @@ import java.util.regex.Pattern;
 public class InterviewGroupService {
     private final CompanyRepository companyRepository;
     private final InterviewGroupRepository interviewGroupRepository;
+    private final CompanyQnaService companyQnaService;
+
 
     @Transactional
     public InterviewGroupDTO create(Long companyId, InterviewGroupDTO interviewGroupDTO, MultipartFile file){
@@ -52,16 +54,19 @@ public class InterviewGroupService {
         interviewGroup.setCompany(company.get());
 
         System.out.println("company qna start");
+        List<CompanyQna> companyQnas = new ArrayList<>();
         // company_qna 연관 관계 설정
         for (CompanyQnaDTO companyQnaDTO : interviewGroupDTO.getCompanyQnas()){
             CompanyQna companyQna = new CompanyQna();
             companyQna.setDtoToObject(companyQnaDTO);
             companyQna.setInterviewgroup(interviewGroup);
+            companyQnas.add(companyQna);
         }
+        // 질문 답변 생성 (Async)
+        if (!companyQnas.isEmpty())
+            companyQnaService.createCompanyAnswer(companyId, interviewGroup.getId(), companyQnas);
 
-        System.out.println("create");
         List<InterviewerDTO> interviewerDTOS = getInterviewerDTOsFromCsv(file);
-        System.out.println("please");
         interviewGroupDTO.setInterviewers(interviewerDTOS);
 
         // interviewer 연관 관계 설정
@@ -74,6 +79,7 @@ public class InterviewGroupService {
         InterviewGroup createdInterviewGroup = interviewGroupRepository.save(interviewGroup);
         InterviewGroupDTO createdInterviewGroupDTO = new InterviewGroupDTO(createdInterviewGroup);
 
+
         return createdInterviewGroupDTO;
     }
 
@@ -81,32 +87,51 @@ public class InterviewGroupService {
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             List<InterviewerDTO> interviewerDTOS = new ArrayList<>();
-            String line;
-            boolean isFirstLine = true;
+            CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader());
 
-            while ((line = reader.readLine()) != null){
-                if (isFirstLine) {
-                    isFirstLine = false;
-                    continue;
+            for(CSVRecord csvRecord: csvParser) {
+                String name = csvRecord.get("name");
+                String email = csvRecord.get("email");
+                String birth = csvRecord.get("birth");
+                String coverLetter = csvRecord.get("cover_letter");
+
+                if (name.isEmpty() || email.isEmpty() || birth.isEmpty() || coverLetter.isEmpty()) {
+                    throw new RuntimeException("CSV 데이터 저장 중 오류 발생: null error");
                 }
 
-                String[] data = line.split(",", 4);
-                for(String field : data) {
-                    if (field.isEmpty()) {
-                        throw new RuntimeException("CSV 데이터 저장 중 오류 발생: null error");
-                    }
-                }
-                // email, birth 검사
-                if (!isValidEmail(data[1])) {
+                if (!isValidEmail(email)) {
                     throw new RuntimeException("CSV 데이터 저장 중 오류 발생: email 형식 error");
                 }
-                if (!isValidBirth(data[2])) {
+                if (!isValidBirth(birth)) {
                     throw new RuntimeException("CSV 데이터 저장 중 오류 발생: birth 형식 error");
                 }
 
+                String[] data = {name, email, birth, coverLetter};
                 InterviewerDTO dto = InterviewerDTO.fromCsv(data);
                 interviewerDTOS.add(dto);
             }
+//            while ((line = reader.readLine()) != null){
+//                if (isFirstLine) {
+//                    isFirstLine = false;
+//                    continue;
+//                }
+//                System.out.println(line);
+//                String[] data = line.split(",", 4);
+//                for(String field : data) {
+//                    if (field.isEmpty()) {
+//                        throw new RuntimeException("CSV 데이터 저장 중 오류 발생: null error");
+//                    }
+//                }
+//                // email, birth 검사
+//                if (!isValidEmail(data[1])) {
+//                    throw new RuntimeException("CSV 데이터 저장 중 오류 발생: email 형식 error");
+//                }
+//                if (!isValidBirth(data[2])) {
+//                    throw new RuntimeException("CSV 데이터 저장 중 오류 발생: birth 형식 error");
+//                }
+//
+//
+//            }
 
             return interviewerDTOS;
 

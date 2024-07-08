@@ -1,5 +1,6 @@
 package aivle.ait.Service;
 
+import aivle.ait.Dto.CompanyDTO;
 import aivle.ait.Dto.CompanyQnaDTO;
 import aivle.ait.Entity.InterviewGroup;
 import aivle.ait.Entity.CompanyQna;
@@ -8,9 +9,16 @@ import aivle.ait.Repository.CompanyQnaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,5 +103,35 @@ public class CompanyQnaService {
 
         CompanyQnaDTO companyQnaDTO = new CompanyQnaDTO(companyqna);
         return companyQnaDTO;
+    }
+
+    @Transactional
+    @Async
+    public void createCompanyAnswer(Long companyId, Long interviewGroupId, List<CompanyQna> companyQnas) {
+        String llmUrl = "http://localhost:5000/llm"; // http://localhost:5000/llm으로 post
+        try {
+            URL url = new URL(llmUrl);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            for(CompanyQna qna : companyQnas) {
+                // 답변을 받지 않았을 경우에만 답변 생성을 요청
+                if (qna.getAnswer() == null || qna.getAnswer() == "") {
+                    HttpEntity<String> request = new HttpEntity<>(qna.getQuestion(), headers);
+                    RestTemplate restTemplate = new RestTemplate();
+                    ResponseEntity<String> response = restTemplate.postForEntity(llmUrl, request, String.class);
+                    String answer = response.getBody();
+
+                    if (answer != null) {
+                        CompanyQnaDTO dto = new CompanyQnaDTO(qna);
+                        dto.setAnswer(answer);
+                        qna.setDtoToObject(dto);
+                    }
+                }
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
