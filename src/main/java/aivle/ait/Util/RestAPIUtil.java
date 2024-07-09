@@ -15,16 +15,20 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Map;
 
 
 public class RestAPIUtil {
 
-    public static String sendPostJson(String url, MultiValueMap<String, Object> body){
+    // body 생성 예시
+    // MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+    // body.add("cover_letter", cover_letter);
+    public static String sendPostJson(String url, Map<String, Object> body){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         // 요청 객체 생성
-        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(body, headers);
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
 
         // request
         RestTemplate restTemplate = new RestTemplate();

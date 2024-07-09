@@ -3,18 +3,17 @@ package aivle.ait.Controller;
 import aivle.ait.Dto.FileDTO;
 import aivle.ait.Dto.InterviewerDTO;
 import aivle.ait.Security.Auth.CustomUserDetails;
-import aivle.ait.Service.ActionResultService;
-import aivle.ait.Service.FileService;
-import aivle.ait.Service.InterviewerService;
-import aivle.ait.Service.VoiceResultService;
+import aivle.ait.Service.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.descriptor.web.ContextService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +22,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +33,7 @@ public class FileController {
     private final FileService fileService;
     private final VoiceResultService voiceResultService;
     private final ActionResultService actionResultService;
+    private final ContextResultService contextResultService;
 
     @PostConstruct
     // files 폴더 생성
@@ -57,12 +60,14 @@ public class FileController {
             FileDTO created_file = fileService.saveByCompanyQna(interviewGroup_id, interviewer_id, companyQna_id, filePath);
 
             // 비동기로 영상분석 서비스 호출
-            asyncProcessVideoAnalysis(created_file);
+            asyncProcessVideoAnalysis(companyQna_id, interviewer_id, created_file);
 
             return ResponseEntity.ok("save success!");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(null);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -78,12 +83,14 @@ public class FileController {
             FileDTO created_file = fileService.saveByInterviewerQna(interviewGroup_id, interviewer_id, interviewerQna_id, filePath);
 
             // 비동기로 영상분석 서비스 호출
-            asyncProcessVideoAnalysis(created_file);
+            asyncProcessVideoAnalysis(interviewerQna_id, interviewer_id, created_file);
 
             return ResponseEntity.ok("save success!");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(null);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -127,8 +134,18 @@ public class FileController {
 
     // 비동기 메서드로 영상분석 서비스 호출
     @Async
-    public void asyncProcessVideoAnalysis(FileDTO fileDTO) {
-        voiceResultService.sendToVoice(fileDTO);
+    public void asyncProcessVideoAnalysis(Long qnaId, Long interviewerId, FileDTO fileDTO) throws ExecutionException, InterruptedException {
+        CompletableFuture<String> interviewerAnswer = voiceResultService.sendToVoice(fileDTO);
         actionResultService.sendToAction(fileDTO);
+
+        // 공통 질문일 경우
+        // CompletableFuture를 사용하면 interviewerAnswer가 값은 리턴 받을 때까지 기다림
+        if (fileDTO.getIsGroup()){
+            contextResultService.sendToContextByCompanyQna(fileDTO, qnaId, interviewerAnswer.get());
+        }
+        // 자소서 기반 질문일 경우
+        else{
+            contextResultService.sendToContextByInterviewerQna(fileDTO, qnaId, interviewerId, interviewerAnswer.get());
+        }
     }
 }

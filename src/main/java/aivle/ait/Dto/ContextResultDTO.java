@@ -1,10 +1,6 @@
 package aivle.ait.Dto;
 
-import aivle.ait.Entity.ActionResult;
 import aivle.ait.Entity.ContextResult;
-import aivle.ait.Entity.File;
-import aivle.ait.Entity.Result;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +15,8 @@ import java.util.stream.Collectors;
 public class ContextResultDTO {
     private Long id;
     private double similarity_score;
+    private double lsa_score;
+    private double emotion_score;
     private double munmek_score;
     private double context_score;
 
@@ -28,6 +26,8 @@ public class ContextResultDTO {
     public ContextResultDTO(ContextResult contextResult) {
         this.id = contextResult.getId();
         this.similarity_score = contextResult.getSimilarity_score();
+        this.lsa_score = contextResult.getLsa_score();
+        this.emotion_score = contextResult.getEmotion_score();
         this.munmek_score = contextResult.getMunmek_score();
         this.context_score = contextResult.getContext_score();
 

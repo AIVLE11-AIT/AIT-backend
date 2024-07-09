@@ -19,13 +19,13 @@ public class File extends Time {
     @Column(nullable = false)
     private Boolean isGroup;
 
-    @OneToOne(mappedBy = "file")
+    @OneToOne(mappedBy = "file", cascade = CascadeType.ALL)
     private ContextResult contextResult;
 
-    @OneToOne(mappedBy = "file")
+    @OneToOne(mappedBy = "file", cascade = CascadeType.ALL)
     private VoiceResult voiceResult;
 
-    @OneToOne(mappedBy = "file")
+    @OneToOne(mappedBy = "file", cascade = CascadeType.ALL)
     private ActionResult actionResult;
 
     // CompanyQna:File = 1:N

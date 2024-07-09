@@ -10,6 +10,7 @@ import aivle.ait.Util.RestAPIUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,12 +34,15 @@ public class ActionResultService {
     private final ActionResultRepository actionResultRepository;
     private final FileRepository fileRepository;
 
+    @Value("${ait.server.actionServer}")
+    private String baseUrl;
+
     // 행동 처리
     @Async
     public void sendToAction(FileDTO fileDTO) {
         try {
             String filePath = fileDTO.getVideo_path();
-            String videoUrl = "http://192.168.0.3:3000/process-video";
+            String videoUrl = baseUrl + "/process-video";
 
             String response = RestAPIUtil.sendPostFile(videoUrl, filePath, "video");
 

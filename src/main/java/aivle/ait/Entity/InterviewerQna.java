@@ -18,7 +18,7 @@ public class InterviewerQna extends Time {
     private String question;
 
     // 읽기 전용
-    @OneToOne(mappedBy = "interviewerQna")
+    @OneToOne(mappedBy = "interviewerQna", cascade = CascadeType.ALL)
     private File file;
 
     // Interviewer:InterviewerQna = 1:N
