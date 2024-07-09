@@ -25,7 +25,7 @@ public class CompanyQna extends Time {
     @JoinColumn(name = "interview_group_id")
     private InterviewGroup interviewgroup;
 
-    @OneToMany(mappedBy = "companyQna", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "companyQna", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<File> files = new ArrayList<>();
 
     public void setDtoToObject(CompanyQnaDTO companyQnaDTO){

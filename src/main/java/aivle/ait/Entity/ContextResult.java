@@ -33,9 +33,12 @@ public class ContextResult extends Time {
     @JoinColumn(name = "result_id")
     private Result result;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "file_id")
     private File file;
+
+    @OneToOne(mappedBy = "contextResult", cascade = CascadeType.ALL)
+    private MunmekDetail munmekDetail;
 
     // =====연관관계 메서드=====
     public void setResult(Result result) {

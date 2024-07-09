@@ -23,6 +23,19 @@ public class FileService {
     private final InterviewerRepository interviewerRepository;
     private final FileRepository fileRepository;
 
+    public boolean checkByCompanyQna(Long interviewerId,
+                                     Long companyQnaId) {
+        Optional<File> file = fileRepository.findByInterviewerIdAndCompanyQnaId(interviewerId, companyQnaId);
+
+        return file.isPresent();
+    }
+
+    public boolean checkByInterviewerQna(Long interviewerQnaId) {
+        Optional<File> file = fileRepository.findByInterviewerQnaId(interviewerQnaId);
+
+        return file.isPresent();
+    }
+
     @Transactional
     public FileDTO saveByCompanyQna(Long interviewGroupId,
                                     Long interviewerId,
@@ -51,10 +64,10 @@ public class FileService {
     @Transactional
     public FileDTO saveByInterviewerQna(Long interviewGroupId,
                                         Long interviewerId,
-                                        Long interviwerQnaId,
+                                        Long interviewerQnaId,
                                         String videoPath) {
 
-        Optional<InterviewerQna> interviewerQna = interviewerQnaRepository.findInterviewerByIdAndInterviewerId(interviwerQnaId, interviewerId);
+        Optional<InterviewerQna> interviewerQna = interviewerQnaRepository.findInterviewerByIdAndInterviewerId(interviewerQnaId, interviewerId);
         Optional<Interviewer> interviewer = interviewerRepository.findInterviewerByIdAndInterviewgroupId(interviewerId, interviewGroupId);
         if (interviewerQna.isEmpty() || interviewer.isEmpty()) {
             System.out.println("null");
@@ -68,9 +81,36 @@ public class FileService {
         file.setIsGroup(false); // 자소서 기반 질문 영상인 경우
 
         File createdFile = fileRepository.save(file);
-        FileDTO createFileDto = new FileDTO(createdFile);
+        FileDTO createdFileDto = new FileDTO(createdFile);
 
-        return createFileDto;
+        return createdFileDto;
+    }
+
+    @Transactional
+    public FileDTO deleteByCompanyQna(Long interviewerId, Long companyQnaId) {
+        Optional<File> file = fileRepository.findByInterviewerIdAndCompanyQnaId(interviewerId, companyQnaId);
+        if (file.isEmpty()){
+            System.out.println("null");
+            return null;
+        }
+
+        fileRepository.delete(file.get());
+
+        return new FileDTO(file.get());
+    }
+
+    @Transactional
+    public void deleteByInterviewerQna(Long interviewerQnaId) {
+        Optional<File> file = fileRepository.findByInterviewerQnaId(interviewerQnaId);
+        if (file.isEmpty()){
+            System.out.println("null");
+            return;
+        }
+
+        File curFile = file.get();
+        fileRepository.delete(curFile);
+
+        return;
     }
 
 }

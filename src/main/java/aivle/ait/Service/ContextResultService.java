@@ -5,6 +5,7 @@ import aivle.ait.Entity.*;
 import aivle.ait.Repository.*;
 import aivle.ait.Util.RestAPIUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,13 +70,25 @@ public class ContextResultService {
             String response = RestAPIUtil.sendPostJson(requestUrl, body);
 
             // json 응답 파싱
-            ContextResult contextResult = objectMapper.readValue(response, ContextResult.class);
-            contextResult.setContext_score(70);
-            contextResult.setMunmek_score(12);
+            JsonNode jsonResponse = objectMapper.readTree(response);
+            ContextResult contextResult = new ContextResult();
+            contextResult.setContext_score(jsonResponse.get("context_score").asDouble());
+            contextResult.setMunmek_score(jsonResponse.get("munmek_score").asDouble());
+            contextResult.setSimilarity_score(jsonResponse.get("similarity_score").asDouble());
+            contextResult.setLsa_score(jsonResponse.get("lsa_score").asDouble());
             contextResult.setEmotion_score(20);
+
+            // details 저장
+            JsonNode munmekNode = jsonResponse.path("munmek");
+            MunmekDetail munmekDetail = new MunmekDetail();
+            munmekDetail.setClarity(munmekNode.get("Clarity").asText());
+            munmekDetail.setLogicality(munmekNode.get("Logicality").asText());
+            munmekDetail.setQuestionComprehension(munmekNode.get("Question Comprehension").asText());
+            munmekDetail.setRelevance(munmekNode.get("Relevance").asText());
 
             // 연관 관계 설정
             contextResult.setFile(file.get());
+            munmekDetail.setContextResult(contextResult);
 
             // save
             contextResultRepository.save(contextResult);
@@ -110,7 +123,6 @@ public class ContextResultService {
         InterviewerQnaDTO interviewerQnaDTO = new InterviewerQnaDTO(interviewerQna.get());
         InterviewerDTO interviewerDTO = new InterviewerDTO(interviewer.get());
 
-
         try {
             // body 생성
             Map<String, Object> body = new HashMap<>();
@@ -120,10 +132,25 @@ public class ContextResultService {
             String response = RestAPIUtil.sendPostJson(requestUrl, body);
 
             // json 응답 파싱
-            ContextResult contextResult = objectMapper.readValue(response, ContextResult.class);
+            JsonNode jsonResponse = objectMapper.readTree(response);
+            ContextResult contextResult = new ContextResult();
+            contextResult.setContext_score(jsonResponse.get("context_score").asDouble());
+            contextResult.setMunmek_score(jsonResponse.get("munmek_score").asDouble());
+            contextResult.setSimilarity_score(jsonResponse.get("similarity_score").asDouble());
+            contextResult.setLsa_score(jsonResponse.get("lsa_score").asDouble());
+            contextResult.setEmotion_score(20);
+
+            // details 저장
+            JsonNode munmekNode = jsonResponse.path("munmek");
+            MunmekDetail munmekDetail = new MunmekDetail();
+            munmekDetail.setClarity(munmekNode.get("Clarity").asText());
+            munmekDetail.setLogicality(munmekNode.get("Logicality").asText());
+            munmekDetail.setQuestionComprehension(munmekNode.get("Question Comprehension").asText());
+            munmekDetail.setRelevance(munmekNode.get("Relevance").asText());
 
             // 연관 관계 설정
             contextResult.setFile(file.get());
+            munmekDetail.setContextResult(contextResult);
 
             // save
             contextResultRepository.save(contextResult);

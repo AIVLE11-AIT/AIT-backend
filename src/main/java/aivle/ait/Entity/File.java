@@ -19,13 +19,13 @@ public class File extends Time {
     @Column(nullable = false)
     private Boolean isGroup;
 
-    @OneToOne(mappedBy = "file", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "file", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private ContextResult contextResult;
 
-    @OneToOne(mappedBy = "file", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "file", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private VoiceResult voiceResult;
 
-    @OneToOne(mappedBy = "file", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "file", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private ActionResult actionResult;
 
     // CompanyQna:File = 1:N
@@ -38,8 +38,8 @@ public class File extends Time {
     @JoinColumn(name = "interviewer_id")
     private Interviewer interviewer;
 
-    @OneToOne
-    @JoinColumn(name = "interviewer_qnd_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "interviewer_qna_id")
     private InterviewerQna interviewerQna;
 
     // =====연관관계 메서드=====

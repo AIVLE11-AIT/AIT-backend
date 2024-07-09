@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface FileRepository extends JpaRepository<File, Long> {
     Optional<List<File>> findByInterviewerId(Long interviewerId);
+    Optional<File> findByInterviewerIdAndCompanyQnaId(Long interviewerId, Long companyId);
+    Optional<File> findByInterviewerQnaId(Long interviewerQnaId);
 }
