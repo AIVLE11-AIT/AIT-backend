@@ -7,6 +7,7 @@ import aivle.ait.Util.RedisUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -68,17 +69,30 @@ public class CompanyService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setTo(to);
-            helper.setSubject("AIT: 회원가입 인증번호 안내");
+            helper.setSubject("[AIT] 회원가입 인증번호 안내");
+
 
             StringBuilder emailContent = new StringBuilder();
+            emailContent.append("<!DOCTYPE html>");
             emailContent.append("<html>");
+            emailContent.append("<head>");
+            emailContent.append("</head>");
             emailContent.append("<body>");
-            emailContent.append("<h2>AIT 회원가입 인증번호 안내</h2>");
-            emailContent.append("<p>안녕하세요. AIT 입니다.</p>");
-            emailContent.append("<p>회원가입을 위한 인증번호는 다음과 같습니다:</p>");
-            emailContent.append("<h3>" + checkNum + "</h3>");
-            emailContent.append("<p>인증번호를 입력하여 회원가입을 완료해 주세요.</p>");
-            emailContent.append("<p>감사합니다.</p>");
+            emailContent.append(
+                    "<div style=\"width: 500px; height: 600px; border-top: 3px solid #696CEA; margin: 100px auto; padding: 30px 0; box-sizing: border-box; color: #000000;\">"
+                            + "    <h1 style=\"margin: 0; padding: 0 5px; font-size: 25px; font-weight: 600;\">"
+                            + "        <span style=\"font-size: 20px; color: #000000;\">AIT</span><br />"
+                            + "        <span style=\"color: #696CEA\">회원가입 인증번호 안내</span> 입니다."
+                            + "    </h1>\n"
+                            + "    <p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 3px; color: #000000;\">"
+                            + "안녕하세요.<br/><br/>AIT에 가입해 주셔서 진심으로 감사드립니다.<br /> <br />"
+                            + "회원 가입을 위한 인증번호를 안내해 드립니다.</p>"
+                            + "    <div style=\"width: 500px; font-size: 18px; margin-top: 30px; padding: 10px 0; background-color: #696CEA; border: 1px solid #696CEA; display: inline-block; color: #000000; text-align: center;\">"
+                            + "        <h3 style=\"margin: 0; padding: 10px; color: #ffffff;\">" + checkNum + "</h3>"
+                            + "    </div>"
+                            + "    <p style=\"font-size: 16px; line-height: 26px; margin-top: 30px; padding: 0 3px; color: #000000;\">"
+                            + "인증번호를 입력하여 회원가입을 완료해 주세요.<br/><br/>감사합니다.</p>"
+                            + "</div>");
             emailContent.append("</body>");
             emailContent.append("</html>");
 
@@ -89,9 +103,9 @@ public class CompanyService {
                 System.out.println("codeFoundByEmail: " + redisUtil.getData(to));
                 redisUtil.deleteData(to);
             }
-            redisUtil.setDataExpire(to, checkNum, 60*5L); // 유효시간 5분 설정
+            redisUtil.setDataExpire(to, checkNum, 60 * 5L); // 유효시간 5분 설정
 
-        } catch(MessagingException e) {
+        } catch (MessagingException e) {
             e.printStackTrace();
         }
         return checkNum;
@@ -147,17 +161,29 @@ public class CompanyService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setTo(to);
-            helper.setSubject("AIT: 임시 비밀번호 안내");
+            helper.setSubject("[AIT] 임시 비밀번호 안내");
 
             StringBuilder emailContent = new StringBuilder();
+            emailContent.append("<!DOCTYPE html>");
             emailContent.append("<html>");
+            emailContent.append("<head>");
+            emailContent.append("</head>");
             emailContent.append("<body>");
-            emailContent.append("<h2>AIT 임시 비밀번호 안내</h2>");
-            emailContent.append("<p>안녕하세요. AIT 입니다.</p>");
-            emailContent.append("<p>임시 비밀번호를 안내해 드립니다:</p>");
-            emailContent.append("<h3>" + password + "</h3>");
-            emailContent.append("<p>로그인 후에 비밀번호를 변경해 주세요!</p>");
-            emailContent.append("<p>감사합니다.</p>");
+            emailContent.append(
+                    "<div style=\"width: 500px; height: 600px; border-top: 3px solid #696CEA; margin: 100px auto; padding: 30px 0; box-sizing: border-box; color: #000000;\">"
+                            + "    <h1 style=\"margin: 0; padding: 0 5px; font-size: 25px; font-weight: 600;\">"
+                            + "        <span style=\"font-size: 20px; color: #000000;\">AIT</span><br />"
+                            + "        <span style=\"color: #696CEA\">임시 비밀번호 안내</span> 입니다."
+                            + "    </h1>\n"
+                            + "    <p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 3px; color: #000000;\">"
+                            + "안녕하세요 AIT입니다.<br /> <br />"
+                            + "임시 비밀번호를 안내해 드립니다.</p>"
+                            + "    <div style=\"width: 500px; font-size: 18px; margin-top: 30px; padding: 10px 0; background-color: #696CEA; border: 1px solid #696CEA; display: inline-block; color: #000000; text-align: center;\">"
+                            + "        <h3 style=\"margin: 0; padding: 10px; color: #ffffff;\">" + password + "</h3>"
+                            + "    </div>"
+                            + "    <p style=\"font-size: 16px; line-height: 26px; margin-top: 30px; padding: 0 3px; color: #000000;\">"
+                            + "로그인 후 비밀번호를 반드시 변경해 주세요!<br/><br/>감사합니다.</p>"
+                            + "</div>");
             emailContent.append("</body>");
             emailContent.append("</html>");
 

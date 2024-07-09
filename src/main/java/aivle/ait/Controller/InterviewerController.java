@@ -125,7 +125,8 @@ public class InterviewerController {
                 Long interviewerId = interviewerDTO.getId();
                 String url = "http://localhost:8080/" + customUserDetails.getCompany().getId() + "/" + interviewGroup_id + "/" + interviewerId;
                 try {
-                    interviewerService.sendEmail(interviewerDTO, interviewerDTO.getInterview_group(), url);
+                    boolean send = interviewerService.sendEmail(interviewerDTO, customUserDetails.getCompany().getId(), interviewGroup_id, url);
+                    if (!send) return ResponseEntity.badRequest().body(null);
                 } catch (Exception e) {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
                 }

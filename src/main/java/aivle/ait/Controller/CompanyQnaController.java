@@ -36,11 +36,11 @@ public class CompanyQnaController {
         }
     }
 
+    // 면접 진행 시 로그인 없이도 질문을 가져와야 하므로 AuthenticationPrincipal 삭제
     @GetMapping("/{companyQna_id}")
     public ResponseEntity<CompanyQnaDTO> read(@PathVariable("interviewGroup_id") Long interviewGroup_id,
-                                              @PathVariable("companyQna_id") Long companyQna_id,
-                                              @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        CompanyQnaDTO companyQnaDTO = companyQnaService.readOne(customUserDetails.getCompany().getId(), interviewGroup_id, companyQna_id);
+                                              @PathVariable("companyQna_id") Long companyQna_id){
+        CompanyQnaDTO companyQnaDTO = companyQnaService.readOne(interviewGroup_id, companyQna_id);
 
         if (companyQnaDTO != null){
             return ResponseEntity.ok(companyQnaDTO);
