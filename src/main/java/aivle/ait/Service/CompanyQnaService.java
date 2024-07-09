@@ -47,9 +47,9 @@ public class CompanyQnaService {
         return createdCompanyQnaDTO;
     }
 
-    public CompanyQnaDTO readOne(Long companyId, Long interviewGroupId, Long companyQna_id){
+    public CompanyQnaDTO readOne(Long interviewGroupId, Long companyQna_id){
         Optional<CompanyQna> preInterviews = companyQnaRepository.findCompanyQnaByIdAndInterviewgroupId(companyQna_id, interviewGroupId);
-        if (preInterviews.isEmpty() || preInterviews.get().getInterviewgroup().getCompany().getId() != companyId) {
+        if (preInterviews.isEmpty()) {
             return null;
         }
 

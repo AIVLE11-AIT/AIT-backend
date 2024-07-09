@@ -33,6 +33,9 @@ public class InterviewerDTO {
 
     private List<FileDTO> files;
 
+    private Long introduction_video_id;
+    private String introduction_video_path;
+
     public InterviewerDTO(Interviewer interviewer) {
         this.id = interviewer.getId();
         this.name = interviewer.getName();
@@ -48,6 +51,11 @@ public class InterviewerDTO {
         if (interviewer.getResult() != null){
             this.result_id = interviewer.getResult().getId();
             this.result = interviewer.getResult().getTotal_report();
+        }
+
+        if (interviewer.getIntroductionVideo() != null) {
+            this.introduction_video_id = interviewer.getIntroductionVideo().getId();
+            this.introduction_video_path = interviewer.getIntroductionVideo().getVideo_path();
         }
     }
 

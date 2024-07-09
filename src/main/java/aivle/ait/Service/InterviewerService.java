@@ -1,6 +1,9 @@
 package aivle.ait.Service;
 
+import aivle.ait.Dto.CompanyDTO;
+import aivle.ait.Dto.InterviewGroupDTO;
 import aivle.ait.Dto.InterviewerDTO;
+import aivle.ait.Entity.Company;
 import aivle.ait.Entity.InterviewGroup;
 import aivle.ait.Entity.Interviewer;
 import aivle.ait.Repository.InterviewGroupRepository;
@@ -19,6 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -109,29 +115,62 @@ public class InterviewerService {
     }
 
     // 링크 전송
-    public void sendEmail(InterviewerDTO interviewerDTO, String company, String url) throws MessagingException {
+    public boolean sendEmail(InterviewerDTO interviewerDTO, Long companyID, Long interviewGroup_id, String url) throws MessagingException {
+        Optional<InterviewGroup> interviewGroupOptional = interviewGroupRepository.findInterviewGroupByIdAndCompanyId(interviewGroup_id, companyID);
+        if (interviewGroupOptional.isEmpty() || interviewGroupOptional.get().getId() != companyID) {
+            System.out.println("그룹을 찾을 수 없음");
+            return false;
+        }
+
         String email = interviewerDTO.getEmail();
         String name = interviewerDTO.getName();
+
+        InterviewGroup interviewGroup = interviewGroupOptional.get();
+        String mailTitle = interviewGroup.getName();
+        String coName = interviewGroup.getCompany().getName();
+
+        LocalDateTime start_date = interviewGroup.getStart_date();
+        LocalDateTime end_date = interviewGroup.getEnd_date();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String startDate = start_date.format(formatter);
+        String endDate = end_date.format(formatter);
 
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
         helper.setTo(email);
-        helper.setSubject("[" + company + "] AI 역량 검사 응시 안내");
+        helper.setSubject("[" + mailTitle + "] AI 역량검사 응시 안내");
 
         StringBuilder emailContent = new StringBuilder();
+        emailContent.append("<!DOCTYPE html>");
         emailContent.append("<html>");
+        emailContent.append("<head>");
+        emailContent.append("</head>");
         emailContent.append("<body>");
-        emailContent.append("<h2>" + "[" + company + "] AI 역량 검사 응시 안내" + "</h2>");
-        emailContent.append("<p>" + name + "님 안녕하세요.</p>");
-        emailContent.append("<p>[" + company + "] AI 역량 검사 응시 링크를 안내해 드립니다.</p>");
-        emailContent.append("<h3>" + url + "</h3>");
-        emailContent.append("<p>감사합니다.</p>");
+        emailContent.append("");
         emailContent.append("</body>");
         emailContent.append("</html>");
 
+//        emailContent.append(
+//                "<div style=\"width: 500px; height: 600px; border-top: 3px solid #696CEA; margin: 100px auto; padding: 30px 0; box-sizing: border-box; color: #000000;\">"
+//                        + "    <h1 style=\"margin: 0; padding: 0 5px; font-size: 25px; font-weight: 600;\">"
+//                        + "        <span style=\"font-size: 20px; color: #000000;\">AIT</span><br />"
+//                        + "        <span style=\"color: #696CEA\">[" + mailTitle + "] AI 역량검사 응시 안내 </span> 입니다."
+//                        + "    </h1>\n"
+//                        + "    <p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 3px; color: #000000;\">"
+//                        + "안녕하세요 " + name + "님, " + coName + " 입니다. <br /> <br />"
+//                        + "AI 역량검사가 다음과 같이 진행됩니다. <br/><br/> 아래 내용을 반드시 숙지하시고, AI 역량검사 응시에 착오 없으시길 바랍니다.</p>"
+//                        + "    <div style=\"width: 500px; font-size: 18px; margin-top: 30px; padding: 10px 0; background-color: #696CEA; border: 1px solid #696CEA; display: inline-block; color: #000000; text-align: center;\">"
+//                        + "        <h3 style=\"margin: 0; padding: 10px; color: #ffffff;\">" + password + "</h3>"
+//                        + "    </div>"
+//                        + "    <p style=\"font-size: 16px; line-height: 26px; margin-top: 30px; padding: 0 3px; color: #000000;\">"
+//                        + "로그인 후 비밀번호를 반드시 변경해 주세요!<br/><br/>감사합니다.</p>"
+//                        + "</div>");
+
         helper.setText(emailContent.toString(), true);
         javaMailSender.send(message);
+
+        return true;
     }
 
     @Transactional
