@@ -48,7 +48,7 @@ public class Interviewer extends Time {
     @OneToMany(mappedBy = "interviewer", cascade = CascadeType.ALL)
     private List<InterviewerQna> interviewerQnas = new ArrayList<>();
 
-    @OneToOne(mappedBy = "interviewer")
+    @OneToOne(mappedBy = "interviewer", fetch = FetchType.LAZY)
     private IntroductionVideo introductionVideo;
 
     public void setDtoToObject(InterviewerDTO interviewerDTO){

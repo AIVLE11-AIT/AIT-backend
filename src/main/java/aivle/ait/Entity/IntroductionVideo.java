@@ -21,7 +21,7 @@ public class IntroductionVideo extends Time {
 
     // 외래키
     // Interviewer:IntroductionVideo = 1:1
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="interviewer_id")
     private Interviewer interviewer;
 

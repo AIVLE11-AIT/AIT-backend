@@ -21,7 +21,7 @@ public class Question extends Time {
     private String content;
 
     // 읽기 전용
-    @OneToOne(mappedBy = "question", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "question", fetch = FetchType.LAZY)
     private Answer answer;
 
     // Company:Question = 1:N
