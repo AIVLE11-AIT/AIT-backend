@@ -1,8 +1,6 @@
 package aivle.ait.Service;
 
-import aivle.ait.Dto.CompanyQnaDTO;
 import aivle.ait.Dto.InterviewerQnaDTO;
-import aivle.ait.Entity.CompanyQna;
 import aivle.ait.Entity.Interviewer;
 import aivle.ait.Entity.InterviewerQna;
 import aivle.ait.Repository.InterviewerQnaRepository;
@@ -11,19 +9,16 @@ import aivle.ait.Util.RestAPIUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
-import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -33,10 +28,14 @@ public class InterviewerQnaService {
     private final InterviewerQnaRepository interviewerQnaRepository;
     private final InterviewerRepository interviewerRepository;
 
+    @Value("${ait.server.createQuestionServer}")
+    private String baseUrl;
+
     @Transactional
     @Async
     public void create(Interviewer interviewer) {
-        String llmUrl = "http://localhost:5000/llm"; // http://localhost:5000/llm으로 post
+        String llmUrl = baseUrl + "/llm";
+
         try {
             String cover_letter = interviewer.getCover_letter();
 
@@ -46,8 +45,8 @@ public class InterviewerQnaService {
             }
 
             // body 생성
-            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            body.add("cover_letter", cover_letter);
+            Map<String, Object> body = new HashMap<>();
+            body.put("cover_letter", cover_letter);
 
             // send
             String responseBody = RestAPIUtil.sendPostJson(llmUrl, body);

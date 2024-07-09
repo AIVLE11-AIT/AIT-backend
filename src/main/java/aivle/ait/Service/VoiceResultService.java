@@ -10,19 +10,14 @@ import aivle.ait.Util.RestAPIUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -32,14 +27,17 @@ public class VoiceResultService {
     private final VoiceResultRepository voiceResultRepository;
     private final FileRepository fileRepository;
 
+    @Value("${ait.server.voiceServer}")
+    private String baseUrl;
+
     // 음성
     @Async
     @Transactional
-    public void sendToVoice(FileDTO fileDTO) {
+    public CompletableFuture<String> sendToVoice(FileDTO fileDTO) {
         try {
             String filePath = fileDTO.getVideo_path();
 
-            String voiceUrl = "http://192.168.0.6:5000/voice";
+            String voiceUrl = baseUrl + "/voice";
 
             String response = RestAPIUtil.sendPostFile(voiceUrl, filePath, "file");
 
@@ -54,7 +52,7 @@ public class VoiceResultService {
             // Voice_result(double): voice_level, voice_speed, voice_intj, voice_score
             Optional<File> file = fileRepository.findById(fileDTO.getId());
             if (file.isEmpty()) {
-                return;
+                return null;
             }
             VoiceResult voiceResult = new VoiceResult();
             voiceResult.setVoice_level(jsonResponse.get("voice_level").asDouble());
@@ -64,8 +62,12 @@ public class VoiceResultService {
             voiceResult.setFile(file.get());
 
             voiceResultRepository.save(voiceResult);
+
+            String interviewerAnswer = jsonResponse.get("inference").asText();
+            return CompletableFuture.completedFuture(interviewerAnswer);
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 

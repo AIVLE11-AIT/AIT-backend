@@ -25,9 +25,9 @@ public class FileService {
 
     @Transactional
     public FileDTO saveByCompanyQna(Long interviewGroupId,
-                        Long interviewerId,
-                        Long companyQnaId,
-                        String videoPath) {
+                                    Long interviewerId,
+                                    Long companyQnaId,
+                                    String videoPath) {
 
         Optional<CompanyQna> companyQna = companyQnaRepository.findCompanyQnaByIdAndInterviewgroupId(companyQnaId, interviewGroupId);
         Optional<Interviewer> interviewer = interviewerRepository.findInterviewerByIdAndInterviewgroupId(interviewerId, interviewGroupId);

@@ -17,6 +17,12 @@ public class ContextResult extends Time {
     private double similarity_score;
 
     @Column(nullable = false)
+    private double lsa_score;
+
+    @Column(nullable = false)
+    private double emotion_score;
+
+    @Column(nullable = false)
     private double munmek_score;
 
     @Column(nullable = false)

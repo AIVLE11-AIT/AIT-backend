@@ -27,10 +27,12 @@ public class FileDTO {
         this.id = file.getId();
         this.video_path = file.getVideo_path();
         this.isGroup = file.getIsGroup();
-        this.companyQna_id = file.getCompanyQna().getId();
         this.interviewer_id = file.getInterviewer().getId();
-        this.interviewerQna_id = file.getInterviewerQna().getId();
 
+        if (file.getCompanyQna() != null)
+            this.companyQna_id = file.getCompanyQna().getId();
+        if (file.getInterviewerQna() != null)
+            this.interviewerQna_id = file.getInterviewerQna().getId();
         if (file.getContextResult() != null)
             this.context_result_id = file.getContextResult().getId();
         if (file.getVoiceResult() != null)
