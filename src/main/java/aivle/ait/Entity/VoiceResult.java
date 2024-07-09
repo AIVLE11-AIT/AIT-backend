@@ -31,7 +31,7 @@ public class VoiceResult extends Time {
     @JoinColumn(name = "result_id")
     private Result result;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "file_id")
     private File file;
 

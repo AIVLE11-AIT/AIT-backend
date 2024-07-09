@@ -55,6 +55,10 @@ public class FileController {
                                                   @PathVariable("companyQna_id") Long companyQna_id,
                                                   @RequestParam("file") MultipartFile file) {
         try {
+            if (fileService.checkByCompanyQna(interviewer_id, companyQna_id)) {
+                fileService.deleteByCompanyQna(interviewer_id, companyQna_id);
+            }
+
             String filePath = saveFile(true, interviewGroup_id, interviewer_id, companyQna_id, file);
 
             FileDTO created_file = fileService.saveByCompanyQna(interviewGroup_id, interviewer_id, companyQna_id, filePath);
@@ -78,6 +82,9 @@ public class FileController {
                                                          @PathVariable("interviewerQna_id") Long interviewerQna_id,
                                                          @RequestParam("file") MultipartFile file) {
         try {
+            if (fileService.checkByInterviewerQna(interviewerQna_id)) {
+                fileService.deleteByInterviewerQna(interviewerQna_id);
+            }
             String filePath = saveFile(false, interviewGroup_id, interviewer_id, interviewerQna_id, file);
 
             FileDTO created_file = fileService.saveByInterviewerQna(interviewGroup_id, interviewer_id, interviewerQna_id, filePath);
@@ -135,17 +142,20 @@ public class FileController {
     // 비동기 메서드로 영상분석 서비스 호출
     @Async
     public void asyncProcessVideoAnalysis(Long qnaId, Long interviewerId, FileDTO fileDTO) throws ExecutionException, InterruptedException {
-        CompletableFuture<String> interviewerAnswer = voiceResultService.sendToVoice(fileDTO);
-        actionResultService.sendToAction(fileDTO);
+//        CompletableFuture<String> interviewerAnswer = voiceResultService.sendToVoice(fileDTO);
+//        actionResultService.sendToAction(fileDTO);
+        String answer = "안녕하세요. KT 인재상 중에서 저에게 가장 적합하다고 생각하는 부분은 도전 정신입니다. 저는 항상 새로운 도전과 목표를 설정하며 성장을 추구하는 사람입니다. 예를 들어, 대학 시절에는 학업과 병행하여 다양한 프로젝트와 인턴십에 참여하면서 실무 경험을 쌓았습니다. 이러한 경험들은 저의 문제 해결 능력과 창의성을 크게 향상시켜 주었고, 이는 곧 KT의 혁신적인 사업 환경에서도 큰 도움이 될 것이라고 생각합니다. 또한, 저는 변화에 빠르게 적응하며 새로운 기술과 트렌드를 학습하는 것을 즐깁니다. KT는 빠르게 변화하는 ICT 산업의 선두주자로서 지속적인 혁신과 발전을 추구하는 기업입니다. 따라서 저의 도전 정신과 학습 능력은 KT의 목표와 매우 부합한다고 생각합니다. 마지막으로, 도전 정신은 팀워크와 협업에서도 중요한 요소라고 생각합니다. 저는 다양한 팀 프로젝트를 통해 협력하고 소통하는 능력을 키워왔으며, 이를 바탕으로 KT의 다양한 부서와 협력하여 성공적인 결과를 만들어낼 자신이 있습니다. 감사합니다.";
 
         // 공통 질문일 경우
         // CompletableFuture를 사용하면 interviewerAnswer가 값은 리턴 받을 때까지 기다림
         if (fileDTO.getIsGroup()){
-            contextResultService.sendToContextByCompanyQna(fileDTO, qnaId, interviewerAnswer.get());
+            contextResultService.sendToContextByCompanyQna(fileDTO, qnaId, answer);
+//            contextResultService.sendToContextByCompanyQna(fileDTO, qnaId, interviewerAnswer.get());
         }
         // 자소서 기반 질문일 경우
         else{
-            contextResultService.sendToContextByInterviewerQna(fileDTO, qnaId, interviewerId, interviewerAnswer.get());
+            contextResultService.sendToContextByInterviewerQna(fileDTO, qnaId, interviewerId, answer);
+//            contextResultService.sendToContextByInterviewerQna(fileDTO, qnaId, interviewerId, interviewerAnswer.get());
         }
     }
 }

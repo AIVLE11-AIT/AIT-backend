@@ -42,7 +42,7 @@ public class Result extends Time {
     private List<ActionResult> actionResults = new ArrayList<>();
 
     // 읽기 전용
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interviewer_id")
     private Interviewer interviewer;
 

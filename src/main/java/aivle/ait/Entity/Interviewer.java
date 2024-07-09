@@ -33,7 +33,7 @@ public class Interviewer extends Time {
     @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String cover_letter;
     // 읽기 전용
-    @OneToOne(mappedBy = "interviewer")
+    @OneToOne(mappedBy = "interviewer", fetch = FetchType.LAZY)
     private Result result;
 
     // Interview_group:Interviewer = 1:N
