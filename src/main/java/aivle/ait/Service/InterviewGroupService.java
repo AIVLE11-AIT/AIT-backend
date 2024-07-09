@@ -9,21 +9,18 @@ import aivle.ait.Entity.InterviewGroup;
 import aivle.ait.Entity.Interviewer;
 import aivle.ait.Repository.CompanyRepository;
 import aivle.ait.Repository.InterviewGroupRepository;
-import com.ibm.icu.text.CharsetDetector;
-import com.ibm.icu.text.CharsetMatch;
+import aivle.ait.Repository.InterviewerRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -38,7 +35,7 @@ import java.util.regex.Pattern;
 public class InterviewGroupService {
     private final CompanyRepository companyRepository;
     private final InterviewGroupRepository interviewGroupRepository;
-    private final CompanyQnaService companyQnaService;
+    private final InterviewerQnaService interviewerQnaService;
 
 
     @Transactional
@@ -53,18 +50,12 @@ public class InterviewGroupService {
         interviewGroup.setDtoToObject(interviewGroupDTO);
         interviewGroup.setCompany(company.get());
 
-        System.out.println("company qna start");
-        List<CompanyQna> companyQnas = new ArrayList<>();
         // company_qna 연관 관계 설정
         for (CompanyQnaDTO companyQnaDTO : interviewGroupDTO.getCompanyQnas()){
             CompanyQna companyQna = new CompanyQna();
             companyQna.setDtoToObject(companyQnaDTO);
             companyQna.setInterviewgroup(interviewGroup);
-            companyQnas.add(companyQna);
         }
-        // 질문 답변 생성 (Async)
-        if (!companyQnas.isEmpty())
-            companyQnaService.createCompanyAnswer(companyId, interviewGroup.getId(), companyQnas);
 
         List<InterviewerDTO> interviewerDTOS = getInterviewerDTOsFromCsv(file);
         interviewGroupDTO.setInterviewers(interviewerDTOS);
@@ -79,6 +70,11 @@ public class InterviewGroupService {
         InterviewGroup createdInterviewGroup = interviewGroupRepository.save(interviewGroup);
         InterviewGroupDTO createdInterviewGroupDTO = new InterviewGroupDTO(createdInterviewGroup);
 
+        // 자소서 기반 질문 생성
+        for (Interviewer interviewer : createdInterviewGroup.getInterviewers()){
+            // async
+            interviewerQnaService.create(interviewer);
+        }
 
         return createdInterviewGroupDTO;
     }

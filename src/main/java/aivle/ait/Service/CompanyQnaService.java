@@ -104,34 +104,4 @@ public class CompanyQnaService {
         CompanyQnaDTO companyQnaDTO = new CompanyQnaDTO(companyqna);
         return companyQnaDTO;
     }
-
-    @Transactional
-    @Async
-    public void createCompanyAnswer(Long companyId, Long interviewGroupId, List<CompanyQna> companyQnas) {
-        String llmUrl = "http://localhost:5000/llm"; // http://localhost:5000/llm으로 post
-        try {
-            URL url = new URL(llmUrl);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-
-            for(CompanyQna qna : companyQnas) {
-                // 답변을 받지 않았을 경우에만 답변 생성을 요청
-                if (qna.getAnswer() == null || qna.getAnswer() == "") {
-                    HttpEntity<String> request = new HttpEntity<>(qna.getQuestion(), headers);
-                    RestTemplate restTemplate = new RestTemplate();
-                    ResponseEntity<String> response = restTemplate.postForEntity(llmUrl, request, String.class);
-                    String answer = response.getBody();
-
-                    if ((response.getStatusCode().is2xxSuccessful()) && (answer != null || answer != "")) {
-                        CompanyQnaDTO dto = new CompanyQnaDTO(qna);
-                        dto.setAnswer(answer);
-                        qna.setDtoToObject(dto);
-                    }
-                }
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 }
