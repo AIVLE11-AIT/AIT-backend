@@ -91,20 +91,27 @@ public class InterviewGroupService {
                 String birth = csvRecord.get("birth");
                 String coverLetter = csvRecord.get("cover_letter");
 
+                System.out.println("csv test " + name + " " + email + " " + birth + " "+ coverLetter);
                 if (name.isEmpty() || email.isEmpty() || birth.isEmpty() || coverLetter.isEmpty()) {
-                    throw new RuntimeException("CSV 데이터 저장 중 오류 발생: null error");
+//                    throw new RuntimeException("CSV 데이터 저장 중 오류 발생: null error");
+                    System.out.println("null error");
+                    continue;
                 }
 
                 if (!isValidEmail(email)) {
-                    throw new RuntimeException("CSV 데이터 저장 중 오류 발생: email 형식 error");
+                    System.out.println("email 형식 error");
+                    continue;
                 }
+
                 if (!isValidBirth(birth)) {
-                    throw new RuntimeException("CSV 데이터 저장 중 오류 발생: birth 형식 error");
+                    System.out.println("birth 형식 error");
+                    continue;
                 }
 
                 String[] data = {name, email, birth, coverLetter};
                 InterviewerDTO dto = InterviewerDTO.fromCsv(data);
                 interviewerDTOS.add(dto);
+
             }
 
             return interviewerDTOS;

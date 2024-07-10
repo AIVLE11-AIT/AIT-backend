@@ -117,7 +117,7 @@ public class InterviewerService {
     // 링크 전송
     public boolean sendEmail(InterviewerDTO interviewerDTO, Long companyID, Long interviewGroup_id, String url) throws MessagingException {
         Optional<InterviewGroup> interviewGroupOptional = interviewGroupRepository.findInterviewGroupByIdAndCompanyId(interviewGroup_id, companyID);
-        if (interviewGroupOptional.isEmpty() || interviewGroupOptional.get().getId() != companyID) {
+        if (interviewGroupOptional.isEmpty() || interviewGroupOptional.get().getCompany().getId() != companyID) {
             System.out.println("그룹을 찾을 수 없음");
             return false;
         }
@@ -147,25 +147,12 @@ public class InterviewerService {
         emailContent.append("<head>");
         emailContent.append("</head>");
         emailContent.append("<body>");
-        emailContent.append("");
+        emailContent.append("<div>");
+        emailContent.append("test " + name + "님 " + coName + " 역량검사 " + startDate + " ~ " + endDate);
+        emailContent.append("</div>");
         emailContent.append("</body>");
         emailContent.append("</html>");
 
-//        emailContent.append(
-//                "<div style=\"width: 500px; height: 600px; border-top: 3px solid #696CEA; margin: 100px auto; padding: 30px 0; box-sizing: border-box; color: #000000;\">"
-//                        + "    <h1 style=\"margin: 0; padding: 0 5px; font-size: 25px; font-weight: 600;\">"
-//                        + "        <span style=\"font-size: 20px; color: #000000;\">AIT</span><br />"
-//                        + "        <span style=\"color: #696CEA\">[" + mailTitle + "] AI 역량검사 응시 안내 </span> 입니다."
-//                        + "    </h1>\n"
-//                        + "    <p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 3px; color: #000000;\">"
-//                        + "안녕하세요 " + name + "님, " + coName + " 입니다. <br /> <br />"
-//                        + "AI 역량검사가 다음과 같이 진행됩니다. <br/><br/> 아래 내용을 반드시 숙지하시고, AI 역량검사 응시에 착오 없으시길 바랍니다.</p>"
-//                        + "    <div style=\"width: 500px; font-size: 18px; margin-top: 30px; padding: 10px 0; background-color: #696CEA; border: 1px solid #696CEA; display: inline-block; color: #000000; text-align: center;\">"
-//                        + "        <h3 style=\"margin: 0; padding: 10px; color: #ffffff;\">" + password + "</h3>"
-//                        + "    </div>"
-//                        + "    <p style=\"font-size: 16px; line-height: 26px; margin-top: 30px; padding: 0 3px; color: #000000;\">"
-//                        + "로그인 후 비밀번호를 반드시 변경해 주세요!<br/><br/>감사합니다.</p>"
-//                        + "</div>");
 
         helper.setText(emailContent.toString(), true);
         javaMailSender.send(message);
