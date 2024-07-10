@@ -1,6 +1,7 @@
 package aivle.ait.Controller;
 
 import aivle.ait.Dto.InterviewGroupDTO;
+import aivle.ait.Dto.InterviewerDTO;
 import aivle.ait.Security.Auth.CustomUserDetails;
 import aivle.ait.Service.InterviewGroupService;
 import aivle.ait.Service.InterviewerService;
@@ -26,9 +27,9 @@ public class InterviewGroupController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
     public ResponseEntity<InterviewGroupDTO> create(@RequestPart(value="InterviewGroupDTO") InterviewGroupDTO interviewGroupDTO,
-                                                    @RequestPart(value="file") MultipartFile file,
+                                                    @RequestPart(value="InterviewerDTO") List<InterviewerDTO> interviewerDTOs,
                                                     @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        InterviewGroupDTO createdInterviewGroupDTO = interviewGroupService.create(customUserDetails.getCompany().getId(), interviewGroupDTO, file);
+        InterviewGroupDTO createdInterviewGroupDTO = interviewGroupService.create(customUserDetails.getCompany().getId(), interviewGroupDTO, interviewerDTOs);
 
         if (createdInterviewGroupDTO != null){
             return ResponseEntity.ok(createdInterviewGroupDTO);
