@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,12 +40,14 @@ public class InterviewGroupService {
 
 
     @Transactional
-    public InterviewGroupDTO create(Long companyId, InterviewGroupDTO interviewGroupDTO, MultipartFile file){
+    public InterviewGroupDTO create(Long companyId, InterviewGroupDTO interviewGroupDTO, List<InterviewerDTO> interviewerDTOs){
         Optional<Company> company = companyRepository.findById(companyId);
 
-        if (company.isEmpty()) {
+        if (company.isEmpty() || interviewGroupDTO == null || interviewerDTOs.isEmpty() || interviewerDTOs.isEmpty()) {
             return null;
         }
+
+        interviewGroupDTO.setInterviewers(interviewerDTOs);
 
         InterviewGroup interviewGroup = new InterviewGroup();
         interviewGroup.setDtoToObject(interviewGroupDTO);
@@ -56,9 +59,6 @@ public class InterviewGroupService {
             companyQna.setDtoToObject(companyQnaDTO);
             companyQna.setInterviewgroup(interviewGroup);
         }
-
-        List<InterviewerDTO> interviewerDTOS = getInterviewerDTOsFromCsv(file);
-        interviewGroupDTO.setInterviewers(interviewerDTOS);
 
         // interviewer 연관 관계 설정
         for (InterviewerDTO interviewerDTO : interviewGroupDTO.getInterviewers()){
@@ -77,57 +77,6 @@ public class InterviewGroupService {
         }
 
         return createdInterviewGroupDTO;
-    }
-
-    public List<InterviewerDTO> getInterviewerDTOsFromCsv(MultipartFile file) {
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
-            List<InterviewerDTO> interviewerDTOS = new ArrayList<>();
-            CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader());
-
-            for(CSVRecord csvRecord: csvParser) {
-                String name = csvRecord.get("name");
-                String email = csvRecord.get("email");
-                String birth = csvRecord.get("birth");
-                String coverLetter = csvRecord.get("cover_letter");
-
-                if (name.isEmpty() || email.isEmpty() || birth.isEmpty() || coverLetter.isEmpty()) {
-                    throw new RuntimeException("CSV 데이터 저장 중 오류 발생: null error");
-                }
-
-                if (!isValidEmail(email)) {
-                    throw new RuntimeException("CSV 데이터 저장 중 오류 발생: email 형식 error");
-                }
-                if (!isValidBirth(birth)) {
-                    throw new RuntimeException("CSV 데이터 저장 중 오류 발생: birth 형식 error");
-                }
-
-                String[] data = {name, email, birth, coverLetter};
-                InterviewerDTO dto = InterviewerDTO.fromCsv(data);
-                interviewerDTOS.add(dto);
-            }
-
-            return interviewerDTOS;
-
-        } catch (Exception e) {
-            throw new RuntimeException("CSV 데이터 저장 중 오류 발생: " + e.getMessage());
-        }
-    }
-
-    // 이메일 유효성 검사
-    public static boolean isValidEmail(String email) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        Pattern pattern = Pattern.compile(emailRegex);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
-
-    // 생년월일 유효성 검사
-    public static boolean isValidBirth(String birth) {
-        String birthDateRegex = "^\\d{4}-\\d{2}-\\d{2}$";
-        Pattern pattern = Pattern.compile(birthDateRegex);
-        Matcher matcher = pattern.matcher(birth);
-        return matcher.matches();
     }
 
     public InterviewGroupDTO readOne(Long companyId, Long interviewGroupId){
