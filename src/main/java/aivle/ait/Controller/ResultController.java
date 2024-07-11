@@ -83,13 +83,13 @@ public class ResultController {
         return (scoreA * weightA) + (scoreB * weightB) + (scoreC * weightC);
     }
 
-    // 결과 레포트 시각화
-    @GetMapping("/visualize")
-    public ResponseEntity<?> visualize(@PathVariable("interviewGroup_id") Long interviewGroup_id,
-                                       @PathVariable("interviewer_id") Long interviewer_id,
-                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        // response
-        // 면접 문항
-        //
-    }
+//    // 결과 레포트 시각화
+//    @GetMapping("/visualize")
+//    public ResponseEntity<?> visualize(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+//                                       @PathVariable("interviewer_id") Long interviewer_id,
+//                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+//        // response
+//        // 면접 문항
+//        //
+//    }
 }

@@ -4,6 +4,7 @@ import aivle.ait.Dto.CompanyDTO;
 import aivle.ait.Dto.InterviewGroupDTO;
 import aivle.ait.Dto.InterviewerDTO;
 import aivle.ait.Entity.Company;
+import aivle.ait.Entity.File;
 import aivle.ait.Entity.InterviewGroup;
 import aivle.ait.Entity.Interviewer;
 import aivle.ait.Repository.InterviewGroupRepository;
@@ -11,6 +12,7 @@ import aivle.ait.Repository.InterviewerRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -36,6 +38,7 @@ public class InterviewerService {
     private final InterviewGroupRepository interviewGroupRepository;
     private final InterviewerRepository interviewerRepository;
     private final JavaMailSender javaMailSender;
+    private final FileService fileService;
 
     @Transactional
     public InterviewerDTO create(Long companyId, Long interviewGroupId, InterviewerDTO interviewerDTO){
@@ -175,5 +178,24 @@ public class InterviewerService {
 
 
         return interviewerDTO;
+    }
+
+    public Resource downloadImage(Long interviewer_id, Long companyId) {
+        Optional<Interviewer> interviewerOptional = interviewerRepository.findById(interviewer_id);
+
+        if (interviewerOptional.isEmpty() || interviewerOptional.get().getInterviewgroup().getCompany().getId() != companyId) {
+            System.out.println("면접자 사진 없음 or companyID 불일치");
+            return null;
+        }
+
+        Interviewer interviewer = interviewerOptional.get();
+        String filePath = interviewer.getImage_path();
+
+        Resource resource = fileService.read(filePath);
+        if (resource == null) {
+            System.out.println("면접자 사진 없음");
+            return null;
+        }
+        return resource;
     }
 }
