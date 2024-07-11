@@ -142,11 +142,11 @@ public class InterviewGroupService {
     }
 
     // 메일 전송 확인
-    public boolean checkEmail(Long companyId, Long interviewGroupId) {
+    public Boolean checkEmail(Long companyId, Long interviewGroupId) {
         Optional<InterviewGroup> interviewGroupOptional = interviewGroupRepository.findInterviewGroupByIdAndCompanyId(interviewGroupId, companyId);
         if (interviewGroupOptional.isEmpty() || interviewGroupOptional.get().getCompany().getId() != companyId) {
             System.out.println("면접 그룹 없음 or companyId 불일치");
-            return false;
+            return null;
         }
 
         InterviewGroup interviewGroup = interviewGroupOptional.get();

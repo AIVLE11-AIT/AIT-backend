@@ -117,10 +117,10 @@ public class InterviewGroupController {
     @GetMapping("/{interviewGroup_id}/checkEmail")
     public ResponseEntity<?> checkEmail(@PathVariable Long interviewGroup_id,
                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        boolean sendEmail = interviewGroupService.checkEmail(customUserDetails.getCompany().getId(), interviewGroup_id);
-        if (sendEmail == false) {
+        Boolean sendEmail = interviewGroupService.checkEmail(customUserDetails.getCompany().getId(), interviewGroup_id);
+        if (sendEmail == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("send email fail!");
         }
-        else return ResponseEntity.ok(true);
+        else return ResponseEntity.ok(sendEmail);
     }
 }
