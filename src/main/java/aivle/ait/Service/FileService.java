@@ -10,6 +10,8 @@ import aivle.ait.Repository.FileRepository;
 import aivle.ait.Repository.InterviewerQnaRepository;
 import aivle.ait.Repository.InterviewerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
@@ -109,8 +111,51 @@ public class FileService {
 
         File curFile = file.get();
         fileRepository.delete(curFile);
-
         return;
     }
 
+    // 기업 공통 문항에 대한 면접 영상을 조회
+    public Resource readFileByCompanyQna(Long companyId, Long interviewerId, Long companyQnaId) {
+        Optional<File> fileOptional = fileRepository.findByInterviewerIdAndCompanyQnaId(interviewerId, companyQnaId);
+        if (fileOptional.isEmpty() || fileOptional.get().getInterviewer().getInterviewgroup().getCompany().getId() != companyId) {
+            System.out.println("면접 영상 없음 or companyId 불일치");
+            return null;
+        }
+
+        File file = fileOptional.get();
+        String filePath = file.getVideo_path();
+
+        Resource resource = read(filePath);
+        if (resource == null) {
+            System.out.println("영상 없음");
+            return null;
+        }
+        return resource;
+    }
+
+    public Resource readFileByInterviewerQna(Long interviewerQnaId, Long interviewerId, Long companyId) {
+        Optional<File> fileOptional = fileRepository.findByInterviewerQnaId(interviewerId);
+        if (fileOptional.isEmpty() || fileOptional.get().getInterviewer().getInterviewgroup().getCompany().getId() != companyId) {
+            System.out.println("면접 영상 없음 or companyId 불일치");
+            return null;
+        }
+
+        File file = fileOptional.get();
+        String filePath = file.getVideo_path();
+
+        Resource resource = read(filePath);
+        if (resource == null) {
+            System.out.println("영상 없음");
+            return null;
+        }
+        return resource;
+    }
+
+    public Resource read(String filePath) {
+        FileSystemResource resource = new FileSystemResource(new java.io.File(filePath));
+
+        if (!resource.exists()) return null;
+
+        return resource;
+    }
 }
