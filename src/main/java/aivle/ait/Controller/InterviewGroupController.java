@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -85,9 +86,7 @@ public class InterviewGroupController {
         if (updatedInterviewGroup != null){
             return ResponseEntity.ok(updatedInterviewGroup);
         }
-        else{
-            return ResponseEntity.badRequest().body(null);
-        }
+        else return ResponseEntity.badRequest().body(null);
     }
 
     @DeleteMapping("/{interviewGroup_id}/delete")
@@ -112,5 +111,16 @@ public class InterviewGroupController {
         }
 
         return ResponseEntity.ok(interviewGroupDTOS.get(0).getCompanyQnas());
+    }
+
+    // 메일 전송 여부 체크
+    @GetMapping("/{interviewGroup_id}/checkEmail")
+    public ResponseEntity<?> checkEmail(@PathVariable Long interviewGroup_id,
+                                        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        boolean sendEmail = interviewGroupService.checkEmail(customUserDetails.getCompany().getId(), interviewGroup_id);
+        if (sendEmail == false) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("send email fail!");
+        }
+        else return ResponseEntity.ok(true);
     }
 }

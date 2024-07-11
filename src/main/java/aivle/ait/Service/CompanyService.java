@@ -71,7 +71,6 @@ public class CompanyService {
             helper.setTo(to);
             helper.setSubject("[AIT] 회원가입 인증번호 안내");
 
-
             StringBuilder emailContent = new StringBuilder();
             emailContent.append("<!DOCTYPE html>");
             emailContent.append("<html>");

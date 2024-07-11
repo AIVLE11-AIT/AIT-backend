@@ -118,6 +118,7 @@ public class InterviewerService {
     }
 
     // 링크 전송
+    @Transactional
     public boolean sendEmail(InterviewerDTO interviewerDTO, Long companyID, Long interviewGroup_id, String url) throws MessagingException {
         Optional<InterviewGroup> interviewGroupOptional = interviewGroupRepository.findInterviewGroupByIdAndCompanyId(interviewGroup_id, companyID);
         if (interviewGroupOptional.isEmpty() || interviewGroupOptional.get().getCompany().getId() != companyID) {
@@ -125,11 +126,32 @@ public class InterviewerService {
             return false;
         }
 
-        String email = interviewerDTO.getEmail();
-        String name = interviewerDTO.getName();
-
         InterviewGroup interviewGroup = interviewGroupOptional.get();
+        String email = interviewerDTO.getEmail();
         String mailTitle = interviewGroup.getName();
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        helper.setTo(email);
+        helper.setSubject("[" + mailTitle + "] AI 역량검사 응시 안내");
+
+        StringBuilder emailContent = makeEmailContent(interviewerDTO, interviewGroup);
+
+        helper.setText(emailContent.toString(), true);
+        javaMailSender.send(message);
+
+        // InterviewGroup의 sendEmail 컬럼을 1로 업데이트
+        InterviewGroupDTO interviewGroupDTO = new InterviewGroupDTO(interviewGroup);
+        interviewGroupDTO.setSendEmail(1);
+        interviewGroup.setDtoToObject(interviewGroupDTO); // update
+
+        return true;
+    }
+
+    // 메일 전송 폼 생성
+    public StringBuilder makeEmailContent(InterviewerDTO interviewerDTO, InterviewGroup interviewGroup) {
+        String name = interviewerDTO.getName();
         String coName = interviewGroup.getCompany().getName();
 
         LocalDateTime start_date = interviewGroup.getStart_date();
@@ -137,12 +159,6 @@ public class InterviewerService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String startDate = start_date.format(formatter);
         String endDate = end_date.format(formatter);
-
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-        helper.setTo(email);
-        helper.setSubject("[" + mailTitle + "] AI 역량검사 응시 안내");
 
         StringBuilder emailContent = new StringBuilder();
         emailContent.append("<!DOCTYPE html>");
@@ -156,11 +172,7 @@ public class InterviewerService {
         emailContent.append("</body>");
         emailContent.append("</html>");
 
-
-        helper.setText(emailContent.toString(), true);
-        javaMailSender.send(message);
-
-        return true;
+        return emailContent;
     }
 
     @Transactional

@@ -140,4 +140,17 @@ public class InterviewGroupService {
 
         return InterviewGroupDTO.convertToDto(interviewGroups);
     }
+
+    // 메일 전송 확인
+    public boolean checkEmail(Long companyId, Long interviewGroupId) {
+        Optional<InterviewGroup> interviewGroupOptional = interviewGroupRepository.findInterviewGroupByIdAndCompanyId(interviewGroupId, companyId);
+        if (interviewGroupOptional.isEmpty() || interviewGroupOptional.get().getCompany().getId() != companyId) {
+            System.out.println("면접 그룹 없음 or companyId 불일치");
+            return false;
+        }
+
+        InterviewGroup interviewGroup = interviewGroupOptional.get();
+        if (interviewGroup.getSendEmail() == 0) return false;
+        return true;
+    }
 }
