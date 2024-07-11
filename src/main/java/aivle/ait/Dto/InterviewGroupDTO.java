@@ -23,6 +23,7 @@ public class InterviewGroupDTO {
     private int action_per;
     private String language;
     private String occupation;
+    private int sendEmail;
 
     private List<CompanyQnaDTO> companyQnas;
     private List<InterviewerDTO> interviewers;
@@ -39,6 +40,7 @@ public class InterviewGroupDTO {
         this.action_per = interviewgroup.getAction_per();
         this.language = interviewgroup.getLanguage();
         this.occupation = interviewgroup.getOccupation();
+        this.sendEmail = interviewgroup.getSendEmail();
 
         this.companyQnas = interviewgroup.getCompanyQnas().stream().map(CompanyQnaDTO::new).collect(Collectors.toList());
         this.interviewers = interviewgroup.getInterviewers().stream().map(InterviewerDTO::new).collect(Collectors.toList());

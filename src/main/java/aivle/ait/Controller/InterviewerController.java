@@ -3,6 +3,7 @@ package aivle.ait.Controller;
 import aivle.ait.Dto.InterviewerDTO;
 import aivle.ait.Entity.Interviewer;
 import aivle.ait.Security.Auth.CustomUserDetails;
+import aivle.ait.Service.InterviewGroupService;
 import aivle.ait.Service.InterviewerService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
@@ -70,7 +71,7 @@ public class InterviewerController {
         if (InterviewerDTOS != null){
             return ResponseEntity.ok(InterviewerDTOS);
         }
-        else{
+        else {
             return ResponseEntity.badRequest().body(null);
         }
     }
@@ -120,6 +121,7 @@ public class InterviewerController {
     }
 
     // 면접 그룹에 속한 지원자 전체에게 면접 링크 메일 전송
+    // 이메일 전송 여부 체크
     @GetMapping("/sendEmail")
     public ResponseEntity<List<InterviewerDTO>> sendEmail(@PathVariable("interviewGroup_id") Long interviewGroup_id,
                                                     @AuthenticationPrincipal CustomUserDetails customUserDetails) {

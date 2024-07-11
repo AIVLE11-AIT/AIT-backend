@@ -44,6 +44,9 @@ public class InterviewGroup extends Time {
     @Column(nullable = false)
     private String occupation;
 
+    @Column(nullable = true, columnDefinition = "integer default 0") // default 값으로 0 설정
+    private int sendEmail;
+
     @OneToMany(mappedBy = "interviewgroup", cascade = CascadeType.ALL)
     private List<CompanyQna> companyQnas = new ArrayList<>();
 
@@ -64,6 +67,7 @@ public class InterviewGroup extends Time {
         this.setAction_per(interviewGroupDTO.getAction_per());
         this.setLanguage(interviewGroupDTO.getLanguage());
         this.setOccupation(interviewGroupDTO.getOccupation());
+        this.setSendEmail(interviewGroupDTO.getSendEmail());
     }
 
     // =====연관관계 메서드=====
