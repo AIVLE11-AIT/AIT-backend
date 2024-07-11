@@ -147,7 +147,7 @@ public class FileController {
 
         // 공통 질문일 경우
         // CompletableFuture를 사용하면 interviewerAnswer가 값은 리턴 받을 때까지 기다림
-        if (fileDTO.getIsGroup()){
+        if (fileDTO.getIsGroup()) {
             contextResultService.sendToContextByCompanyQna(fileDTO, qnaId, interviewerAnswer.get());
         }
         // 자소서 기반 질문일 경우

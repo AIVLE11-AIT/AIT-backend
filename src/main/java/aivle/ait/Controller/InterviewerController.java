@@ -120,7 +120,7 @@ public class InterviewerController {
                                                     @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         List<InterviewerDTO> InterviewerDTOs = interviewerService.readAll(customUserDetails.getCompany().getId(), interviewGroup_id);
 
-        if (!InterviewerDTOs.isEmpty()) {
+        if (InterviewerDTOs != null) {
             for (InterviewerDTO interviewerDTO : InterviewerDTOs) {
                 Long interviewerId = interviewerDTO.getId();
                 String url = "http://localhost:8080/" + customUserDetails.getCompany().getId() + "/" + interviewGroup_id + "/" + interviewerId;

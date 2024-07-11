@@ -57,9 +57,9 @@ public class CompanyQnaService {
         return companyQnaDTO;
     }
 
-    public List<CompanyQnaDTO> readAll(Long companyId, Long interviewGroupId){
+    public List<CompanyQnaDTO> readAll(Long interviewGroupId){
         Optional<InterviewGroup> interviewGroup = interviewGroupRepository.findById(interviewGroupId);
-        if (interviewGroup.isEmpty() || interviewGroup.get().getCompany().getId() != companyId) {
+        if (interviewGroup.isEmpty()) {
             return null;
         }
         List<CompanyQnaDTO> companyQnaDTOS = CompanyQnaDTO.convertToDto(interviewGroup.get().getCompanyQnas());
