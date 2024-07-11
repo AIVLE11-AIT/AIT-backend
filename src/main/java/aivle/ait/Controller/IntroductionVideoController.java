@@ -49,7 +49,7 @@ public class IntroductionVideoController {
 
     // 지원자의 자기소개 영상을 불러옴
     @GetMapping("/read")
-    public ResponseEntity<Resource> readAll(@PathVariable("interviewer_id") Long interviewer_id,
+    public ResponseEntity<Resource> read(@PathVariable("interviewer_id") Long interviewer_id,
                                             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         Resource video = introductionVideoService.read(customUserDetails.getCompany().getId(), interviewer_id);
 

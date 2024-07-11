@@ -20,6 +20,7 @@ public class ResultController {
     private final ActionResultService actionResultService;
     private final VoiceResultService voiceResultService;
     private final ContextResultService contextResultService;
+    private final MunmekDetailService munmekDetailService;
 
     @GetMapping("/finish")
     public ResponseEntity<?> analyze(@PathVariable("interviewGroup_id") Long interviewGroup_id,
@@ -81,4 +82,14 @@ public class ResultController {
                                                 double weightA, double weightB, double weightC) {
         return (scoreA * weightA) + (scoreB * weightB) + (scoreC * weightC);
     }
+
+//    // 결과 레포트 시각화
+//    @GetMapping("/visualize")
+//    public ResponseEntity<?> visualize(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+//                                       @PathVariable("interviewer_id") Long interviewer_id,
+//                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+//        // response
+//        // 면접 문항
+//        //
+//    }
 }

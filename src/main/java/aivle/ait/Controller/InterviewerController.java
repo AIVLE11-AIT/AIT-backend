@@ -6,9 +6,13 @@ import aivle.ait.Security.Auth.CustomUserDetails;
 import aivle.ait.Service.InterviewerService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +20,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -176,6 +181,35 @@ public class InterviewerController {
         } catch(IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(null);
+        }
+    }
+
+    // 면접자 이미지 전송
+    @GetMapping(value="/{interviewer_id}/image/read")
+    public ResponseEntity<Resource> downloadImage(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+                                                  @PathVariable("interviewer_id") Long interviewer_id,
+                                                  @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        Resource image = interviewerService.downloadImage(interviewer_id, customUserDetails.getCompany().getId());
+
+        if (image == null) return ResponseEntity.badRequest().body(null);
+        else {
+            String fileName = getFileName(image);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+fileName+"\"");
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(image);
+        }
+    }
+
+    private String getFileName(Resource resource) {
+        if (resource instanceof UrlResource) {
+            return new File(((UrlResource) resource).getURL().getPath()).getName();
+        } else if (resource instanceof FileSystemResource) {
+            return new File(((FileSystemResource) resource).getPath()).getName();
+        } else {
+            return "image.jpg"; // or a default filename
         }
     }
 }
