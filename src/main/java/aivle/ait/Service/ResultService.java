@@ -21,6 +21,7 @@ public class ResultService {
     private final ActionResultRepository actionResultRepository;
     private final VoiceResultRepository voiceResultRepository;
     private final ContextResultRepository contextResultRepository;
+    private final ResultRepository resultRepository;
 
     @Value("${ait.server.reportServer}")
     private String baseUrl;
@@ -135,6 +136,7 @@ public class ResultService {
         createReport(result, interviewGroupDTO, answerValuation);
 
         // DB 저장
+        resultRepository.save(result);
 
         return new ResultDTO(result);
     }
