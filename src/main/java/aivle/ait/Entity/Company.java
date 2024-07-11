@@ -34,9 +34,13 @@ public class Company extends Time{
     private List<Question> questions = new ArrayList<>();
 
     public void setDtoToObject(CompanyDTO companyDTO) {
-        this.setName(companyDTO.getName());
-        this.setEmail(companyDTO.getEmail());
-        this.setPassword(companyDTO.getPassword());
-        this.setRole(companyDTO.getRole());
+        if (companyDTO.getName() != null)
+            this.setName(companyDTO.getName());
+        if (companyDTO.getEmail() != null)
+            this.setEmail(companyDTO.getEmail());
+        if (companyDTO.getPassword() != null)
+            this.setPassword(companyDTO.getPassword());
+        if (companyDTO.getRole() != null)
+            this.setRole(companyDTO.getRole());
     }
 }

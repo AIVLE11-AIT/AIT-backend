@@ -33,7 +33,8 @@ public class VoiceResultDTO {
         this.voice_intj = voiceResult.getVoice_intj();
         this.voice_score = voiceResult.getVoice_score();
 
-        this.result_id = voiceResult.getResult().getId();
+        if (voiceResult.getResult() != null)
+            this.result_id = voiceResult.getResult().getId();
         this.file_id = voiceResult.getFile().getId();
     }
 

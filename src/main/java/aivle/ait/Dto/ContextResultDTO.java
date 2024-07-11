@@ -22,6 +22,12 @@ public class ContextResultDTO {
 
     private Long result_id;
     private Long file_id;
+    private Long munmekDetail_id;
+
+    private String detailRelevance;
+    private String detailLogicality;
+    private String detailClarity;
+    private String detailQuestionComprehension;
 
     public ContextResultDTO(ContextResult contextResult) {
         this.id = contextResult.getId();
@@ -31,8 +37,17 @@ public class ContextResultDTO {
         this.munmek_score = contextResult.getMunmek_score();
         this.context_score = contextResult.getContext_score();
 
-        this.result_id = contextResult.getResult().getId();
+        if (contextResult.getResult() != null)
+            this.result_id = contextResult.getResult().getId();
         this.file_id = contextResult.getFile().getId();
+
+        if (contextResult.getMunmekDetail() != null){
+            this.munmekDetail_id = contextResult.getMunmekDetail().getId();
+            this.detailRelevance = contextResult.getMunmekDetail().getRelevance();
+            this.detailLogicality = contextResult.getMunmekDetail().getLogicality();
+            this.detailClarity = contextResult.getMunmekDetail().getClarity();
+            this.detailQuestionComprehension = contextResult.getMunmekDetail().getQuestionComprehension();
+        }
     }
 
     /* List<Object> -> List<Dto> 변환처리 */

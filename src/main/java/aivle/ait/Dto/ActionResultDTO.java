@@ -34,7 +34,8 @@ public class ActionResultDTO {
         this.hand_count_score = actionResult.getHand_count_score();
         this.action_score = actionResult.getAction_score();
 
-        this.result_id = actionResult.getResult().getId();
+        if (actionResult.getResult() != null)
+            this.result_id = actionResult.getResult().getId();
         this.file_id = actionResult.getFile().getId();
     }
 
