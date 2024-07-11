@@ -23,8 +23,8 @@ public class ResultController {
 
     @GetMapping("/finish")
     public ResponseEntity<?> analyze(@PathVariable("interviewGroup_id") Long interviewGroup_id,
-                                               @PathVariable("interviewer_id") Long interviewer_id,
-                                               @AuthenticationPrincipal CustomUserDetails customUserDetails){
+                                       @PathVariable("interviewer_id") Long interviewer_id,
+                                       @AuthenticationPrincipal CustomUserDetails customUserDetails){
         InterviewGroupDTO interviewGroupDTO = interviewGroupService.readOne(customUserDetails.getCompany().getId(), interviewGroup_id);
         if (interviewGroupDTO == null){
             return ResponseEntity.badRequest().body("해당 인터뷰 그룹이 없음.");

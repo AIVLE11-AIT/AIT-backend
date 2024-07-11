@@ -76,7 +76,7 @@ public class ContextResultService {
             contextResult.setMunmek_score(jsonResponse.get("munmek_score").asDouble());
             contextResult.setSimilarity_score(jsonResponse.get("similarity_score").asDouble());
             contextResult.setLsa_score(jsonResponse.get("lsa_score").asDouble());
-            contextResult.setEmotion_score(20);
+            contextResult.setEmotion_score(jsonResponse.get("emotion_score").asDouble());
 
             // details 저장
             JsonNode munmekNode = jsonResponse.path("munmek");
