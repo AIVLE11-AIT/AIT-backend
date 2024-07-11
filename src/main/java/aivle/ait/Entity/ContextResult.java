@@ -49,4 +49,7 @@ public class ContextResult extends Time {
         this.file = file;
         file.setContextResult(this);
     }
+    public void deleteResult(){
+        this.result = null;
+    }
 }

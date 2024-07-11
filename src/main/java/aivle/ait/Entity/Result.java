@@ -17,7 +17,7 @@ public class Result extends Time {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String total_report;
 
     @Column(nullable = false)
@@ -68,13 +68,13 @@ public class Result extends Time {
     @Column(nullable = false)
     private int action_score;
 
-    @OneToMany(mappedBy = "result", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "result")
     private List<ContextResult> contextResults = new ArrayList<>();
 
-    @OneToMany(mappedBy = "result", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "result")
     private List<VoiceResult> voiceResults = new ArrayList<>();
 
-    @OneToMany(mappedBy = "result", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "result")
     private List<ActionResult> actionResults = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -104,5 +104,8 @@ public class Result extends Time {
     public void setInterviewer(Interviewer interviewer) {
         this.interviewer = interviewer;
         interviewer.setResult(this);
+    }
+    public void deleteInterviewer(){
+        this.interviewer = null;
     }
 }

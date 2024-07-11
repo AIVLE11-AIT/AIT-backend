@@ -60,4 +60,7 @@ public class ActionResult extends Time {
         this.file = file;
         file.setActionResult(this);
     }
+    public void deleteResult(){
+        this.result = null;
+    }
 }

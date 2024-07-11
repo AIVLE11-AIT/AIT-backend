@@ -36,7 +36,7 @@ public class ResultDTO {
     private List<VoiceResultDTO> voiceResult;
     private List<ActionResultDTO> actionResults;
 
-    private Interviewer interviewer;
+    private Long interviewerId;
 
     public ResultDTO(Result result) {
         this.id = result.getId();
@@ -62,7 +62,7 @@ public class ResultDTO {
         this.voiceResult = result.getVoiceResults().stream().map(VoiceResultDTO::new).collect(Collectors.toList());
         this.actionResults = result.getActionResults().stream().map(ActionResultDTO::new).collect(Collectors.toList());
 
-        this.interviewer = result.getInterviewer();
+        this.interviewerId = result.getInterviewer().getId();
     }
 
     /* List<Object> -> List<Dto> 변환처리 */

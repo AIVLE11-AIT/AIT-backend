@@ -64,4 +64,7 @@ public class Interviewer extends Time {
         this.interviewgroup = interviewgroup;
         interviewgroup.getInterviewers().add(this);
     }
+    public void deleteResult(){
+        this.result = null;
+    }
 }

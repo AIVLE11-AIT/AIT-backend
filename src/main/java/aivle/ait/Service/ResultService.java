@@ -6,7 +6,6 @@ import aivle.ait.Repository.*;
 import aivle.ait.Util.RestAPIUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +25,6 @@ public class ResultService {
     @Value("${ait.server.reportServer}")
     private String baseUrl;
 
-    @Async
     @Transactional
     public ResultDTO analyze(Long interviewGroupId, Long interviewerId){
         Optional<InterviewGroup> interviewGroups = interviewGroupRepository.findById(interviewGroupId);
@@ -133,11 +131,11 @@ public class ResultService {
         result.setTotal_score(total_score);
 
         // llm을 사용한 총 평가 (total_report)
-        createReport(result, interviewGroupDTO, answerValuation);
+        String report = createReport(result, interviewGroupDTO, answerValuation);
+        result.setTotal_report(report);
 
         // DB 저장
         resultRepository.save(result);
-
         return new ResultDTO(result);
     }
 
@@ -186,7 +184,7 @@ public class ResultService {
 
             String response = RestAPIUtil.sendPostJson(requestUrl, body);
 
-            return "";
+            return response;
         }
         catch (Exception e){
             e.printStackTrace();
@@ -197,5 +195,21 @@ public class ResultService {
     public double calculateWeightedScore(double scoreA, double scoreB, double scoreC,
                                          double weightA, double weightB, double weightC) {
         return (scoreA * weightA) + (scoreB * weightB) + (scoreC * weightC);
+    }
+
+    @Transactional
+    public ResultDTO delete(Long resultId){
+        Optional<Result> results = resultRepository.findById(resultId);
+        if (results.isEmpty()){
+            return null;
+        }
+
+        actionResultRepository.detachActionResultFromResult(resultId);
+        contextResultRepository.detachContextResultFromResult(resultId);
+        voiceResultRepository.detachVoiceResultFromResult(resultId);
+
+        resultRepository.deleteById(resultId);
+
+        return new ResultDTO(results.get());
     }
 }
