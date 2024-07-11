@@ -67,7 +67,7 @@ public class ResultController {
 
         // 3개의 평가항목을 100점 만점으로 변환
         int total_score = (int)calculateWeightedScore(total_action_score, total_voice_score, total_context_score,
-                                interviewGroupDTO.getAction_per(), interviewGroupDTO.getVoice_per(), interviewGroupDTO.getContext_per());
+                (double) interviewGroupDTO.getAction_per() / 100, (double) interviewGroupDTO.getVoice_per() / 100, (double) interviewGroupDTO.getContext_per() / 100);
 
         // llm을 사용한 총 평가 (total_report) - 해야함...
         
