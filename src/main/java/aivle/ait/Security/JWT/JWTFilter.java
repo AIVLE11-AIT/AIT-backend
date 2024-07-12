@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -45,7 +46,20 @@ public class JWTFilter extends OncePerRequestFilter {
         //토큰 소멸 시간 검증
         if (jwtUtil.isExpired(token)) {
             System.out.println("token expired");
-            filterChain.doFilter(request, response);
+//            filterChain.doFilter(request, response);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+            response.setContentType("application/json");
+            response.getWriter().write("{\"message\": \"Expired JWT token\"}");
+
+            //조건이 해당되면 메소드 종료 (필수)
+            return;
+        }
+        else if (jwtUtil.isExpired(token) == null){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+            response.setContentType("application/json");
+            response.getWriter().write("{\"message\": \"Invalid JWT token\"}");
 
             //조건이 해당되면 메소드 종료 (필수)
             return;

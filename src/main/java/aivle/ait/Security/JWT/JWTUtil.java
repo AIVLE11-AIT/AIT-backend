@@ -1,5 +1,7 @@
 package aivle.ait.Security.JWT;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,8 +39,23 @@ public class JWTUtil {
     }
 
     public Boolean isExpired(String token) {
-
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        Boolean result = false;
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+                result = false;
+        } catch (ExpiredJwtException e) {
+            System.out.println("Token is expired. Details: " + e.getMessage());
+            result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Invalid token");
+            result = null;
+        }
+        return result;
     }
 
     public String createJwt(Long id, String username, String role) {
