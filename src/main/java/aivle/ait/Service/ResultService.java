@@ -212,4 +212,16 @@ public class ResultService {
 
         return new ResultDTO(results.get());
     }
+
+    public ResultDTO read(Long interviewerId, Long companyId) {
+        Optional<Result> resultOptional = resultRepository.findById(interviewerId);
+
+        if (resultOptional.isEmpty() || resultOptional.get().getInterviewer().getInterviewgroup().getCompany().getId() != companyId) {
+            System.out.println("result 없음 or companyId 불일치");
+            return null;
+        }
+
+        ResultDTO resultDTO = new ResultDTO(resultOptional.get());
+        return resultDTO;
+    }
 }

@@ -1,11 +1,13 @@
 package aivle.ait.Controller;
 
 import aivle.ait.Dto.ResultDTO;
+import aivle.ait.Security.Auth.CustomUserDetails;
 import aivle.ait.Service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.ExecutionException;
@@ -40,13 +42,17 @@ public class ResultController {
         return ResponseEntity.ok(resultDTO);
     }
 
-//    // 결과 레포트 시각화
-//    @GetMapping("/visualize")
-//    public ResponseEntity<?> visualize(@PathVariable("interviewGroup_id") Long interviewGroup_id,
-//                                       @PathVariable("interviewer_id") Long interviewer_id,
-//                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-//        // response
-//        // 면접 문항
-//        //
-//    }
+    // 결과 레포트 시각화
+    @GetMapping("/read")
+    public ResponseEntity<?> read(@PathVariable("interviewer_id") Long interviewer_id,
+                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        // response
+        // 면접 문항
+        ResultDTO resultDTO = resultService.read(interviewer_id, customUserDetails.getCompany().getId());
+        if (resultDTO == null) {
+            System.out.println("result 없음");
+            return ResponseEntity.badRequest().body(null);
+        }
+        return ResponseEntity.ok(resultDTO);
+    }
 }
