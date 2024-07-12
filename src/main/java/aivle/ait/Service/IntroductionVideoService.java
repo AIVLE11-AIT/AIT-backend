@@ -57,7 +57,11 @@ public class IntroductionVideoService {
         Long realCompanyID = introductionVideo.getInterviewer().getInterviewgroup().getCompany().getId();
 
         if (realCompanyID != companyId)
+        {
+            System.out.println("companyId 불일치");
             return null;
+        }
+
         File file = new File(introductionVideo.getVideo_path());
         FileSystemResource resource = new FileSystemResource(file);
 
