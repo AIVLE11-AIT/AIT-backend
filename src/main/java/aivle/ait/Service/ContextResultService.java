@@ -27,6 +27,7 @@ public class ContextResultService {
     private final InterviewerQnaRepository interviewerQnaRepository;
     private final InterviewerRepository interviewerRepository;
     private final FileRepository fileRepository;
+    private final InterviewGroupRepository interviewGroupRepository;
 
     @Value("${ait.server.contextServer}")
     private String baseUrl;
@@ -43,12 +44,13 @@ public class ContextResultService {
     // 기업 공통 질문 문장 처리
     @Async
     @Transactional
-    public void sendToContextByCompanyQna(FileDTO fileDTO, Long companyQnaId, String interviewerAnswer) {
+    public void sendToContextByCompanyQna(FileDTO fileDTO, Long companyQnaId, String interviewerAnswer, Long interviewGroup_id) {
         // cosine_score, lsa_score, emotion_score, munmek_score, context_score 요청 후 값 받아오기
         String requestUrl = baseUrl + "/coQnaEval";
 
         Optional<CompanyQna> companyQna = companyQnaRepository.findById(companyQnaId);
         Optional<File> file = fileRepository.findById(fileDTO.getId());
+        Optional<InterviewGroup> interviewGroup = interviewGroupRepository.findById(interviewGroup_id);
         if (companyQna.isEmpty()){
             System.out.println("분석 단계 - 해당 companyQna이 없음");
             return;
@@ -57,12 +59,18 @@ public class ContextResultService {
             System.out.println("분석 단계 - 해당 file이 없음");
             return;
         }
+        if (interviewGroup.isEmpty()){
+            System.out.println("분석 단계 - 해당 interviewGroup이 없음");
+            return;
+        }
         CompanyQnaDTO companyQnaDTO = new CompanyQnaDTO(companyQna.get());
+        InterviewGroupDTO interviewGroupDTO = new InterviewGroupDTO(interviewGroup.get());
 
 
         try {
             // body 생성
             Map<String, Object> body = new HashMap<>();
+            body.put("occupation", interviewGroupDTO.getOccupation());
             body.put("question", companyQnaDTO.getQuestion());
             body.put("answer", interviewerAnswer);
             String response = RestAPIUtil.sendPostJson(requestUrl, body);

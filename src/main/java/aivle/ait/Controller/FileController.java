@@ -67,7 +67,7 @@ public class FileController {
             FileDTO created_file = fileService.saveByCompanyQna(interviewGroup_id, interviewer_id, companyQna_id, filePath);
 
             // 비동기로 영상분석 서비스 호출
-            asyncProcessVideoAnalysis(companyQna_id, interviewer_id, created_file);
+            asyncProcessVideoAnalysis(companyQna_id, interviewer_id, created_file, interviewGroup_id);
 
             return ResponseEntity.ok("save success!");
         } catch (IOException e) {
@@ -93,7 +93,7 @@ public class FileController {
             FileDTO created_file = fileService.saveByInterviewerQna(interviewGroup_id, interviewer_id, interviewerQna_id, filePath);
 
             // 비동기로 영상분석 서비스 호출
-            asyncProcessVideoAnalysis(interviewerQna_id, interviewer_id, created_file);
+            asyncProcessVideoAnalysis(interviewerQna_id, interviewer_id, created_file, interviewGroup_id);
 
             return ResponseEntity.ok("save success!");
         } catch (IOException e) {
@@ -144,13 +144,13 @@ public class FileController {
 
     // 비동기 메서드로 영상분석 서비스 호출
     @Async
-    public void asyncProcessVideoAnalysis(Long qnaId, Long interviewerId, FileDTO fileDTO) throws ExecutionException, InterruptedException {
+    public void asyncProcessVideoAnalysis(Long qnaId, Long interviewerId, FileDTO fileDTO, Long interviewGroup_id) throws ExecutionException, InterruptedException {
         CompletableFuture<String> interviewerAnswer = voiceResultService.sendToVoice(fileDTO);
         actionResultService.sendToAction(fileDTO);
         // 공통 질문일 경우
         // CompletableFuture를 사용하면 interviewerAnswer가 값은 리턴 받을 때까지 기다림
         if (fileDTO.getIsGroup()) {
-            contextResultService.sendToContextByCompanyQna(fileDTO, qnaId, interviewerAnswer.get());
+            contextResultService.sendToContextByCompanyQna(fileDTO, qnaId, interviewerAnswer.get(), interviewGroup_id);
         }
         // 자소서 기반 질문일 경우
         else {
