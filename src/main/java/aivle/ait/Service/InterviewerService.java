@@ -89,6 +89,20 @@ public class InterviewerService {
         return interviewerDTOS;
     }
 
+    public List<InterviewerDTO> readAllByIsPass(Boolean isPass, Long companyId, Long interviewGroupId){
+        Optional<InterviewGroup> interviewGroup = interviewGroupRepository.findById(interviewGroupId);
+        if (interviewGroup.isEmpty() || interviewGroup.get().getCompany().getId() != companyId) {
+            return null;
+        }
+
+        List<Interviewer> interviewers = interviewerRepository.findByInterviewgroupIdAndResult_IsPass(interviewGroupId, isPass);
+        if (interviewers.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return InterviewerDTO.convertToDto(interviewers);
+    }
+
     @Transactional
     public InterviewerDTO update(Long companyId, Long interviewGroupId, Long preInterviewId, InterviewerDTO interviewerDTO){
         Optional<Interviewer> interviewers = interviewerRepository.findInterviewerByIdAndInterviewgroupId(preInterviewId, interviewGroupId);

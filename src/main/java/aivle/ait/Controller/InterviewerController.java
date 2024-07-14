@@ -91,6 +91,19 @@ public class InterviewerController {
         }
     }
 
+    @GetMapping("/readAll/{isPass}")
+    public ResponseEntity<?> readAllByIsPass(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+                                            @PathVariable("isPass") Boolean isPass,
+                                            @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        List<InterviewerDTO> InterviewerDTOS = interviewerService.readAllByIsPass(isPass, customUserDetails.getCompany().getId(), interviewGroup_id);
+
+        if (InterviewerDTOS == null){
+            return ResponseEntity.badRequest().body("조회하는 인터뷰 그룸과 로그인 아이디가 일치 하지 않음.");
+        }
+
+        return ResponseEntity.ok(InterviewerDTOS);
+    }
+
     @PutMapping("/{interviewer_id}/update")
     public ResponseEntity<InterviewerDTO> update(@PathVariable("interviewGroup_id") Long interviewGroup_id,
                                                   @PathVariable("interviewer_id") Long preInterview_id,

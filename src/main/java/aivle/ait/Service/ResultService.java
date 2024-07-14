@@ -123,6 +123,7 @@ public class ResultService {
         result.setTotal_similarity_score(result.getTotal_similarity_score() / questionCount);
         result.setTotal_lsa_score(result.getTotal_lsa_score() / questionCount);
         result.setTotal_emotion_score(result.getTotal_emotion_score() / questionCount);
+        result.setTotal_munmek_score(result.getTotal_munmek_score() / questionCount);
         result.setContext_score(result.getContext_score() / questionCount);
 
         // 3개의 평가항목을 100점 만점으로 변환
