@@ -130,6 +130,12 @@ public class ResultService {
                 (double) interviewGroupDTO.getAction_per() / 100, (double) interviewGroupDTO.getVoice_per() / 100, (double) interviewGroupDTO.getContext_per() / 100);
         result.setTotal_score(total_score);
 
+        // total_score를 기반으로 통과 여부 설정
+        if (interviewGroupDTO.getPassingScore() <= result.getTotal_score())
+            result.setPass(true);
+        else
+            result.setPass(false);
+
         // llm을 사용한 총 평가 (total_report)
         String report = createReport(result, interviewGroupDTO, answerValuation);
         result.setTotal_report(report);
