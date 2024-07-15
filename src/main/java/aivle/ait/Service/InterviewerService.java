@@ -217,7 +217,7 @@ public class InterviewerService {
         emailContent.append(" font-size: 15px; text-align: center;");
         emailContent.append(" font-weight: 600;\">[주의사항]</div>");
         emailContent.append("<ul>");
-        emailContent.append("<li>테스트 응시 시 전 이용 방법을 충분히 읽어본 후 면접에 응시하시기 바랍니다.</li>");
+        emailContent.append("<li>테스트 응시 전 이용 방법을 충분히 읽어본 후 면접에 응시하시기 바랍니다.</li>");
         emailContent.append("<li>면접 기간 내에 면접 진행을 완료해 주세요.</li>");
         emailContent.append("</ul>");
         emailContent.append("</div>");
