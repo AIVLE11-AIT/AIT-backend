@@ -183,40 +183,28 @@ public class InterviewerService {
         emailContent.append("<body>");
 
         // ContentContainer 시작
-        emailContent.append("<div style=\"padding: 30px;");
-        emailContent.append(" background-color: white;");
-        emailContent.append(" border-radius: 10px;");
-        emailContent.append(" border: 1px solid lightgray;");
-        emailContent.append(" display: flex;");
-        emailContent.append(" flex-direction: column;");
-        emailContent.append(" text-align: center;");
-        emailContent.append(" width: 700px;");
-        emailContent.append(" height: 500px;");
-        emailContent.append(" justify-content: center;");
-        emailContent.append(" align-items: center;\">");
+        emailContent.append("<div style=\"width: 800px; height: 600px; border: 1px solid lightgray; margin: 100px auto; padding: 30px; box-sizing: border-box; color: #000000; justify-content: center; align-items: center;\">");
 
         // Section 시작
-        emailContent.append("<div style=\"margin-right: 20px;");
-        emailContent.append(" color: #606060;");
+        emailContent.append("<div style=\"color: #606060;");
         emailContent.append(" font-size: 15px;");
         emailContent.append(" font-weight: 500;");
         emailContent.append(" text-align: center;");
         emailContent.append(" width: 100%;\">");
-        emailContent.append("<h2 style=\"margin-bottom: 20px; margin-top: 20px;");
+        emailContent.append("<h2 style=\"margin-bottom: 30px; margin-top: 20px;");
         emailContent.append(" color: #303030;");
         emailContent.append(" font-size: 22px;");
-        emailContent.append(" font-weight: 600;\">");
-        emailContent.append(interviewTitle + " AI 면접 안내</h2>");
-        emailContent.append("<p><strong>" + name + "님</strong> 안녕하세요.</p>");
+        emailContent.append(" font-weight: 600;\">[");
+        emailContent.append(interviewTitle + "] AI 면접 안내</h2>");
+        emailContent.append("<p><strong>" + name + "</strong>님 안녕하세요.</p>");
         emailContent.append("<p>AI 면접은 <strong>" + startDate + " - " + endDate + "</strong> 기간 내에 진행 가능합니다.</p>");
-        emailContent.append("<p style=\"margin-bottom: 30px;\">AI 면접은 pretest.co.kr 에서 온라인으로 진행됩니다.</p>");
+        emailContent.append("<p style=\"margin-bottom: 30px;\">AI 면접은 " + "<a href=\"" + url + "\">" + url + "</a> 에서 온라인으로 진행됩니다.</p>");
         emailContent.append("</div>");
         // Section 끝
 
         // NoticeBox 시작
-        emailContent.append("<div style=\"padding: 20px;");
+        emailContent.append("<div style=\"margin-top: 30px; margin-right: 30px;");
         emailContent.append(" width: 100%;");
-        emailContent.append(" padding: 10px;");
         emailContent.append(" border-radius: 10px;");
         emailContent.append(" border: 2px solid #F1F1F2;");
         emailContent.append(" background: #FBFBFB;");
@@ -226,7 +214,7 @@ public class InterviewerService {
         emailContent.append(" line-height: 1.2;\">");
         emailContent.append("<div style=\"margin-bottom: 20px; margin-top: 20px;");
         emailContent.append(" color: #000;");
-        emailContent.append(" font-size: 15px;");
+        emailContent.append(" font-size: 15px; text-align: center;");
         emailContent.append(" font-weight: 600;\">[주의사항]</div>");
         emailContent.append("<ul>");
         emailContent.append("<li>테스트 응시 시 전 이용 방법을 충분히 읽어본 후 면접에 응시하시기 바랍니다.</li>");
@@ -236,19 +224,17 @@ public class InterviewerService {
         // NoticeBox 끝
 
         // GoToInterviewPageButton 시작
-        emailContent.append("<div style=\"color: white; margin-top: 20px;");
-        emailContent.append(" font-size: 15px;");
-        emailContent.append(" border-radius: 14px;");
+        emailContent.append("<div style=\"color: white; margin-top: 30px; margin-right: 30px;");
+        emailContent.append(" font-size: 17px;");
+        emailContent.append(" border-radius: 12px;");
         emailContent.append(" background: #696CEA;");
-        emailContent.append(" display: flex;");
         emailContent.append(" width: 100%;");
-        emailContent.append(" height: 30px;");
-        emailContent.append(" padding: 10px;");
+        emailContent.append(" height: 45px;");
+        emailContent.append(" display: flex;");
         emailContent.append(" justify-content: center;");
         emailContent.append(" align-items: center;");
-//        emailContent.append(" margin-left: auto;");
         emailContent.append(" font-weight: 600;\">");
-        emailContent.append("<a href=\""+ url + "\" style=\"color: white; text-decoration: none;\">면접 페이지 바로가기</a>");
+        emailContent.append("<a href=\"").append(url).append("\" style=\"color: white; padding: 5px; text-decoration: none; text-align: center; width: 100%;\">면접 페이지 바로가기</a>");
         emailContent.append("</div>");
         // GoToInterviewPageButton 끝
 
@@ -270,7 +256,7 @@ public class InterviewerService {
         emailContent.append(" color: #D9D9D9;");
         emailContent.append(" font-size: 15px;");
         emailContent.append(" font-weight: 400;");
-        emailContent.append(" margin-top: 30px;\">");
+        emailContent.append(" margin-top: 30px; margin-bottom: 20px;\">");
         emailContent.append("<p>2024 AIT · 서비스 이용약관 · 개인정보 처리방침</p>");
         emailContent.append("</div>");
 

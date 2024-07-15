@@ -71,29 +71,7 @@ public class CompanyService {
             helper.setTo(to);
             helper.setSubject("[AIT] 회원가입 인증번호 안내");
 
-            StringBuilder emailContent = new StringBuilder();
-            emailContent.append("<!DOCTYPE html>");
-            emailContent.append("<html>");
-            emailContent.append("<head>");
-            emailContent.append("</head>");
-            emailContent.append("<body>");
-            emailContent.append(
-                    "<div style=\"width: 500px; height: 600px; border-top: 3px solid #696CEA; margin: 100px auto; padding: 30px 0; box-sizing: border-box; color: #000000;\">"
-                            + "    <h1 style=\"margin: 0; padding: 0 5px; font-size: 25px; font-weight: 600;\">"
-                            + "        <span style=\"font-size: 20px; color: #000000;\">AIT</span><br />"
-                            + "        <span style=\"color: #696CEA\">회원가입 인증번호 안내</span> 입니다."
-                            + "    </h1>\n"
-                            + "    <p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 3px; color: #000000;\">"
-                            + "안녕하세요.<br/><br/>AIT에 가입해 주셔서 진심으로 감사드립니다.<br /> <br />"
-                            + "회원 가입을 위한 인증번호를 안내해 드립니다.</p>"
-                            + "    <div style=\"width: 500px; font-size: 18px; margin-top: 30px; padding: 10px 0; background-color: #696CEA; border: 1px solid #696CEA; display: inline-block; color: #000000; text-align: center;\">"
-                            + "        <h3 style=\"margin: 0; padding: 10px; color: #ffffff;\">" + checkNum + "</h3>"
-                            + "    </div>"
-                            + "    <p style=\"font-size: 16px; line-height: 26px; margin-top: 30px; padding: 0 3px; color: #000000;\">"
-                            + "인증번호를 입력하여 회원가입을 완료해 주세요.<br/><br/>감사합니다.</p>"
-                            + "</div>");
-            emailContent.append("</body>");
-            emailContent.append("</html>");
+            StringBuilder emailContent = makeEmailContentForJoin(checkNum);
 
             helper.setText(emailContent.toString(), true);
             javaMailSender.send(message);
@@ -108,6 +86,74 @@ public class CompanyService {
             e.printStackTrace();
         }
         return checkNum;
+    }
+
+    public StringBuilder makeEmailContentForJoin(String checkNum) {
+        StringBuilder emailContent = new StringBuilder();
+        emailContent.append("<!DOCTYPE html>");
+        emailContent.append("<html>");
+        emailContent.append("<head>");
+        emailContent.append("</head>");
+        emailContent.append("<body>");
+
+        // ContentContainer 시작
+        emailContent.append("<div style=\"width: 800px; height: 450px; border: 1px solid lightgray; margin: 100px auto; padding: 30px; box-sizing: border-box; color: #000000; justify-content: center; align-items: center;\">");
+
+        // Section 시작
+        emailContent.append("<div style=\"color: #606060;");
+        emailContent.append(" font-size: 15px;");
+        emailContent.append(" font-weight: 500;");
+        emailContent.append(" text-align: center;");
+        emailContent.append(" width: 100%;\">");
+        emailContent.append("<h2 style=\"margin-bottom: 30px; margin-top: 20px;");
+        emailContent.append(" color: #696CEA;");
+        emailContent.append(" font-size: 22px;");
+        emailContent.append(" font-weight: 600;\">[AIT] 회원가입 인증번호 안내</h2>");
+        emailContent.append("<p>안녕하세요, AIT 입니다.</p>");
+        emailContent.append("<p>AIT에 가입해 주셔서 진심으로 감사드립니다.</p>");
+        emailContent.append("<p>회원가입을 위한 인증번호를 안내해 드립니다.</p>");
+        emailContent.append("</div>");
+        // Section 끝
+
+        // NoticeBox 시작
+        emailContent.append("<div style=\"margin-top: 30px; margin-right: 30px;");
+        emailContent.append(" width: 100%;");
+        emailContent.append(" border-radius: 10px;");
+        emailContent.append(" border: 3px solid #e5e5fa;");
+        emailContent.append(" background: #e5e5fa;");
+        emailContent.append(" color: #000;");
+        emailContent.append(" font-size: 15px;");
+        emailContent.append(" font-weight: 500;");
+        emailContent.append(" line-height: 1.2; text-align: center;\">");
+        emailContent.append("<div style=\"margin-bottom: 20px; margin-top: 20px;");
+        emailContent.append(" font-size: 15px; text-align: center;");
+        emailContent.append(" font-weight: 600;\">[인증번호]</div>");
+        emailContent.append("<p style=\"font-size: 18px; margin-bottom: 15px; color: #696CEA;\"><strong>" + checkNum + "</strong></p>");
+        emailContent.append("<div style=\"font-size: 13px; color: #969696;\"><p>*개인정보 보호를 위해 인증번호는 5분간 유효합니다.</p></div>");
+        emailContent.append("</div>");
+        // NoticeBox 끝
+
+        // CenteredText 시작
+        emailContent.append("<div style=\"color: #606060;");
+        emailContent.append(" text-align: center;");
+        emailContent.append(" font-size: 15px;");
+        emailContent.append(" font-weight: 600;");
+        emailContent.append(" line-height: 1.3;");
+        emailContent.append(" margin-top: 30px;\">");
+        emailContent.append("인증번호를 입력하여 회원가입을 완료해 주세요.<br />");
+        emailContent.append("감사합니다.");
+        emailContent.append("</div>");
+        // CenteredText 끝
+
+        // ContentContainer 끝
+        emailContent.append("</div>");
+
+        // FooterText 끝
+        emailContent.append("</body>");
+        emailContent.append("</html>");
+
+
+        return emailContent;
     }
 
     // 인증번호 확인
@@ -162,29 +208,7 @@ public class CompanyService {
             helper.setTo(to);
             helper.setSubject("[AIT] 임시 비밀번호 안내");
 
-            StringBuilder emailContent = new StringBuilder();
-            emailContent.append("<!DOCTYPE html>");
-            emailContent.append("<html>");
-            emailContent.append("<head>");
-            emailContent.append("</head>");
-            emailContent.append("<body>");
-            emailContent.append(
-                    "<div style=\"width: 500px; height: 600px; border-top: 3px solid #696CEA; margin: 100px auto; padding: 30px 0; box-sizing: border-box; color: #000000;\">"
-                            + "    <h1 style=\"margin: 0; padding: 0 5px; font-size: 25px; font-weight: 600;\">"
-                            + "        <span style=\"font-size: 20px; color: #000000;\">AIT</span><br />"
-                            + "        <span style=\"color: #696CEA\">임시 비밀번호 안내</span> 입니다."
-                            + "    </h1>\n"
-                            + "    <p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 3px; color: #000000;\">"
-                            + "안녕하세요 AIT입니다.<br /> <br />"
-                            + "임시 비밀번호를 안내해 드립니다.</p>"
-                            + "    <div style=\"width: 500px; font-size: 18px; margin-top: 30px; padding: 10px 0; background-color: #696CEA; border: 1px solid #696CEA; display: inline-block; color: #000000; text-align: center;\">"
-                            + "        <h3 style=\"margin: 0; padding: 10px; color: #ffffff;\">" + password + "</h3>"
-                            + "    </div>"
-                            + "    <p style=\"font-size: 16px; line-height: 26px; margin-top: 30px; padding: 0 3px; color: #000000;\">"
-                            + "로그인 후 비밀번호를 반드시 변경해 주세요!<br/><br/>감사합니다.</p>"
-                            + "</div>");
-            emailContent.append("</body>");
-            emailContent.append("</html>");
+            StringBuilder emailContent = makeEmailContentForPassword(password);
 
             helper.setText(emailContent.toString(), true);
             javaMailSender.send(message);
@@ -194,5 +218,73 @@ public class CompanyService {
             e.printStackTrace();
         }
         return password;
+    }
+
+    public StringBuilder makeEmailContentForPassword(String password) {
+        StringBuilder emailContent = new StringBuilder();
+        emailContent.append("<!DOCTYPE html>");
+        emailContent.append("<html>");
+        emailContent.append("<head>");
+        emailContent.append("</head>");
+        emailContent.append("<body>");
+
+        // ContentContainer 시작
+        emailContent.append("<div style=\"width: 800px; height: 400px; border: 1px solid lightgray; margin: 100px auto; padding: 30px; box-sizing: border-box; color: #000000; justify-content: center; align-items: center;\">");
+
+        // Section 시작
+        emailContent.append("<div style=\"color: #606060;");
+        emailContent.append(" font-size: 15px;");
+        emailContent.append(" font-weight: 500;");
+        emailContent.append(" text-align: center;");
+        emailContent.append(" width: 100%;\">");
+        emailContent.append("<h2 style=\"margin-bottom: 30px; margin-top: 20px;");
+        emailContent.append(" color: #696CEA;");
+        emailContent.append(" font-size: 22px;");
+        emailContent.append(" font-weight: 600;\">[AIT] 임시 비밀번호 안내</h2>");
+        emailContent.append("<p>안녕하세요, AIT 입니다.</p>");
+        emailContent.append("<p>임시 비밀번호를 안내해 드립니다.</p>");
+        emailContent.append("</div>");
+        // Section 끝
+
+        // NoticeBox 시작
+        emailContent.append("<div style=\"margin-top: 30px; margin-right: 30px;");
+        emailContent.append(" width: 100%;");
+        emailContent.append(" border-radius: 10px;");
+        emailContent.append(" border: 3px solid #e5e5fa;");
+        emailContent.append(" background: #e5e5fa;");
+        emailContent.append(" color: #696CEA;");
+        emailContent.append(" font-size: 15px;");
+        emailContent.append(" font-weight: 500;");
+        emailContent.append(" line-height: 1.2; text-align: center;\">");
+        emailContent.append("<div style=\"margin-bottom: 20px; margin-top: 20px;");
+        emailContent.append(" font-size: 15px; text-align: center;");
+        emailContent.append(" font-weight: 600; color: #000;\">[임시 비밀번호]</div>");
+        emailContent.append("<p style=\"font-size: 18px; margin-bottom: 15px; color: #696CEA;\"><strong>" + password + "</strong></p>");
+        emailContent.append("</div>");
+        // NoticeBox 끝
+
+
+        // CenteredText 시작
+        emailContent.append("<div style=\"color: #606060;");
+        emailContent.append(" text-align: center;");
+        emailContent.append(" font-size: 15px;");
+        emailContent.append(" font-weight: 600;");
+        emailContent.append(" line-height: 1.3;");
+        emailContent.append(" margin-top: 30px;\">");
+        emailContent.append("로그인 후 반드시 비밀번호를 변경해 주세요!<br />");
+        emailContent.append("감사합니다.");
+        emailContent.append("</div>");
+        // CenteredText 끝
+
+        // ContentContainer 끝
+        emailContent.append("</div>");
+
+        // FooterText 끝
+        emailContent.append("</body>");
+        emailContent.append("</html>");
+
+
+        return emailContent;
+
     }
 }
