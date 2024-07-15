@@ -147,6 +147,7 @@ public class FileController {
     public void asyncProcessVideoAnalysis(Long qnaId, Long interviewerId, FileDTO fileDTO, Long interviewGroup_id) throws ExecutionException, InterruptedException {
         CompletableFuture<String> interviewerAnswer = voiceResultService.sendToVoice(fileDTO);
         actionResultService.sendToAction(fileDTO);
+
         // 공통 질문일 경우
         // CompletableFuture를 사용하면 interviewerAnswer가 값은 리턴 받을 때까지 기다림
         if (fileDTO.getIsGroup()) {
