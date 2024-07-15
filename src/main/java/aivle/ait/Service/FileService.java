@@ -134,7 +134,7 @@ public class FileService {
     }
 
     public Resource readFileByInterviewerQna(Long interviewerQnaId, Long interviewerId, Long companyId) {
-        Optional<File> fileOptional = fileRepository.findByInterviewerQnaId(interviewerId);
+        Optional<File> fileOptional = fileRepository.findByInterviewerQnaId(interviewerQnaId);
         if (fileOptional.isEmpty() || fileOptional.get().getInterviewer().getInterviewgroup().getCompany().getId() != companyId) {
             System.out.println("면접 영상 없음 or companyId 불일치");
             return null;
