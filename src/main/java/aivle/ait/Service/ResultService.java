@@ -221,7 +221,7 @@ public class ResultService {
     }
 
     public ResultDTO read(Long interviewerId, Long companyId) {
-        Optional<Result> resultOptional = resultRepository.findById(interviewerId);
+        Optional<Result> resultOptional = resultRepository.findByInterviewerId(interviewerId);
 
         if (resultOptional.isEmpty() || resultOptional.get().getInterviewer().getInterviewgroup().getCompany().getId() != companyId) {
             System.out.println("result 없음 or companyId 불일치");
