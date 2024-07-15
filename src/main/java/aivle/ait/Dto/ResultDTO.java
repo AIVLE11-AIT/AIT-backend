@@ -31,6 +31,7 @@ public class ResultDTO {
     private int context_score;
     private int voice_score;
     private int action_score;
+    private boolean isPass;
 
     private List<ContextResultDTO> contextResults;
     private List<VoiceResultDTO> voiceResult;
@@ -57,6 +58,7 @@ public class ResultDTO {
         this.context_score = result.getContext_score();
         this.voice_score = result.getVoice_score();
         this.action_score = result.getAction_score();
+        this.isPass = result.isPass();
 
         this.contextResults = result.getContextResults().stream().map(ContextResultDTO::new).collect(Collectors.toList());
         this.voiceResult = result.getVoiceResults().stream().map(VoiceResultDTO::new).collect(Collectors.toList());

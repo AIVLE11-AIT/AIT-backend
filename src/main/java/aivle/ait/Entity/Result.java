@@ -68,6 +68,9 @@ public class Result extends Time {
     @Column(nullable = false)
     private int action_score;
 
+    @Column(nullable = false)
+    private boolean isPass;
+
     @OneToMany(mappedBy = "result")
     private List<ContextResult> contextResults = new ArrayList<>();
 

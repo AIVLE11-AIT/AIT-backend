@@ -123,12 +123,19 @@ public class ResultService {
         result.setTotal_similarity_score(result.getTotal_similarity_score() / questionCount);
         result.setTotal_lsa_score(result.getTotal_lsa_score() / questionCount);
         result.setTotal_emotion_score(result.getTotal_emotion_score() / questionCount);
+        result.setTotal_munmek_score(result.getTotal_munmek_score() / questionCount);
         result.setContext_score(result.getContext_score() / questionCount);
 
         // 3개의 평가항목을 100점 만점으로 변환
         int total_score = (int)calculateWeightedScore(result.getAction_score(), result.getVoice_score(), result.getContext_score(),
                 (double) interviewGroupDTO.getAction_per() / 100, (double) interviewGroupDTO.getVoice_per() / 100, (double) interviewGroupDTO.getContext_per() / 100);
         result.setTotal_score(total_score);
+
+        // total_score를 기반으로 통과 여부 설정
+        if (interviewGroupDTO.getPassingScore() <= result.getTotal_score())
+            result.setPass(true);
+        else
+            result.setPass(false);
 
         // llm을 사용한 총 평가 (total_report)
         String report = createReport(result, interviewGroupDTO, answerValuation);
