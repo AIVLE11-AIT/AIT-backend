@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -133,11 +134,12 @@ public class InterviewerService {
 
     // 링크 전송
     @Transactional
-    public boolean sendEmail(InterviewerDTO interviewerDTO, Long companyID, Long interviewGroup_id, String url) throws MessagingException {
+    @Async
+    public void sendEmail(InterviewerDTO interviewerDTO, Long companyID, Long interviewGroup_id, String url) throws MessagingException {
         Optional<InterviewGroup> interviewGroupOptional = interviewGroupRepository.findInterviewGroupByIdAndCompanyId(interviewGroup_id, companyID);
         if (interviewGroupOptional.isEmpty() || interviewGroupOptional.get().getCompany().getId() != companyID) {
             System.out.println("그룹을 찾을 수 없음");
-            return false;
+            throw new MessagingException("그룹을 찾을 수 없음 or companyId 불일치");
         }
 
         InterviewGroup interviewGroup = interviewGroupOptional.get();
@@ -160,7 +162,6 @@ public class InterviewerService {
         interviewGroupDTO.setSendEmail(1);
         interviewGroup.setDtoToObject(interviewGroupDTO); // update
 
-        return true;
     }
 
     // 메일 전송 폼 생성
@@ -183,8 +184,7 @@ public class InterviewerService {
         emailContent.append("<body>");
 
         // ContentContainer 시작
-        emailContent.append("<div style=\"width: 800px; height: 600px; border: 1px solid lightgray; margin: 100px auto; padding: 40px; box-sizing: border-box; color: #000000; justify-content: center; align-items: center;\">");
-
+        emailContent.append("<div style=\"width: 800px; height: 600px; border: 1px solid lightgray; margin: 100px auto; padding: 40px; box-sizing: border-box; border-radius: 10px; color: #000000; justify-content: center; align-items: center;\">");
         // Section 시작
         emailContent.append("<div style=\"color: #606060;");
         emailContent.append(" font-size: 15px;");
