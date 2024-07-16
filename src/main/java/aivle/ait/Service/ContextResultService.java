@@ -48,10 +48,10 @@ public class ContextResultService {
         // cosine_score, lsa_score, emotion_score, munmek_score, context_score 요청 후 값 받아오기
         String requestUrl = baseUrl + "/coQnaEval";
 
-        Optional<CompanyQna> companyQna = companyQnaRepository.findById(companyQnaId);
+        Optional<CompanyQna> companyQnas = companyQnaRepository.findById(companyQnaId);
         Optional<File> file = fileRepository.findById(fileDTO.getId());
         Optional<InterviewGroup> interviewGroup = interviewGroupRepository.findById(interviewGroup_id);
-        if (companyQna.isEmpty()){
+        if (companyQnas.isEmpty()){
             System.out.println("분석 단계 - 해당 companyQna이 없음");
             return;
         }
@@ -63,7 +63,12 @@ public class ContextResultService {
             System.out.println("분석 단계 - 해당 interviewGroup이 없음");
             return;
         }
-        CompanyQnaDTO companyQnaDTO = new CompanyQnaDTO(companyQna.get());
+
+        // 답변 저장 추가
+        CompanyQna companyQna = companyQnas.get();
+        companyQna.setAnswer(interviewerAnswer);
+
+        CompanyQnaDTO companyQnaDTO = new CompanyQnaDTO(companyQna);
         InterviewGroupDTO interviewGroupDTO = new InterviewGroupDTO(interviewGroup.get());
 
 
@@ -111,10 +116,10 @@ public class ContextResultService {
         // 자소서와 답변간 cosine_score, lsa_score를 하고, 질문과 답변에 대해서 emotion_score, munmek_score, context_score를 분석
         String requestUrl = baseUrl + "/coverLetterEval";
 
-        Optional<InterviewerQna> interviewerQna = interviewerQnaRepository.findById(interviewerQnaId);
+        Optional<InterviewerQna> interviewerQnas = interviewerQnaRepository.findById(interviewerQnaId);
         Optional<File> file = fileRepository.findById(fileDTO.getId());
         Optional<Interviewer> interviewer = interviewerRepository.findById(interviewerId);
-        if (interviewerQna.isEmpty()){
+        if (interviewerQnas.isEmpty()){
             System.out.println("분석 단계 - 해당 interviewerQna이 없음");
             return;
         }
@@ -126,7 +131,12 @@ public class ContextResultService {
             System.out.println("분석 단계 - 해당 interviewer이 없음");
             return;
         }
-        InterviewerQnaDTO interviewerQnaDTO = new InterviewerQnaDTO(interviewerQna.get());
+
+        // 답변 저장 추가
+        InterviewerQna interviewerQna = interviewerQnas.get();
+        interviewerQna.setAnswer(interviewerAnswer);
+
+        InterviewerQnaDTO interviewerQnaDTO = new InterviewerQnaDTO(interviewerQna);
         InterviewerDTO interviewerDTO = new InterviewerDTO(interviewer.get());
 
         try {

@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class CompanyQnaDTO {
     private Long id;
     private String question;
+    private String answer;
     private Long interview_group_id;
     private String interview_group;
     private List<FileDTO> files;
@@ -22,6 +23,9 @@ public class CompanyQnaDTO {
     public CompanyQnaDTO(CompanyQna companyQna) {
         this.id = companyQna.getId();
         this.question = companyQna.getQuestion();
+
+        if (companyQna.getAnswer() != null)
+            this.answer = companyQna.getAnswer();
 
         this.interview_group_id = companyQna.getInterviewgroup().getId();
         this.interview_group = companyQna.getInterviewgroup().getName();

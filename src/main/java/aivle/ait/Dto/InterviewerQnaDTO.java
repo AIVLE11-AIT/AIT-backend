@@ -15,12 +15,17 @@ import java.util.stream.Collectors;
 public class InterviewerQnaDTO {
     private Long id;
     private String question;
+    private String answer;
 
     private Long interviewerId;
 
     public InterviewerQnaDTO(InterviewerQna interviewerQna) {
         this.id = interviewerQna.getId();
         this.question = interviewerQna.getQuestion();
+
+        if (interviewerQna.getAnswer() != null)
+            this.answer = interviewerQna.getAnswer();
+
         this.interviewerId = interviewerQna.getInterviewer().getId();
     }
 

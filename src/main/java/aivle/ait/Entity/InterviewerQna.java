@@ -17,6 +17,9 @@ public class InterviewerQna extends Time {
     @Column(nullable = false)
     private String question;
 
+    @Column(columnDefinition = "LONGTEXT")
+    private String answer;
+
     // 읽기 전용
     @OneToOne(mappedBy = "interviewerQna")
     private File file;
