@@ -27,6 +27,7 @@ public class InterviewerDTO {
 
     private Long result_id;
     private String result;
+    private Boolean isPass;
 
     private Long interview_group_id;
     private String interview_group;
@@ -51,6 +52,7 @@ public class InterviewerDTO {
         if (interviewer.getResult() != null){
             this.result_id = interviewer.getResult().getId();
             this.result = interviewer.getResult().getTotal_report();
+            this.isPass = interviewer.getResult().isPass();
         }
 
         if (interviewer.getIntroductionVideo() != null) {
