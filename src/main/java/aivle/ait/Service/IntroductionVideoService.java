@@ -126,10 +126,9 @@ public class IntroductionVideoService {
 
     }
 
-    public Boolean check(Long interviewer_id, Long interviewGroup_id){
-        interviewerRepository.findInterviewerByIdAndInterviewgroupId(interviewer_id, interviewGroup_id);
-        Optional<Interviewer> interviewerOptional = interviewerRepository.findInterviewerByIdAndInterviewgroupId(interviewer_id, interviewGroup_id);
+    public Boolean check(Long interviewer_id){
+        Optional<IntroductionVideo> introductionVideo = introductionVideoRepository.findByInterviewerId(interviewer_id);
 
-        return interviewerOptional.isPresent();
+        return introductionVideo.isPresent();
     }
 }
