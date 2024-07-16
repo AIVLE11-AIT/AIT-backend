@@ -143,7 +143,7 @@ public class InterviewerController {
         if (InterviewerDTOs != null) {
             for (InterviewerDTO interviewerDTO : InterviewerDTOs) {
                 Long interviewerId = interviewerDTO.getId(); // /interview/{interviewGroup_id}/{interviewer_id}
-                String url = "http://localhost:8080/" + customUserDetails.getCompany().getId() + "/" + interviewGroup_id + "/" + interviewerId;
+                String url = "http://localhost:8080/" + interviewGroup_id + "/" + interviewerId;
                 try {
                     boolean send = interviewerService.sendEmail(interviewerDTO, customUserDetails.getCompany().getId(), interviewGroup_id, url);
                     if (!send) return ResponseEntity.badRequest().body(null);

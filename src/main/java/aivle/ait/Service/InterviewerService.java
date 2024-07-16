@@ -183,13 +183,13 @@ public class InterviewerService {
         emailContent.append("<body>");
 
         // ContentContainer 시작
-        emailContent.append("<div style=\"width: 800px; height: 600px; border: 1px solid lightgray; margin: 100px auto; padding: 30px; box-sizing: border-box; color: #000000; justify-content: center; align-items: center;\">");
+        emailContent.append("<div style=\"width: 800px; height: 600px; border: 1px solid lightgray; margin: 100px auto; padding: 40px; box-sizing: border-box; color: #000000; justify-content: center; align-items: center;\">");
 
         // Section 시작
         emailContent.append("<div style=\"color: #606060;");
         emailContent.append(" font-size: 15px;");
         emailContent.append(" font-weight: 500;");
-        emailContent.append(" text-align: center;");
+        emailContent.append(" text-align: start;");
         emailContent.append(" width: 100%;\">");
         emailContent.append("<h2 style=\"margin-bottom: 30px; margin-top: 20px;");
         emailContent.append(" color: #303030;");
@@ -212,9 +212,9 @@ public class InterviewerService {
         emailContent.append(" font-size: 15px;");
         emailContent.append(" font-weight: 500;");
         emailContent.append(" line-height: 1.2;\">");
-        emailContent.append("<div style=\"margin-bottom: 20px; margin-top: 20px;");
+        emailContent.append("<div style=\"margin-bottom: 20px; margin-top: 20px; margin-left: 20px;");
         emailContent.append(" color: #000;");
-        emailContent.append(" font-size: 15px; text-align: center;");
+        emailContent.append(" font-size: 15px; text-align: start;");
         emailContent.append(" font-weight: 600;\">[주의사항]</div>");
         emailContent.append("<ul>");
         emailContent.append("<li>테스트 응시 전 이용 방법을 충분히 읽어본 후 면접에 응시하시기 바랍니다.</li>");
@@ -234,7 +234,7 @@ public class InterviewerService {
         emailContent.append(" justify-content: center;");
         emailContent.append(" align-items: center;");
         emailContent.append(" font-weight: 600;\">");
-        emailContent.append("<a href=\"").append(url).append("\" style=\"color: white; padding: 5px; text-decoration: none; text-align: center; width: 100%;\">면접 페이지 바로가기</a>");
+        emailContent.append("<a href=\"").append(url).append("\" style=\"color: white; padding: auto; text-decoration: none; text-align: center; width: 100%; margin-top: 10px;\">면접 페이지 바로가기</a>");
         emailContent.append("</div>");
         // GoToInterviewPageButton 끝
 

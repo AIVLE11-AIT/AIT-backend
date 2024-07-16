@@ -119,17 +119,16 @@ public class CompanyService {
         emailContent.append("<div style=\"margin-top: 30px; margin-right: 30px;");
         emailContent.append(" width: 100%;");
         emailContent.append(" border-radius: 10px;");
-        emailContent.append(" border: 3px solid #e5e5fa;");
-        emailContent.append(" background: #e5e5fa;");
-        emailContent.append(" color: #000;");
+        emailContent.append(" border: 3px solid #F2F2F2;");
+        emailContent.append(" background: #F2F2F2;");
         emailContent.append(" font-size: 15px;");
         emailContent.append(" font-weight: 500;");
         emailContent.append(" line-height: 1.2; text-align: center;\">");
-        emailContent.append("<div style=\"margin-bottom: 20px; margin-top: 20px;");
+        emailContent.append("<div style=\"margin-bottom: 15px; margin-top: 20px;");
         emailContent.append(" font-size: 15px; text-align: center;");
         emailContent.append(" font-weight: 600;\">[인증번호]</div>");
         emailContent.append("<p style=\"font-size: 18px; margin-bottom: 15px; color: #696CEA;\"><strong>" + checkNum + "</strong></p>");
-        emailContent.append("<div style=\"font-size: 13px; color: #969696;\"><p>*개인정보 보호를 위해 인증번호는 5분간 유효합니다.</p></div>");
+        emailContent.append("<div style=\"font-size: 13px; color: #969696; margin-bottom: 15px;\"><p>*개인정보 보호를 위해 인증번호는 5분간 유효합니다.</p></div>");
         emailContent.append("</div>");
         // NoticeBox 끝
 
@@ -250,15 +249,14 @@ public class CompanyService {
         emailContent.append("<div style=\"margin-top: 30px; margin-right: 30px;");
         emailContent.append(" width: 100%;");
         emailContent.append(" border-radius: 10px;");
-        emailContent.append(" border: 3px solid #e5e5fa;");
-        emailContent.append(" background: #e5e5fa;");
-        emailContent.append(" color: #696CEA;");
+        emailContent.append(" border: 3px solid #F2F2F2;");
+        emailContent.append(" background: #F2F2F2;");
         emailContent.append(" font-size: 15px;");
         emailContent.append(" font-weight: 500;");
         emailContent.append(" line-height: 1.2; text-align: center;\">");
-        emailContent.append("<div style=\"margin-bottom: 20px; margin-top: 20px;");
+        emailContent.append("<div style=\"margin-bottom: 25px; margin-top: 20px;");
         emailContent.append(" font-size: 15px; text-align: center;");
-        emailContent.append(" font-weight: 600; color: #000;\">[임시 비밀번호]</div>");
+        emailContent.append(" font-weight: 600;\">[임시 비밀번호]</div>");
         emailContent.append("<p style=\"font-size: 18px; margin-bottom: 15px; color: #696CEA;\"><strong>" + password + "</strong></p>");
         emailContent.append("</div>");
         // NoticeBox 끝
