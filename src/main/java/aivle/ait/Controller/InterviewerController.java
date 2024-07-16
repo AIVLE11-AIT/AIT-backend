@@ -2,6 +2,7 @@ package aivle.ait.Controller;
 
 import aivle.ait.Dto.InterviewerDTO;
 import aivle.ait.Entity.Interviewer;
+import aivle.ait.Repository.InterviewGroupRepository;
 import aivle.ait.Security.Auth.CustomUserDetails;
 import aivle.ait.Service.InterviewGroupService;
 import aivle.ait.Service.InterviewerService;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +35,7 @@ import java.util.List;
 @RequestMapping(value = "/interviewGroup/{interviewGroup_id}/interviewer", produces = MediaType.APPLICATION_JSON_VALUE)
 public class InterviewerController {
     private final InterviewerService interviewerService;
+    private final InterviewGroupRepository interviewGroupRepository;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
@@ -136,26 +139,29 @@ public class InterviewerController {
     // 면접 그룹에 속한 지원자 전체에게 면접 링크 메일 전송
     // 이메일 전송 여부 체크
     @GetMapping("/sendEmail")
-    public ResponseEntity<List<InterviewerDTO>> sendEmail(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+    public ResponseEntity<?> sendEmail(@PathVariable("interviewGroup_id") Long interviewGroup_id,
                                                     @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        List<InterviewerDTO> InterviewerDTOs = interviewerService.readAll(customUserDetails.getCompany().getId(), interviewGroup_id);
+        boolean exist = interviewGroupRepository.existsById(interviewGroup_id);
 
-        if (InterviewerDTOs != null) {
-            for (InterviewerDTO interviewerDTO : InterviewerDTOs) {
-                Long interviewerId = interviewerDTO.getId(); // /interview/{interviewGroup_id}/{interviewer_id}
-                String url = "http://localhost:8080/" + interviewGroup_id + "/" + interviewerId;
-                try {
-                    boolean send = interviewerService.sendEmail(interviewerDTO, customUserDetails.getCompany().getId(), interviewGroup_id, url);
-                    if (!send) return ResponseEntity.badRequest().body(null);
-                } catch (Exception e) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-                }
-            }
+        if (exist) {
+            sendEmailAsync(interviewGroup_id, customUserDetails.getCompany().getId());
+            return ResponseEntity.ok("sendEmail success");
         } else {
             return ResponseEntity.badRequest().body(null);
         }
+    }
 
-        return ResponseEntity.ok(InterviewerDTOs);
+    public void sendEmailAsync(Long interviewGroup_id, Long companyId) {
+        List<InterviewerDTO> InterviewerDTOs = interviewerService.readAll(companyId, interviewGroup_id);
+        for (InterviewerDTO interviewerDTO : InterviewerDTOs) {
+            Long interviewerId = interviewerDTO.getId(); // /interview/{interviewGroup_id}/{interviewer_id}
+            String url = "https://localhost:8080/" + interviewGroup_id + "/" + interviewerId;
+            try {
+                interviewerService.sendEmail(interviewerDTO, companyId, interviewGroup_id, url);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     // 사진 파일 전송

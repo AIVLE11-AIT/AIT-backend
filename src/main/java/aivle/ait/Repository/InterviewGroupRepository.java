@@ -12,4 +12,5 @@ public interface InterviewGroupRepository extends JpaRepository<InterviewGroup, 
     Page<InterviewGroup> findByCompanyId(Long companyId, Pageable pageable);
     Optional<InterviewGroup> findInterviewGroupByIdAndCompanyId(Long id, Long companyId);
     List<InterviewGroup> findByCompanyIdOrderByCreatedDateDesc(Long companyId);
+    boolean existsById(Long id);
 }
