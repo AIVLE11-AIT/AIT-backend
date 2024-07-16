@@ -2,6 +2,8 @@ package aivle.ait.Controller;
 
 import aivle.ait.Dto.FileDTO;
 import aivle.ait.Dto.InterviewerDTO;
+import aivle.ait.Entity.File;
+import aivle.ait.Repository.FileRepository;
 import aivle.ait.Security.Auth.CustomUserDetails;
 import aivle.ait.Service.*;
 import jakarta.annotation.PostConstruct;
@@ -25,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;

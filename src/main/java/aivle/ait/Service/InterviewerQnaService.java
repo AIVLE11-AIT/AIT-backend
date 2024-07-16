@@ -34,7 +34,7 @@ public class InterviewerQnaService {
     @Transactional
     @Async
     public void create(Interviewer interviewer) {
-        String llmUrl = baseUrl + "/llm";
+        String llmUrl = baseUrl + "/personal_question";
 
         try {
             String cover_letter = interviewer.getCover_letter();

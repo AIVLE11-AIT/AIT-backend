@@ -62,7 +62,7 @@ public class ResultService {
             result.setTotal_eyetrack_gesture_score(result.getTotal_eyetrack_gesture_score() + (int)actionResult.getEyetrack_gesture_score());
             result.setTotal_body_gesture_score(result.getTotal_body_gesture_score() + (int)actionResult.getBody_gesture_score());
             result.setTotal_hand_count_score(result.getTotal_hand_count_score() + (int)actionResult.getHand_count_score());
-            result.setTotal_emotion_score(result.getTotal_emotion_score() + (int)actionResult.getEmotion_score());
+            result.setTotal_face_emotion_score(result.getTotal_face_emotion_score() + (int)actionResult.getEmotion_score());
             result.setAction_score(result.getAction_score() + (int)actionResult.getAction_score());
 
             // 관계 설정
@@ -72,7 +72,7 @@ public class ResultService {
         result.setTotal_eyetrack_gesture_score(result.getTotal_eyetrack_gesture_score() / questionCount);
         result.setTotal_body_gesture_score(result.getTotal_body_gesture_score() / questionCount);
         result.setTotal_hand_count_score(result.getTotal_hand_count_score() / questionCount);
-        result.setTotal_emotion_score(result.getTotal_emotion_score() / questionCount);
+        result.setTotal_face_emotion_score(result.getTotal_face_emotion_score() / questionCount);
         result.setAction_score(result.getAction_score() / questionCount);
 
         // 음성 분석
@@ -97,6 +97,7 @@ public class ResultService {
         // 문맥 분석
         List<Map<String, String>> answerValuation = new ArrayList<>();
         for (FileDTO fileDTO : interviewerDTO.getFiles()) {
+            if (fileDTO.getContext_result_id() == null) continue;
             Optional<ContextResult> contextResults = contextResultRepository.findById(fileDTO.getContext_result_id());
             if (contextResults.isEmpty()) continue;
 

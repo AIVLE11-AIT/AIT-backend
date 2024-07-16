@@ -83,6 +83,7 @@ public class CompanyController {
         }
     }
 
+
     // 수정
     @PutMapping("/update")
     public ResponseEntity<?> update(@RequestBody CompanyDTO companyDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails) {

@@ -261,6 +261,7 @@ public class CompanyService {
         emailContent.append("</div>");
         // NoticeBox 끝
 
+
         // CenteredText 시작
         emailContent.append("<div style=\"color: #606060;");
         emailContent.append(" text-align: center;");

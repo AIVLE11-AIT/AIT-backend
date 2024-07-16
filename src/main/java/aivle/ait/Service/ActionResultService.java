@@ -39,6 +39,7 @@ public class ActionResultService {
 
     // 행동 처리
     @Async
+    @Transactional
     public void sendToAction(FileDTO fileDTO) {
         try {
             String filePath = fileDTO.getVideo_path();
