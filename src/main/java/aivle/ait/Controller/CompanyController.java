@@ -50,10 +50,14 @@ public class CompanyController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/check")
-    public String checkEmail(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+    public Boolean checkRole(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         Company company = customUserDetails.getCompany();
-
-        return company.getEmail();
+        if (company.getRole().equals("ROLE_ADMIN")){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     // 인증번호 메일 전송
