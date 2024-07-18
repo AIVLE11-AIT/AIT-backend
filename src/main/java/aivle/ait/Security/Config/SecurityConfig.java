@@ -67,7 +67,7 @@ public class SecurityConfig {
                                 "/interviewGroup/*/interviewer/*/introduce/**",
                                 "/interviewGroup/{interviewGroup_id}/interviewer/{interviewer_id}/result/finish").permitAll()
                         .requestMatchers("/question/*/answer/**").hasRole("ADMIN")
-                        .anyRequest().hasRole("USER"));
+                        .anyRequest().hasAnyRole("USER", "ADMIN"));
 
         //JWTFilter 등록 (JWTFilter는 JWT 토큰이 있으면 로그인된 정보를 추출)
         http
