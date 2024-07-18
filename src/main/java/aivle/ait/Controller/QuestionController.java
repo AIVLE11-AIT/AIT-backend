@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -67,7 +68,7 @@ public class QuestionController {
     public ResponseEntity<List<QuestionDTO>> readMyQuestion(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         List<QuestionDTO> questionDTOs = questionService.readMyQuestion(customUserDetails.getCompany().getId());
 
-        if (!questionDTOs.isEmpty()){
+        if (questionDTOs != null){
             return ResponseEntity.ok(questionDTOs);
         }
         else{
