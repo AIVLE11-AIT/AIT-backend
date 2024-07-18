@@ -37,14 +37,14 @@ public class AnswerService {
         return createdAnswerDTO;
     }
 
-    public String readOne(Long question_id){
-        Question question = questionRepository.getReferenceById(question_id);
-        if (question == null){
+    public AnswerDTO readOne(Long question_id){
+        Optional<Answer> answer = answerRepository.findAnswerByQuestionId(question_id);
+        if (answer.isEmpty()){
             return null;
         }
-        QuestionDTO questionDto = new QuestionDTO(question);
+        AnswerDTO answerDTO = new AnswerDTO(answer.get());
 
-        return questionDto.getAnswer();
+        return answerDTO;
     }
 
     @Transactional

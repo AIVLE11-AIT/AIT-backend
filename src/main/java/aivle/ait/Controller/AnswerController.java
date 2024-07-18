@@ -30,14 +30,14 @@ public class AnswerController {
     }
 
     @GetMapping("/read")
-    public ResponseEntity<String> readAll(@PathVariable("question_id") Long question_id){
-        String answer = answerService.readOne(question_id);
+    public ResponseEntity<?> readOne(@PathVariable("question_id") Long question_id){
+        AnswerDTO answerDTO = answerService.readOne(question_id);
 
-        if (answer != null){
-            return ResponseEntity.ok(answer);
+        if (answerDTO != null){
+            return ResponseEntity.ok(answerDTO);
         }
         else{
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body("답변 없음.");
         }
     }
 
