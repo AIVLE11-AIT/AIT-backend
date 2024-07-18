@@ -155,7 +155,7 @@ public class InterviewerController {
         List<InterviewerDTO> InterviewerDTOs = interviewerService.readAll(companyId, interviewGroup_id);
         for (InterviewerDTO interviewerDTO : InterviewerDTOs) {
             Long interviewerId = interviewerDTO.getId(); // /interview/{interviewGroup_id}/{interviewer_id}
-            String url = "https://localhost:8080/" + interviewGroup_id + "/" + interviewerId;
+            String url = "https://www.ait11.co.kr/pretest/" + interviewGroup_id + "/" + interviewerId;
             try {
                 interviewerService.sendEmail(interviewerDTO, companyId, interviewGroup_id, url);
             } catch (Exception e) {
