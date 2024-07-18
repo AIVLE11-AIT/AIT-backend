@@ -57,9 +57,17 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/question/*/answer/create", "/question/*/answer/*/update", "/question/*/answer/*/delete").hasRole("USER")
+                        .requestMatchers("/interviewGroup/*/*/interviewerQna/*/update", "/interviewGroup/*/companyQna/*/delete").hasRole("USER")
+                        .requestMatchers("/interviewGroup/*/interviewer/*/introduce/create", "/interviewGroup/*/interviewer/*/introduce/update", "/interviewGroup/*/interviewer/*/introduce/delete").hasRole("USER")
+                        .requestMatchers("/signup/**", "/login", "/update", "/sendTempPassword/**",
+                                "/interviewGroup/*/companyQna/**",
+                                "/interviewGroup/*/*/interviewerQna/**",
+                                "/interviewGroup/*/interviewer/*/file/**",
+                                "/interviewGroup/*/interviewer/*/introduce/**",
+                                "/interviewGroup/{interviewGroup_id}/interviewer/{interviewer_id}/result/finish").permitAll()
                         .requestMatchers("/question/*/answer/**").hasRole("ADMIN")
-                        .requestMatchers("/question/**").hasAnyRole("USER", "ADMIN")
-                        .anyRequest().permitAll());
+                        .anyRequest().hasRole("USER"));
 
         //JWTFilter 등록 (JWTFilter는 JWT 토큰이 있으면 로그인된 정보를 추출)
         http

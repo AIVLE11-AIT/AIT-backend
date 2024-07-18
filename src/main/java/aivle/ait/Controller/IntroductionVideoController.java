@@ -28,8 +28,8 @@ public class IntroductionVideoController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
     public ResponseEntity<?> create(@PathVariable("interviewer_id") Long interviewer_id,
-                                             @PathVariable("interviewGroup_id") Long interviewGroup_id,
-                                             @RequestParam("file")MultipartFile file) {
+                                     @PathVariable("interviewGroup_id") Long interviewGroup_id,
+                                     @RequestParam("file")MultipartFile file) {
         try {
             if (introductionVideoService.check(interviewer_id)) {
                 System.out.println("자기소개 영상이 이미 존재");
