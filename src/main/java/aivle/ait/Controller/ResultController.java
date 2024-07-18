@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.concurrent.ExecutionException;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/interviewGroup/{interviewGroup_id}/interviewer/{interviewer_id}/result", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,27 +30,37 @@ public class ResultController {
 
     @GetMapping("/finish")
     public ResponseEntity<?> analyze(@PathVariable("interviewGroup_id") Long interviewGroup_id,
-                                       @PathVariable("interviewer_id") Long interviewer_id) throws ExecutionException, InterruptedException {
-        ResultDTO resultDTO = resultService.analyze(interviewGroup_id, interviewer_id);
-        if (resultDTO == null){
-            System.out.println();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+                                       @PathVariable("interviewer_id") Long interviewer_id){
+        try{
+            ResultDTO resultDTO = resultService.analyze(interviewGroup_id, interviewer_id);
+            if (resultDTO == null){
+                System.out.println();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("분석 실패");
+            }
+            else {
+                return ResponseEntity.ok(resultDTO);
+            }
 
-        return ResponseEntity.ok(resultDTO);
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     // 결과 레포트 시각화
     @GetMapping("/read")
     public ResponseEntity<?> read(@PathVariable("interviewer_id") Long interviewer_id,
-                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+                                   @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         // response
         // 면접 문항
         ResultDTO resultDTO = resultService.read(interviewer_id, customUserDetails.getCompany().getId());
         if (resultDTO == null) {
             System.out.println("result 없음");
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.internalServerError().body("result 없음");
         }
-        return ResponseEntity.ok(resultDTO);
+        else {
+            return ResponseEntity.ok(resultDTO);
+        }
     }
 }

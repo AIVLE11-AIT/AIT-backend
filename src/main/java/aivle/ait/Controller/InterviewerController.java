@@ -39,58 +39,83 @@ public class InterviewerController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
-    public ResponseEntity<InterviewerDTO> create(@RequestBody InterviewerDTO interviewerDTO,
+    public ResponseEntity<?> create(@RequestBody InterviewerDTO interviewerDTO,
                                                   @PathVariable("interviewGroup_id") Long interviewGroup_id,
                                                   @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        InterviewerDTO createdInterviewerDTO = interviewerService.create(customUserDetails.getCompany().getId(), interviewGroup_id, interviewerDTO);
+        try {
+            InterviewerDTO createdInterviewerDTO = interviewerService.create(customUserDetails.getCompany().getId(), interviewGroup_id, interviewerDTO);
 
-        if (createdInterviewerDTO != null){
-            return ResponseEntity.ok(createdInterviewerDTO);
+            if (createdInterviewerDTO != null){
+                return ResponseEntity.ok(createdInterviewerDTO);
+            }
+            else{
+                return ResponseEntity.badRequest().body("interviewGroup이 없거나 해당 계정의 소유가 아님.");
+            }
         }
-        else{
-            return ResponseEntity.badRequest().body(null);
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
     @GetMapping("/{interviewer_id}")
-    public ResponseEntity<InterviewerDTO> read(@PathVariable("interviewGroup_id") Long interviewGroup_id,
-                                                @PathVariable("interviewer_id") Long preInterview_id,
-                                                @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        InterviewerDTO InterviewerDTO = interviewerService.readOne(customUserDetails.getCompany().getId(), interviewGroup_id, preInterview_id);
+    public ResponseEntity<?> read(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+                                    @PathVariable("interviewer_id") Long preInterview_id,
+                                    @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        try{
+            InterviewerDTO InterviewerDTO = interviewerService.readOne(customUserDetails.getCompany().getId(), interviewGroup_id, preInterview_id);
 
-        if (InterviewerDTO != null){
-            return ResponseEntity.ok(InterviewerDTO);
+            if (InterviewerDTO != null){
+                return ResponseEntity.ok(InterviewerDTO);
+            }
+            else{
+                return ResponseEntity.badRequest().body("interviewer가 없거나 해당 계정의 소유가 아님.");
+            }
         }
-        else{
-            return ResponseEntity.badRequest().body(null);
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
     @GetMapping("/readAll")
-    public ResponseEntity<List<InterviewerDTO>> readAll(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+    public ResponseEntity<?> readAll(@PathVariable("interviewGroup_id") Long interviewGroup_id,
                                                          @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        List<InterviewerDTO> InterviewerDTOS = interviewerService.readAll(customUserDetails.getCompany().getId(), interviewGroup_id);
+        try{
+            List<InterviewerDTO> InterviewerDTOS = interviewerService.readAll(customUserDetails.getCompany().getId(), interviewGroup_id);
 
-        if (InterviewerDTOS != null){
-            return ResponseEntity.ok(InterviewerDTOS);
+            if (InterviewerDTOS != null){
+                return ResponseEntity.ok(InterviewerDTOS);
+            }
+            else {
+                return ResponseEntity.badRequest().body("interviewGroup이 없거나 해당 계정의 소유가 아님.");
+            }
         }
-        else {
-            return ResponseEntity.badRequest().body(null);
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
     // 내 면접 그룹들만 페이지 별로 불러오기 ex) localhost:8888/interviewGroup/{interviewGroup_id}/preInterview/read?page=0&size=5
     @GetMapping("/read")
-    public ResponseEntity<Page<InterviewerDTO>> readPage(@PageableDefault(size = 5) Pageable pageable,
+    public ResponseEntity<?> readPage(@PageableDefault(size = 5) Pageable pageable,
                                                           @PathVariable("interviewGroup_id") Long interviewGroup_id,
                                                           @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        Page<InterviewerDTO> InterviewerDTOS = interviewerService.readAllPageable(customUserDetails.getCompany().getId(), interviewGroup_id, pageable);
 
-        if (!InterviewerDTOS.isEmpty()){
-            return ResponseEntity.ok(InterviewerDTOS);
+        try{
+            Page<InterviewerDTO> InterviewerDTOS = interviewerService.readAllPageable(customUserDetails.getCompany().getId(), interviewGroup_id, pageable);
+
+            if (!InterviewerDTOS.isEmpty()){
+                return ResponseEntity.ok(InterviewerDTOS);
+            }
+            else{
+                return ResponseEntity.badRequest().body("interviewGroup이 없거나 해당 계정의 소유가 아님.");
+            }
         }
-        else{
-            return ResponseEntity.badRequest().body(null);
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
@@ -98,41 +123,60 @@ public class InterviewerController {
     public ResponseEntity<?> readAllByIsPass(@PathVariable("interviewGroup_id") Long interviewGroup_id,
                                             @PathVariable("isPass") Boolean isPass,
                                             @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        List<InterviewerDTO> InterviewerDTOS = interviewerService.readAllByIsPass(isPass, customUserDetails.getCompany().getId(), interviewGroup_id);
+        try{
+            List<InterviewerDTO> InterviewerDTOS = interviewerService.readAllByIsPass(isPass, customUserDetails.getCompany().getId(), interviewGroup_id);
 
-        if (InterviewerDTOS == null){
-            return ResponseEntity.badRequest().body("조회하는 인터뷰 그룸과 로그인 아이디가 일치 하지 않음.");
+            if (InterviewerDTOS != null){
+                return ResponseEntity.ok(InterviewerDTOS);
+            }
+            else{
+                return ResponseEntity.badRequest().body("interviewGroup이 없거나 해당 계정의 소유가 아님.");
+            }
         }
-
-        return ResponseEntity.ok(InterviewerDTOS);
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 
     @PutMapping("/{interviewer_id}/update")
-    public ResponseEntity<InterviewerDTO> update(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+    public ResponseEntity<?> update(@PathVariable("interviewGroup_id") Long interviewGroup_id,
                                                   @PathVariable("interviewer_id") Long preInterview_id,
                                                   @RequestBody InterviewerDTO interviewerDTO,
                                                   @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        InterviewerDTO updatedInterviewerDTO = interviewerService.update(customUserDetails.getCompany().getId(), interviewGroup_id, preInterview_id, interviewerDTO);
+        try{
+            InterviewerDTO updatedInterviewerDTO = interviewerService.update(customUserDetails.getCompany().getId(), interviewGroup_id, preInterview_id, interviewerDTO);
 
-        if (updatedInterviewerDTO != null){
-            return ResponseEntity.ok(updatedInterviewerDTO);
+            if (updatedInterviewerDTO != null){
+                return ResponseEntity.ok(updatedInterviewerDTO);
+            }
+            else{
+                return ResponseEntity.badRequest().body("interviewer가 없거나 해당 계정의 소유가 아님.");
+            }
         }
-        else{
-            return ResponseEntity.badRequest().body(null);
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
     @DeleteMapping("/{interviewer_id}/delete")
-    public ResponseEntity<InterviewerDTO> delete(@PathVariable("interviewGroup_id") Long interviewGroup_id,
+    public ResponseEntity<?> delete(@PathVariable("interviewGroup_id") Long interviewGroup_id,
                                                   @PathVariable("interviewer_id") Long preInterview_id,
                                                   @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        InterviewerDTO deletedInterviewerDTO = interviewerService.delete(customUserDetails.getCompany().getId(), interviewGroup_id, preInterview_id);
+        try{
+            InterviewerDTO deletedInterviewerDTO = interviewerService.delete(customUserDetails.getCompany().getId(), interviewGroup_id, preInterview_id);
 
-        if (deletedInterviewerDTO != null){
-            return ResponseEntity.ok(deletedInterviewerDTO);
+            if (deletedInterviewerDTO != null){
+                return ResponseEntity.ok(deletedInterviewerDTO);
+            }
+            else{
+                return ResponseEntity.badRequest().body("interviewer가 없거나 해당 계정의 소유가 아님.");
+            }
         }
-        else{
-            return ResponseEntity.badRequest().body(null);
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
@@ -141,13 +185,19 @@ public class InterviewerController {
     @GetMapping("/sendEmail")
     public ResponseEntity<?> sendEmail(@PathVariable("interviewGroup_id") Long interviewGroup_id,
                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        boolean exist = interviewGroupRepository.existsById(interviewGroup_id);
+        try{
+            boolean exist = interviewGroupRepository.existsById(interviewGroup_id);
 
-        if (exist) {
-            sendEmailAsync(interviewGroup_id, customUserDetails.getCompany().getId());
-            return ResponseEntity.ok("sendEmail success");
-        } else {
-            return ResponseEntity.badRequest().body(null);
+            if (exist) {
+                sendEmailAsync(interviewGroup_id, customUserDetails.getCompany().getId());
+                return ResponseEntity.ok("sendEmail success");
+            } else {
+                return ResponseEntity.badRequest().body("interviewGroup이 존재하지 않음.");
+            }
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 

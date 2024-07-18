@@ -27,13 +27,19 @@ public class CompanyController {
 
         if (!check){
             CompanyDTO createdCompanyDTO = companyService.register(companyDto);
-            if (createdCompanyDTO != null){
-                System.out.println("가입 성공");
-                return ResponseEntity.ok(createdCompanyDTO);
+            try{
+                if (createdCompanyDTO != null){
+                    System.out.println("가입 성공");
+                    return ResponseEntity.ok(createdCompanyDTO);
+                }
+                else{
+                    System.out.println("가입 실패");
+                    return ResponseEntity.badRequest().body("회원 데이터가 유효하지 않음.");
+                }
             }
-            else{
-                System.out.println("가입 실패");
-                return ResponseEntity.badRequest().body(null);
+            catch(Exception e){
+                System.out.println(e.getMessage());
+                return ResponseEntity.internalServerError().body(e.getMessage());
             }
         }
         else{

@@ -25,116 +25,164 @@ public class QuestionController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
-    public ResponseEntity<QuestionDTO> create(@RequestBody QuestionDTO questionDTO,
+    public ResponseEntity<?> create(@RequestBody QuestionDTO questionDTO,
                                               @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        QuestionDTO createdQuestion = questionService.create(customUserDetails.getCompany().getId(), questionDTO);
+        try{
+            QuestionDTO createdQuestion = questionService.create(customUserDetails.getCompany().getId(), questionDTO);
 
-        if (createdQuestion != null){
-            return ResponseEntity.ok(createdQuestion);
+            if (createdQuestion != null){
+                return ResponseEntity.ok(createdQuestion);
+            }
+            else{
+                return ResponseEntity.badRequest().body("로그인 확인 필요.");
+            }
         }
-        else{
-            return ResponseEntity.badRequest().body(null);
+        catch(Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
     @GetMapping("/readAll")
-    public ResponseEntity<List<QuestionDTO>> readAll(){
-        List<QuestionDTO> questionDTOs = questionService.readAll();
+    public ResponseEntity<?> readAll(){
+        try{
+            List<QuestionDTO> questionDTOs = questionService.readAll();
 
-        if (!questionDTOs.isEmpty()){
-            return ResponseEntity.ok(questionDTOs);
+            if (!questionDTOs.isEmpty()){
+                return ResponseEntity.ok(questionDTOs);
+            }
+            else{
+                return ResponseEntity.badRequest().body("question이 없음.");
+            }
         }
-        else{
-            return ResponseEntity.badRequest().body(null);
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
     // 페이지 별로 불러오기 ex) localhost:8888/qustion/read?page=0&size=5
     @GetMapping("/read")
-    public ResponseEntity<Page<QuestionDTO>> readPage(@PageableDefault(size = 5) Pageable pageable,
+    public ResponseEntity<?> readPage(@PageableDefault(size = 5) Pageable pageable,
                                                       @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        Page<QuestionDTO> questionDTOs = questionService.readAllPageable(customUserDetails.getCompany().getId(), pageable);
+        try{
+            Page<QuestionDTO> questionDTOs = questionService.readAllPageable(customUserDetails.getCompany().getId(), pageable);
 
-        if (!questionDTOs.isEmpty()){
-            return ResponseEntity.ok(questionDTOs);
+            if (!questionDTOs.isEmpty()){
+                return ResponseEntity.ok(questionDTOs);
+            }
+            else{
+                return ResponseEntity.badRequest().body("question이 없음.");
+            }
         }
-        else{
-            return ResponseEntity.badRequest().body(null);
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
     // 내 게시물만 불러오기
     @GetMapping("/readMyQuestion")
-    public ResponseEntity<List<QuestionDTO>> readMyQuestion(@AuthenticationPrincipal CustomUserDetails customUserDetails){
-        List<QuestionDTO> questionDTOs = questionService.readMyQuestion(customUserDetails.getCompany().getId());
+    public ResponseEntity<?> readMyQuestion(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        try{
+            List<QuestionDTO> questionDTOs = questionService.readMyQuestion(customUserDetails.getCompany().getId());
 
-        if (questionDTOs != null){
-            return ResponseEntity.ok(questionDTOs);
+            if (questionDTOs != null){
+                return ResponseEntity.ok(questionDTOs);
+            }
+            else{
+                return ResponseEntity.badRequest().body("로그인 확인 필요");
+            }
         }
-        else{
-            return ResponseEntity.badRequest().body(null);
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
+
     }
 
     // 해당 게시판이 내 것인지 확인
     @GetMapping("/{question_id}/check")
-    public ResponseEntity<Boolean> checkMyBoard(@PathVariable Long question_id,
+    public ResponseEntity<?> checkMyBoard(@PathVariable Long question_id,
                                                 @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        boolean isMine = questionService.checkMyQuestion(question_id, customUserDetails.getCompany().getName());
+        try{
+            boolean isMine = questionService.checkMyQuestion(question_id, customUserDetails.getCompany().getName());
 
-        if (isMine){
-            return ResponseEntity.ok(isMine);
+            if (isMine){
+                return ResponseEntity.ok(isMine);
+            }
+            else{
+                return ResponseEntity.badRequest().body(isMine);
+            }
         }
-        else{
-            return ResponseEntity.badRequest().body(isMine);
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
+
     }
 
     @PutMapping("/{question_id}/update")
-    public ResponseEntity<QuestionDTO> update(@PathVariable Long question_id, @RequestBody QuestionDTO questionDTO){
-        QuestionDTO updatedQuestions = questionService.update(question_id, questionDTO);
+    public ResponseEntity<?> update(@PathVariable Long question_id, @RequestBody QuestionDTO questionDTO){
+        try{
+            QuestionDTO updatedQuestions = questionService.update(question_id, questionDTO);
 
-        if (updatedQuestions != null){
-            return ResponseEntity.ok(updatedQuestions);
+            if (updatedQuestions != null){
+                return ResponseEntity.ok(updatedQuestions);
+            }
+            else{
+                return ResponseEntity.badRequest().body("해당 question이 없음.");
+            }
         }
-        else{
-            return ResponseEntity.badRequest().body(null);
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
+
     }
 
     @GetMapping("/{question_id}")
-    public ResponseEntity<QuestionDTO> read(@PathVariable Long question_id){
-        QuestionDTO question_dto = questionService.readOne(question_id);
+    public ResponseEntity<?> read(@PathVariable Long question_id){
+        try{
+            QuestionDTO question_dto = questionService.readOne(question_id);
 
-        if (question_dto != null){
-            return ResponseEntity.ok(question_dto);
+            if (question_dto != null){
+                return ResponseEntity.ok(question_dto);
+            }
+            else{
+                return ResponseEntity.badRequest().body("question이 존재하지 않음.");
+            }
         }
-        else{
-            return ResponseEntity.badRequest().body(null);
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
+
     }
 
     @DeleteMapping("/{question_id}/delete")
-    public ResponseEntity<QuestionDTO> delete(@PathVariable Long question_id){
-        QuestionDTO deletedQuestios = questionService.delete(question_id);
+    public ResponseEntity<?> delete(@PathVariable Long question_id){
+        try{
+            QuestionDTO deletedQuestios = questionService.delete(question_id);
 
-        if (deletedQuestios != null){
-            return ResponseEntity.ok(deletedQuestios);
+            if (deletedQuestios != null){
+                return ResponseEntity.ok(deletedQuestios);
+            }
+            else{
+                return ResponseEntity.badRequest().body("question이 존재하지 않음.");
+            }
         }
-        else{
-            return ResponseEntity.badRequest().body(null);
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
+
     }
 
     @GetMapping("/search/{keyword}")
     public ResponseEntity<List<QuestionDTO>> questionSearch(@PathVariable String keyword){
         List<QuestionDTO> questionDTOs = questionService.getQustionKeyword(keyword);
 
-        if (!questionDTOs.isEmpty()){
-            return ResponseEntity.ok(questionDTOs);
-        }
-        else{
-            return ResponseEntity.badRequest().body(null);
-        }
+        return ResponseEntity.ok(questionDTOs);
     }
 }

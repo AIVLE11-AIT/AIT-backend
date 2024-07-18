@@ -43,7 +43,7 @@ public class InterviewGroupService {
     public InterviewGroupDTO create(Long companyId, InterviewGroupDTO interviewGroupDTO, List<InterviewerDTO> interviewerDTOs){
         Optional<Company> company = companyRepository.findById(companyId);
 
-        if (company.isEmpty() || interviewGroupDTO == null || interviewerDTOs.isEmpty() || interviewerDTOs.isEmpty()) {
+        if (company.isEmpty() || interviewGroupDTO == null || interviewerDTOs.isEmpty()) {
             return null;
         }
 

@@ -27,46 +27,66 @@ public class InterviewGroupController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
-    public ResponseEntity<InterviewGroupDTO> create(@RequestPart(value="InterviewGroupDTO") InterviewGroupDTO interviewGroupDTO,
+    public ResponseEntity<?> create(@RequestPart(value="InterviewGroupDTO") InterviewGroupDTO interviewGroupDTO,
                                                     @RequestPart(value="InterviewerDTO") List<InterviewerDTO> interviewerDTOs,
                                                     @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        InterviewGroupDTO createdInterviewGroupDTO = interviewGroupService.create(customUserDetails.getCompany().getId(), interviewGroupDTO, interviewerDTOs);
+        try{
+            InterviewGroupDTO createdInterviewGroupDTO = interviewGroupService.create(customUserDetails.getCompany().getId(), interviewGroupDTO, interviewerDTOs);
 
-        if (createdInterviewGroupDTO != null){
-            return ResponseEntity.ok(createdInterviewGroupDTO);
+            if (createdInterviewGroupDTO != null){
+                return ResponseEntity.ok(createdInterviewGroupDTO);
+            }
+            else{
+                return ResponseEntity.badRequest().body("로그인, 입력데이터 확인 필요.");
+            }
         }
-        else{
-            return ResponseEntity.badRequest().body(null);
+        catch(Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
+
     }
     @GetMapping("/{interviewGroup_id}")
-    public ResponseEntity<InterviewGroupDTO> read(@PathVariable Long interviewGroup_id,
+    public ResponseEntity<?> read(@PathVariable Long interviewGroup_id,
                                                   @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        InterviewGroupDTO interviewGroupDTO = interviewGroupService.readOne(customUserDetails.getCompany().getId(), interviewGroup_id);
+        try{
+            InterviewGroupDTO interviewGroupDTO = interviewGroupService.readOne(customUserDetails.getCompany().getId(), interviewGroup_id);
 
-        if (interviewGroupDTO != null){
-            return ResponseEntity.ok(interviewGroupDTO);
+            if (interviewGroupDTO != null){
+                return ResponseEntity.ok(interviewGroupDTO);
+            }
+            else{
+                return ResponseEntity.badRequest().body("interviewGroup이 없음.");
+            }
         }
-        else{
-            return ResponseEntity.badRequest().body(null);
+        catch(Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
+
     }
 
     @GetMapping("/readAll")
-    public ResponseEntity<List<InterviewGroupDTO>> readAll(@AuthenticationPrincipal CustomUserDetails customUserDetails){
-        List<InterviewGroupDTO> interviewGroupDTOS = interviewGroupService.readAll(customUserDetails.getCompany().getId());
+    public ResponseEntity<?> readAll(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        try{
+            List<InterviewGroupDTO> interviewGroupDTOS = interviewGroupService.readAll(customUserDetails.getCompany().getId());
 
-        if (interviewGroupDTOS != null){
-            return ResponseEntity.ok(interviewGroupDTOS);
+            if (interviewGroupDTOS != null){
+                return ResponseEntity.ok(interviewGroupDTOS);
+            }
+            else{
+                return ResponseEntity.badRequest().body("로그인 확인 필요.");
+            }
         }
-        else{
-            return ResponseEntity.badRequest().body(null);
+        catch(Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
     // 내 면접 그룹들만 페이지 별로 불러오기 ex) localhost:8888/interviewGroup/read?page=0&size=5
     @GetMapping("/read")
-    public ResponseEntity<Page<InterviewGroupDTO>> readPage(@PageableDefault(size = 5) Pageable pageable,
+    public ResponseEntity<?> readPage(@PageableDefault(size = 5) Pageable pageable,
                                                             @AuthenticationPrincipal CustomUserDetails customUserDetails){
         Page<InterviewGroupDTO> interviewGroupDTOS = interviewGroupService.readAllPageable(customUserDetails.getCompany().getId(), pageable);
 
@@ -74,7 +94,7 @@ public class InterviewGroupController {
             return ResponseEntity.ok(interviewGroupDTOS);
         }
         else{
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.ok().body("{}");
         }
     }
 
@@ -90,16 +110,23 @@ public class InterviewGroupController {
     }
 
     @DeleteMapping("/{interviewGroup_id}/delete")
-    public ResponseEntity<InterviewGroupDTO> delete(@PathVariable Long interviewGroup_id,
-                                                    @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        InterviewGroupDTO deletedInterviewGroups = interviewGroupService.delete(customUserDetails.getCompany().getId(), interviewGroup_id);
+    public ResponseEntity<?> delete(@PathVariable Long interviewGroup_id,
+                                    @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        try{
+            InterviewGroupDTO deletedInterviewGroups = interviewGroupService.delete(customUserDetails.getCompany().getId(), interviewGroup_id);
 
-        if (deletedInterviewGroups != null){
-            return ResponseEntity.ok(deletedInterviewGroups);
+            if (deletedInterviewGroups != null){
+                return ResponseEntity.ok(deletedInterviewGroups);
+            }
+            else{
+                return ResponseEntity.badRequest().body("interviewGroup이 없음.");
+            }
         }
-        else{
-            return ResponseEntity.badRequest().body(null);
+        catch(Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
+
     }
 
     @GetMapping("/check")
