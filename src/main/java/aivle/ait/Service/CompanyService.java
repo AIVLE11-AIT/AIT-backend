@@ -34,7 +34,7 @@ public class CompanyService {
         company.setName(companyDto.getName());
         company.setPassword(encodedPassword);
         company.setEmail(companyDto.getEmail());
-        company.setRole("ROLE_USER");
+        company.setRole("ROLE_COMMON");
 
         companyRepository.save(company);
 
