@@ -61,11 +61,12 @@ public class SecurityConfig {
                         .requestMatchers("/interviewGroup/*/*/interviewerQna/*/update", "/interviewGroup/*/companyQna/*/delete").hasRole("USER")
                         .requestMatchers("/interviewGroup/*/interviewer/*/introduce/create", "/interviewGroup/*/interviewer/*/introduce/update", "/interviewGroup/*/interviewer/*/introduce/delete").hasRole("USER")
                         .requestMatchers("/signup/**", "/login", "/update", "/sendTempPassword/**",
+                                "/interviewGroup/*/interviewer/*/image",
                                 "/interviewGroup/*/companyQna/**",
                                 "/interviewGroup/*/*/interviewerQna/**",
                                 "/interviewGroup/*/interviewer/*/file/**",
                                 "/interviewGroup/*/interviewer/*/introduce/**",
-                                "/interviewGroup/{interviewGroup_id}/interviewer/{interviewer_id}/result/finish").permitAll()
+                                "/interviewGroup/*/interviewer/*/result/finish").permitAll()
                         .requestMatchers("/question/*/answer/**").hasRole("ADMIN")
                         .anyRequest().hasAnyRole("USER", "ADMIN"));
 
