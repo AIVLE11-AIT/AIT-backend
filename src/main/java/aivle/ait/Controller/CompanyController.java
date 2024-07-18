@@ -22,7 +22,7 @@ public class CompanyController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/signup/register")
-    public ResponseEntity<CompanyDTO> register(@RequestBody CompanyDTO companyDto){
+    public ResponseEntity<?> register(@RequestBody CompanyDTO companyDto){
         boolean check = companyService.getEmailCheck(companyDto.getEmail());
 
         if (!check){
@@ -31,9 +31,14 @@ public class CompanyController {
                 System.out.println("가입 성공");
                 return ResponseEntity.ok(createdCompanyDTO);
             }
+            else{
+                System.out.println("가입 실패");
+                return ResponseEntity.badRequest().body(null);
+            }
         }
-        System.out.println("가입 실패");
-        return ResponseEntity.badRequest().body(null);
+        else{
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Company already exists.");
+        }
     }
 
     @GetMapping("/check/register/{Email}")
