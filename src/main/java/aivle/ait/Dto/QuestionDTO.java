@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +22,7 @@ public class QuestionDTO {
     private String answer;
     private Long company_id;
     private String company;
+    private String date;
 
     public QuestionDTO(Question question) {
         this.id = question.getId();
@@ -27,6 +30,8 @@ public class QuestionDTO {
         this.content = question.getContent();
         this.company_id = question.getCompany().getId();
         this.company = question.getCompany().getName();
+
+        this.date = question.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
         if (question.getAnswer() != null) {
             this.answer_id = question.getAnswer().getId();
