@@ -57,7 +57,7 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/question/*/answer/create", "/question/*/answer/*/update", "/question/*/answer/*/delete").hasRole("USER")
+                        .requestMatchers("/question/*/answer/create", "/question/*/answer/*/update", "/question/*/answer/*/delete").hasRole("ADMIN")
                         .requestMatchers("/interviewGroup/*/*/interviewerQna/*/update", "/interviewGroup/*/companyQna/*/delete").hasRole("USER")
                         .requestMatchers("/interviewGroup/*/interviewer/*/introduce/create", "/interviewGroup/*/interviewer/*/introduce/update", "/interviewGroup/*/interviewer/*/introduce/delete").hasRole("USER")
                         .requestMatchers("/signup/**", "/login", "/update", "/sendTempPassword/**",
