@@ -58,12 +58,12 @@ public class InterviewerController {
         }
     }
 
+    // 면접자 조회 시 로그인 없이 되도록 수정
     @GetMapping("/{interviewer_id}")
     public ResponseEntity<?> read(@PathVariable("interviewGroup_id") Long interviewGroup_id,
-                                    @PathVariable("interviewer_id") Long preInterview_id,
-                                    @AuthenticationPrincipal CustomUserDetails customUserDetails){
+                                    @PathVariable("interviewer_id") Long preInterview_id){
         try{
-            InterviewerDTO InterviewerDTO = interviewerService.readOne(customUserDetails.getCompany().getId(), interviewGroup_id, preInterview_id);
+            InterviewerDTO InterviewerDTO = interviewerService.readOne(interviewGroup_id, preInterview_id);
 
             if (InterviewerDTO != null){
                 return ResponseEntity.ok(InterviewerDTO);
