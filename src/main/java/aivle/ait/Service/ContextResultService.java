@@ -65,9 +65,9 @@ public class ContextResultService {
         }
 
         // 답변 저장 추가
-        CompanyQna companyQna = companyQnas.get();
-        companyQna.setAnswer(interviewerAnswer);
+        file.get().setAnswer(interviewerAnswer);
 
+        CompanyQna companyQna = companyQnas.get();
         CompanyQnaDTO companyQnaDTO = new CompanyQnaDTO(companyQna);
         InterviewGroupDTO interviewGroupDTO = new InterviewGroupDTO(interviewGroup.get());
 
@@ -133,9 +133,9 @@ public class ContextResultService {
         }
 
         // 답변 저장 추가
-        InterviewerQna interviewerQna = interviewerQnas.get();
-        interviewerQna.setAnswer(interviewerAnswer);
+        file.get().setAnswer(interviewerAnswer);
 
+        InterviewerQna interviewerQna = interviewerQnas.get();
         InterviewerQnaDTO interviewerQnaDTO = new InterviewerQnaDTO(interviewerQna);
         InterviewerDTO interviewerDTO = new InterviewerDTO(interviewer.get());
 

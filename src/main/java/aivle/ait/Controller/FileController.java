@@ -3,6 +3,7 @@ package aivle.ait.Controller;
 import aivle.ait.Dto.FileDTO;
 import aivle.ait.Dto.InterviewerDTO;
 import aivle.ait.Entity.File;
+import aivle.ait.Entity.VisualQnADTO;
 import aivle.ait.Repository.FileRepository;
 import aivle.ait.Security.Auth.CustomUserDetails;
 import aivle.ait.Service.*;
@@ -165,9 +166,9 @@ public class FileController {
     // 기업 공통 질문 면접 영상 불러오기
     @GetMapping(value="/companyQna/{companyQna_id}/read")
     public ResponseEntity<Resource> readFileByCompanyQna(@PathVariable("interviewGroup_id") Long interviewGroup_id,
-                     @PathVariable("interviewer_id") Long interviewer_id,
-                     @PathVariable("companyQna_id") Long companyQna_id,
-                     @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+                                                         @PathVariable("interviewer_id") Long interviewer_id,
+                                                         @PathVariable("companyQna_id") Long companyQna_id,
+                                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         Resource videoForCompanyQna = fileService.readFileByCompanyQna(customUserDetails.getCompany().getId(), interviewer_id, companyQna_id);
 
         if (videoForCompanyQna == null) return ResponseEntity.badRequest().body(null);
@@ -199,5 +200,42 @@ public class FileController {
         }
     }
 
+    @GetMapping(value="/companyQna/{companyQna_id}/answer")
+    public ResponseEntity<?> readAnswerByCompanyQna(@PathVariable("interviewer_id") Long interviewer_id,
+                                                    @PathVariable("companyQna_id") Long companyQna_id,
+                                                    @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        try{
+            VisualQnADTO visualQnADTO = fileService.readQnaByCompanyQna(interviewer_id, companyQna_id);
+            if (visualQnADTO != null) {
+                return ResponseEntity.ok().body(visualQnADTO);
+            }
+            else {
+                return ResponseEntity.badRequest().body("조회된 답변이 없음");
+            }
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body("서버 조회 에러");
+        }
+    }
+
+    @GetMapping(value="/interviewerQna/{interviewerQna_id}/answer")
+    public ResponseEntity<?> readAnswerByInterviewerQna(@PathVariable("interviewer_id") Long interviewer_id,
+                                                        @PathVariable("interviewerQna_id") Long interviewerQna_id,
+                                                        @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        try{
+            VisualQnADTO visualQnADTO = fileService.readQnaByInterviewerQna(interviewer_id, interviewerQna_id);
+            if (visualQnADTO != null) {
+                return ResponseEntity.ok().body(visualQnADTO);
+            }
+            else {
+                return ResponseEntity.badRequest().body("조회된 답변이 없음");
+            }
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body("서버 조회 에러");
+        }
+    }
 
 }

@@ -1,10 +1,7 @@
 package aivle.ait.Service;
 
 import aivle.ait.Dto.FileDTO;
-import aivle.ait.Entity.CompanyQna;
-import aivle.ait.Entity.File;
-import aivle.ait.Entity.Interviewer;
-import aivle.ait.Entity.InterviewerQna;
+import aivle.ait.Entity.*;
 import aivle.ait.Repository.CompanyQnaRepository;
 import aivle.ait.Repository.FileRepository;
 import aivle.ait.Repository.InterviewerQnaRepository;
@@ -157,5 +154,37 @@ public class FileService {
         if (!resource.exists()) return null;
 
         return resource;
+    }
+
+    public VisualQnADTO readQnaByCompanyQna(Long interviewerId, Long companyQnaId) {
+        Optional<CompanyQna> companyQna = companyQnaRepository.findCompanyQnaByIdAndInterviewgroupId(companyQnaId, interviewerId);
+        Optional<File> file = fileRepository.findByInterviewerIdAndCompanyQnaId(interviewerId, companyQnaId);
+        if (companyQna.isEmpty()){
+            System.out.println("companyQna ID가 유효하지 않음.");
+            return null;
+        }
+        if (file.isEmpty()){
+            System.out.println("file ID가 유효하지 않음.");
+            return null;
+        }
+
+        VisualQnADTO visualQnADTO = new VisualQnADTO(companyQna.get().getQuestion(), file.get().getAnswer());
+        return visualQnADTO;
+    }
+
+    public VisualQnADTO readQnaByInterviewerQna(Long interviewerId, Long interviewerQnaId) {
+        Optional<InterviewerQna> interviewerQna = interviewerQnaRepository.findInterviewerByIdAndInterviewerId(interviewerQnaId, interviewerId);
+        Optional<File> file = fileRepository.findByInterviewerQnaId(interviewerQnaId);
+        if (interviewerQna.isEmpty()){
+            System.out.println("interviewer ID가 유효하지 않음.");
+            return null;
+        }
+        if (file.isEmpty()){
+            System.out.println("interviewerQna ID가 유효하지 않음.");
+            return null;
+        }
+
+        VisualQnADTO visualQnADTO = new VisualQnADTO(interviewerQna.get().getQuestion(), file.get().getAnswer());
+        return visualQnADTO;
     }
 }

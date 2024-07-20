@@ -20,9 +20,6 @@ public class CompanyQna extends Time {
     @Column(nullable = false)
     private String question;
 
-    @Column(columnDefinition = "LONGTEXT")
-    private String answer;
-
     // Interview_group:company_qna = 1:N
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interview_group_id")

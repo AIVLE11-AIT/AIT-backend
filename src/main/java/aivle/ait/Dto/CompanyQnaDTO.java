@@ -24,9 +24,6 @@ public class CompanyQnaDTO {
         this.id = companyQna.getId();
         this.question = companyQna.getQuestion();
 
-        if (companyQna.getAnswer() != null)
-            this.answer = companyQna.getAnswer();
-
         this.interview_group_id = companyQna.getInterviewgroup().getId();
         this.interview_group = companyQna.getInterviewgroup().getName();
 
