@@ -31,21 +31,22 @@ public class ResultController {
     @GetMapping("/finish")
     public ResponseEntity<?> analyze(@PathVariable("interviewGroup_id") Long interviewGroup_id,
                                        @PathVariable("interviewer_id") Long interviewer_id){
-        try{
-            ResultDTO resultDTO = resultService.analyze(interviewGroup_id, interviewer_id);
-            if (resultDTO == null){
-                System.out.println();
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("분석 실패");
-            }
-            else {
-                return ResponseEntity.ok(resultDTO);
-            }
-
-        }
-        catch (Exception e){
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+//        try{
+//            ResultDTO resultDTO = resultService.analyze(interviewGroup_id, interviewer_id);
+//            if (resultDTO == null){
+//                System.out.println();
+//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("분석 실패");
+//            }
+//            else {
+//                return ResponseEntity.ok(resultDTO);
+//            }
+//
+//        }
+//        catch (Exception e){
+//            System.out.println(e.getMessage());
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+//        }
+        return ResponseEntity.ok("finish");
     }
 
     // 결과 레포트 시각화

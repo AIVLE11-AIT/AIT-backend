@@ -6,9 +6,14 @@ import aivle.ait.Repository.*;
 import aivle.ait.Util.RestAPIUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -25,8 +30,35 @@ public class ResultService {
     @Value("${ait.server.reportServer}")
     private String baseUrl;
 
+    // 스케줄러를 돌려서 매일 정각, 현재 시간을 기준으로 면접 날짜가 끝난 면접 그룹을 찾음 (종료 시점을 기준으로 1시간 이상 차이나야 함)
+    // 그룹 안의 인터뷰어들의 세부파트 결과를 바탕으로 analyze를 진행.
+    @Scheduled(fixedDelay = 60000) // 1분마다 스케줄러 실행
+    public void scheduleAnalyze() {
+        System.out.println("스케줄러 실행");
+        LocalDateTime now = LocalDateTime.now();
+        List<InterviewGroup> groups = interviewGroupRepository.findAll();
+
+        for (InterviewGroup group: groups) {
+            if (group.getEnd_date().isAfter(now)) continue; // 면접이 아직 종료되지 않았으면 넘어감
+            LocalDateTime end_date = group.getEnd_date();
+            //Duration duration = Duration.between(end_date, now);
+            //if (duration.toHours() < 1) continue; // 면접 종료가 1시간 이상 지나야지 분석 가능
+
+            List<Interviewer> interviewers = interviewerRepository.findByInterviewgroupId(group.getId());
+            if (interviewers.isEmpty()) {
+                System.out.println("인터뷰 그룹이 없음. " + group.getId());
+                continue;
+            }
+            for(Interviewer interviewer: interviewers) {
+                analyze(group.getId(), interviewer.getId());
+            }
+        }
+    }
+
+    @Async
     @Transactional
     public ResultDTO analyze(Long interviewGroupId, Long interviewerId){
+        System.out.println("analyze 실행");
         Optional<InterviewGroup> interviewGroups = interviewGroupRepository.findById(interviewGroupId);
         if (interviewGroups.isEmpty()){
             System.out.println("해당 인터뷰 그룹이 없음.");

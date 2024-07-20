@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface InterviewerRepository extends JpaRepository<Interviewer, Long> {
     Page<Interviewer> findByInterviewgroupId(Long interviewGroupId, Pageable pageable);
     Optional<Interviewer> findInterviewerByIdAndInterviewgroupId(Long id, Long interviewgroupId);
-
+    List<Interviewer> findByInterviewgroupId(Long interviewgroupId);
     List<Interviewer> findByInterviewgroupIdAndResult_IsPass(Long interviewGroupId, Boolean isPass);
 }
