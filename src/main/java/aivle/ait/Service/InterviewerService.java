@@ -60,9 +60,9 @@ public class InterviewerService {
     }
 
 
-    public InterviewerDTO readOne(Long companyId, Long interviewGroupId, Long interviewerId){
+    public InterviewerDTO readOne(Long interviewGroupId, Long interviewerId){
         Optional<Interviewer> interviewers = interviewerRepository.findInterviewerByIdAndInterviewgroupId(interviewerId, interviewGroupId);
-        if (interviewers.isEmpty() || interviewers.get().getInterviewgroup().getCompany().getId() != companyId) {
+        if (interviewers.isEmpty()) {
             return null;
         }
 

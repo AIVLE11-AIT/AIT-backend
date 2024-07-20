@@ -23,9 +23,6 @@ public class InterviewerQnaDTO {
         this.id = interviewerQna.getId();
         this.question = interviewerQna.getQuestion();
 
-        if (interviewerQna.getAnswer() != null)
-            this.answer = interviewerQna.getAnswer();
-
         this.interviewerId = interviewerQna.getInterviewer().getId();
     }
 

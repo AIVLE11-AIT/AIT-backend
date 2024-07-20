@@ -19,6 +19,9 @@ public class File extends Time {
     @Column(nullable = false)
     private Boolean isGroup;
 
+    @Column(columnDefinition = "LONGTEXT")
+    private String answer;
+
     @OneToOne(mappedBy = "file", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private ContextResult contextResult;
 

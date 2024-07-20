@@ -81,8 +81,8 @@ public class InterviewGroupService {
         return createdInterviewGroupDTO;
     }
 
-    public InterviewGroupDTO readOne(Long companyId, Long interviewGroupId){
-        Optional<InterviewGroup> interviewGroup = interviewGroupRepository.findInterviewGroupByIdAndCompanyId(interviewGroupId, companyId);
+    public InterviewGroupDTO readOne(Long interviewGroupId){
+        Optional<InterviewGroup> interviewGroup = interviewGroupRepository.findById(interviewGroupId);
         if (interviewGroup.isEmpty()) {
             return null;
         }
