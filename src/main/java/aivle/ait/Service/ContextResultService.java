@@ -78,7 +78,10 @@ public class ContextResultService {
             body.put("occupation", interviewGroupDTO.getOccupation());
             body.put("question", companyQnaDTO.getQuestion());
             body.put("answer", interviewerAnswer);
+            System.out.println("CompanyQna context body: " + body);
             String response = RestAPIUtil.sendPostJson(requestUrl, body);
+            System.out.println("CompanyQna context result: " + response);
+
 
             // json 응답 파싱
             JsonNode jsonResponse = objectMapper.readTree(response);
@@ -145,7 +148,9 @@ public class ContextResultService {
             body.put("cover_letter", interviewerDTO.getCover_letter());
             body.put("question", interviewerQnaDTO.getQuestion());
             body.put("answer", interviewerAnswer);
+            System.out.println("InterviewerQna context body: " + body);
             String response = RestAPIUtil.sendPostJson(requestUrl, body);
+            System.out.println("InterviewerQna context result: " + response);
 
             // json 응답 파싱
             JsonNode jsonResponse = objectMapper.readTree(response);
