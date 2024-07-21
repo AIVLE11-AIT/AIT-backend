@@ -62,6 +62,8 @@ public class SecurityConfig {
                         .requestMatchers("/interviewGroup/*/interviewer/*/introduce/update", "/interviewGroup/*/interviewer/*/introduce/delete").hasRole("USER")
                         .requestMatchers("/signup/**", "/login", "/update", "/sendTempPassword/**",
                                 "/interviewGroup/*/interviewer/*/image",
+                                "/interviewGroup/*/interviewer/readOne/*",
+                                "/interviewGroup/readOne/*",
                                 "/interviewGroup/*/companyQna/**",
                                 "/interviewGroup/*/*/interviewerQna/**",
                                 "/interviewGroup/*/interviewer/*/file/**",

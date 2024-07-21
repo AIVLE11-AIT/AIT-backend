@@ -47,7 +47,6 @@ public class InterviewGroupController {
 
     }
 
-    // 인텨뷰 그룹 조회 시 로그인 없이 되도록 수정
     @GetMapping("/{interviewGroup_id}")
     public ResponseEntity<?> read(@PathVariable Long interviewGroup_id){
         try{
@@ -64,7 +63,25 @@ public class InterviewGroupController {
             System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
+    }
 
+    // 인텨뷰 그룹 조회 시 로그인 없이 되도록 수정
+    @GetMapping("/readOne/{interviewGroup_id}")
+    public ResponseEntity<?> readOne(@PathVariable Long interviewGroup_id){
+        try{
+            InterviewGroupDTO interviewGroupDTO = interviewGroupService.readOne(interviewGroup_id);
+
+            if (interviewGroupDTO != null){
+                return ResponseEntity.ok(interviewGroupDTO);
+            }
+            else{
+                return ResponseEntity.badRequest().body("interviewGroup이 없음.");
+            }
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 
     @GetMapping("/readAll")
