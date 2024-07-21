@@ -6,6 +6,7 @@ import aivle.ait.Entity.Result;
 import aivle.ait.Repository.InterviewGroupRepository;
 import aivle.ait.Repository.InterviewerRepository;
 import aivle.ait.Repository.ResultRepository;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class SchedulerService {
     private final InterviewerRepository interviewerRepository;
     private final InterviewGroupRepository interviewGroupRepository;
@@ -25,6 +27,7 @@ public class SchedulerService {
     // 스케줄러를 1분 간겨으로 돌려서 면접 날짜가 끝난 면접 그룹을 찾음
     // 그룹 안의 인터뷰어들의 세부파트 결과를 바탕으로 analyze를 진행.
     @Scheduled(fixedDelay = 60000) // 1분마다 스케줄러 실행
+    @Transactional
     public void scheduleAnalyze() {
         System.out.println("스케줄러 실행");
         LocalDateTime now = LocalDateTime.now();
