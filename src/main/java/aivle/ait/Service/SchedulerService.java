@@ -24,7 +24,7 @@ public class SchedulerService {
 
     // 스케줄러를 1분 간겨으로 돌려서 면접 날짜가 끝난 면접 그룹을 찾음
     // 그룹 안의 인터뷰어들의 세부파트 결과를 바탕으로 analyze를 진행.
-    @Scheduled(fixedDelay = 20000) // 1분마다 스케줄러 실행
+    @Scheduled(fixedDelay = 60000) // 1분마다 스케줄러 실행
     public void scheduleAnalyze() {
         System.out.println("스케줄러 실행");
         LocalDateTime now = LocalDateTime.now();

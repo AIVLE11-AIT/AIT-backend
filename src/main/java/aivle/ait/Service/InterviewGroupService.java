@@ -7,6 +7,8 @@ import aivle.ait.Entity.Company;
 import aivle.ait.Entity.CompanyQna;
 import aivle.ait.Entity.InterviewGroup;
 import aivle.ait.Entity.Interviewer;
+import aivle.ait.Exception.ResourceNotFoundException;
+import aivle.ait.Repository.CompanyQnaRepository;
 import aivle.ait.Repository.CompanyRepository;
 import aivle.ait.Repository.InterviewGroupRepository;
 import aivle.ait.Repository.InterviewerRepository;
@@ -31,6 +33,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +42,7 @@ public class InterviewGroupService {
     private final CompanyRepository companyRepository;
     private final InterviewGroupRepository interviewGroupRepository;
     private final InterviewerQnaService interviewerQnaService;
+    private final CompanyQnaRepository companyQnaRepository;
 
 
     @Transactional
@@ -115,6 +119,15 @@ public class InterviewGroupService {
 
         InterviewGroup interviewGroup = interviewGroups.get();
         interviewGroup.setDtoToObject(interviewGroupDTO); // update
+
+        // N쪽 엔티티 수정
+        List<CompanyQna> newCompanyQnas = interviewGroupDTO.getCompanyQnas().stream().map(companyQnaDTO -> {
+            CompanyQna companyQna = companyQnaRepository.findById(companyQnaDTO.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("CompanyQna not found"));
+            companyQna.setDtoToObject(companyQnaDTO);
+            return companyQna;
+        }).toList();
+        interviewGroup.setCompanyQnas(newCompanyQnas);
 
         InterviewGroupDTO createdInterviewGroupDTO = new InterviewGroupDTO(interviewGroup);
         return createdInterviewGroupDTO;
