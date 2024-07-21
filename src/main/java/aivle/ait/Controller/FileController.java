@@ -202,10 +202,11 @@ public class FileController {
 
     @GetMapping(value="/companyQna/{companyQna_id}/answer")
     public ResponseEntity<?> readAnswerByCompanyQna(@PathVariable("interviewer_id") Long interviewer_id,
+                                                    @PathVariable("interviewGroup_id") Long interviewGroup_id,
                                                     @PathVariable("companyQna_id") Long companyQna_id,
                                                     @AuthenticationPrincipal CustomUserDetails customUserDetails){
         try{
-            VisualQnADTO visualQnADTO = fileService.readQnaByCompanyQna(interviewer_id, companyQna_id);
+            VisualQnADTO visualQnADTO = fileService.readQnaByCompanyQna(interviewer_id, interviewGroup_id, companyQna_id);
             if (visualQnADTO != null) {
                 return ResponseEntity.ok().body(visualQnADTO);
             }

@@ -156,8 +156,8 @@ public class FileService {
         return resource;
     }
 
-    public VisualQnADTO readQnaByCompanyQna(Long interviewerId, Long companyQnaId) {
-        Optional<CompanyQna> companyQna = companyQnaRepository.findCompanyQnaByIdAndInterviewerId(companyQnaId, interviewerId);
+    public VisualQnADTO readQnaByCompanyQna(Long interviewerId, Long interviewGroupId, Long companyQnaId) {
+        Optional<CompanyQna> companyQna = companyQnaRepository.findCompanyQnaByIdAndInterviewgroupId(companyQnaId, interviewGroupId);
         Optional<File> file = fileRepository.findByInterviewerIdAndCompanyQnaId(interviewerId, companyQnaId);
         if (companyQna.isEmpty()){
             System.out.println("companyQna ID가 유효하지 않음.");
