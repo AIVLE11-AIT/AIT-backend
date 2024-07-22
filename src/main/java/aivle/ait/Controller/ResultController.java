@@ -1,6 +1,11 @@
 package aivle.ait.Controller;
 
+import aivle.ait.Dto.InterviewGroupDTO;
 import aivle.ait.Dto.ResultDTO;
+import aivle.ait.Entity.InterviewGroup;
+import aivle.ait.Entity.Interviewer;
+import aivle.ait.Repository.InterviewGroupRepository;
+import aivle.ait.Repository.InterviewerRepository;
 import aivle.ait.Security.Auth.CustomUserDetails;
 import aivle.ait.Service.*;
 import lombok.RequiredArgsConstructor;
@@ -10,11 +15,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/interviewGroup/{interviewGroup_id}/interviewer/{interviewer_id}/result", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ResultController {
     private final ResultService resultService;
+    private final InterviewGroupRepository interviewGroupRepository;
+    private final InterviewerRepository interviewerRepository;
 
     // 테스트할 때 지우는 용
     @GetMapping("/delete/{result_id}")
@@ -31,22 +40,20 @@ public class ResultController {
     @GetMapping("/finish")
     public ResponseEntity<?> analyze(@PathVariable("interviewGroup_id") Long interviewGroup_id,
                                        @PathVariable("interviewer_id") Long interviewer_id){
-//        try{
-//            ResultDTO resultDTO = resultService.analyze(interviewGroup_id, interviewer_id);
-//            if (resultDTO == null){
-//                System.out.println();
-//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("분석 실패");
-//            }
-//            else {
-//                return ResponseEntity.ok(resultDTO);
-//            }
-//
-//        }
-//        catch (Exception e){
-//            System.out.println(e.getMessage());
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-//        }
-        return ResponseEntity.ok("finish");
+        try{
+            Optional<InterviewGroup> interviewGroupOptional = interviewGroupRepository.findById(interviewGroup_id);
+            Optional<Interviewer> interviewerOptional = interviewerRepository.findInterviewerByIdAndInterviewgroupId(interviewer_id, interviewGroup_id);
+            if (interviewGroupOptional.isEmpty() || interviewerOptional.isEmpty()) {
+                return ResponseEntity.badRequest().body("인터뷰 그룹이 없음 or 인터뷰어 없음");
+            }
+            InterviewGroup interviewGroup = interviewGroupOptional.get();
+            InterviewGroupDTO interviewGroupDTO = new InterviewGroupDTO(interviewGroup);
+            return ResponseEntity.ok(interviewGroupDTO);
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     // 결과 레포트 시각화
