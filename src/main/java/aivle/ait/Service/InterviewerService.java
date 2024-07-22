@@ -264,13 +264,14 @@ public class InterviewerService {
         emailContent.append("</div>");
         // CenteredText 끝
 
+
         // FooterText 시작
         emailContent.append("<div style=\"text-align: center;");
         emailContent.append(" color: #D9D9D9;");
         emailContent.append(" font-size: 15px;");
         emailContent.append(" font-weight: 400;");
         emailContent.append(" margin-top: 30px; margin-bottom: 20px;\">");
-        emailContent.append("<p>2024 AIT · 서비스 이용약관 · 개인정보 처리방침</p>");
+        emailContent.append("<p>2024 AIT · <a href=\"https://www.ait11.co.kr/terms-of-service\" style=\"text-decoration: none; color: #D9D9D9;\">서비스 이용약관</a> · <a href=\"https://www.ait11.co.kr/privacy-policy\" style=\"text-decoration: none; color: #D9D9D9;\">개인정보 처리방침</a></p>");
         emailContent.append("</div>");
 
         // ContentContainer 끝
@@ -378,7 +379,7 @@ public class InterviewerService {
         emailContent.append(" font-size: 15px;");
         emailContent.append(" font-weight: 400;");
         emailContent.append(" margin-top: 30px; margin-bottom: 20px;\">");
-        emailContent.append("<p>2024 AIT · Terms of Service · Guide for private information collection and use</p>");
+        emailContent.append("<p>2024 AIT · <a href=\"https://www.ait11.co.kr/terms-of-service\" style=\"text-decoration: none; color: #D9D9D9;\">Terms of Service</a> · <a href=\"https://www.ait11.co.kr/privacy-policy\" style=\"text-decoration: none; color: #D9D9D9;\">Guide for private information collection and use</a></p>");
         emailContent.append("</div>");
 
         // ContentContainer 끝
