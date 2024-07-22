@@ -143,18 +143,31 @@ public class InterviewerService {
         }
 
         InterviewGroup interviewGroup = interviewGroupOptional.get();
-        String email = interviewerDTO.getEmail();
-        String mailTitle = interviewGroup.getName();
+        String language = interviewGroup.getLanguage();
 
+        String email = interviewerDTO.getEmail();
+        String mailTitle = "[" + interviewGroup.getName() + "]";
+        StringBuilder emailContent;
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
         helper.setTo(email);
-        helper.setSubject("[" + mailTitle + "] AI 면접 안내");
 
-        StringBuilder emailContent = makeEmailContent(interviewerDTO, interviewGroup, url);
+        if (language.equals("kor")) {
+            mailTitle += " AI 면접 안내";
+            emailContent = makeEmailContent(interviewerDTO, interviewGroup, url);
 
-        helper.setText(emailContent.toString(), true);
+            helper.setSubject(mailTitle);
+            helper.setText(emailContent.toString(), true);
+        }
+        else if (language.equals("eng")) {
+            mailTitle += " AI Interview Notice";
+            emailContent = makeEnglishEmailContent(interviewerDTO, interviewGroup, url);
+
+            helper.setSubject(mailTitle);
+            helper.setText(emailContent.toString(), true);
+        }
+
         javaMailSender.send(message);
 
         // InterviewGroup의 sendEmail 컬럼을 1로 업데이트
@@ -258,6 +271,114 @@ public class InterviewerService {
         emailContent.append(" font-weight: 400;");
         emailContent.append(" margin-top: 30px; margin-bottom: 20px;\">");
         emailContent.append("<p>2024 AIT · 서비스 이용약관 · 개인정보 처리방침</p>");
+        emailContent.append("</div>");
+
+        // ContentContainer 끝
+        emailContent.append("</div>");
+
+        // FooterText 끝
+        emailContent.append("</body>");
+        emailContent.append("</html>");
+
+
+
+
+        return emailContent;
+    }
+
+    public StringBuilder makeEnglishEmailContent(InterviewerDTO interviewerDTO, InterviewGroup interviewGroup, String url) {
+        String name = interviewerDTO.getName();
+        String coName = interviewGroup.getCompany().getName();
+        String interviewTitle = interviewGroup.getName();
+
+        LocalDateTime start_date = interviewGroup.getStart_date();
+        LocalDateTime end_date = interviewGroup.getEnd_date();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String startDate = start_date.format(formatter);
+        String endDate = end_date.format(formatter);
+
+        StringBuilder emailContent = new StringBuilder();
+        emailContent.append("<!DOCTYPE html>");
+        emailContent.append("<html>");
+        emailContent.append("<head>");
+        emailContent.append("</head>");
+        emailContent.append("<body>");
+
+        // ContentContainer 시작
+        emailContent.append("<div style=\"width: 800px; height: 600px; border: 1px solid lightgray; margin: 100px auto; padding: 40px; box-sizing: border-box; border-radius: 10px; color: #000000; justify-content: center; align-items: center;\">");
+        // Section 시작
+        emailContent.append("<div style=\"color: #606060;");
+        emailContent.append(" font-size: 15px;");
+        emailContent.append(" font-weight: 500;");
+        emailContent.append(" text-align: start;");
+        emailContent.append(" width: 100%;\">");
+        emailContent.append("<h2 style=\"margin-bottom: 30px; margin-top: 20px;");
+        emailContent.append(" color: #303030;");
+        emailContent.append(" font-size: 22px;");
+        emailContent.append(" font-weight: 600;\">[");
+        emailContent.append(interviewTitle + "] AI Interview Notice</h2>");
+        emailContent.append("<p>Dear <strong>" + name + ",</strong></p>");
+        emailContent.append("<p>We are pleased to inform you that your AI interview can be <strong>" + startDate + " - " + endDate + "</strong>.</p>");
+        emailContent.append("<p style=\"margin-bottom: 30px;\">The AI Interview will be held online at the following link: " + "<a href=\"" + url + "\">" + url + "</a>.</p>");
+        emailContent.append("</div>");
+        // Section 끝
+
+        // NoticeBox 시작
+        emailContent.append("<div style=\"margin-top: 30px; margin-right: 30px;");
+        emailContent.append(" width: 100%;");
+        emailContent.append(" border-radius: 10px;");
+        emailContent.append(" border: 2px solid #F1F1F2;");
+        emailContent.append(" background: #FBFBFB;");
+        emailContent.append(" color: #606060;");
+        emailContent.append(" font-size: 15px;");
+        emailContent.append(" font-weight: 500;");
+        emailContent.append(" line-height: 1.2;\">");
+        emailContent.append("<div style=\"margin-bottom: 20px; margin-top: 20px; margin-left: 20px;");
+        emailContent.append(" color: #000;");
+        emailContent.append(" font-size: 15px; text-align: start;");
+        emailContent.append(" font-weight: 600;\">[Important Notice]</div>");
+        emailContent.append("<ul>");
+        emailContent.append("<li>Please make sure to read the instructions carefully before starting the test.</li>");
+        emailContent.append("<li>Ensure that you complete the interview within the specified time frame.</li>");
+        emailContent.append("</ul>");
+        emailContent.append("</div>");
+        // NoticeBox 끝
+
+        // GoToInterviewPageButton 시작
+        emailContent.append("<div style=\"color: white; margin-top: 30px; margin-right: 30px;");
+        emailContent.append(" font-size: 17px;");
+        emailContent.append(" border-radius: 12px;");
+        emailContent.append(" background: #696CEA;");
+        emailContent.append(" width: 100%;");
+        emailContent.append(" height: 45px;");
+        emailContent.append(" display: flex;");
+        emailContent.append(" justify-content: center;");
+        emailContent.append(" align-items: center;");
+        emailContent.append(" font-weight: 600;\">");
+        emailContent.append("<a href=\"").append(url).append("\" style=\"color: white; padding: auto; text-decoration: none; text-align: center; width: 100%; margin-top: 10px;\">Start the interview</a>");
+        emailContent.append("</div>");
+        // GoToInterviewPageButton 끝
+
+
+        // CenteredText 시작
+        emailContent.append("<div style=\"color: #606060;");
+        emailContent.append(" text-align: center;");
+        emailContent.append(" font-size: 15px;");
+        emailContent.append(" font-weight: 600;");
+        emailContent.append(" line-height: 1.3;");
+        emailContent.append(" margin-top: 30px;\">");
+        emailContent.append("Please keep these points in mind to avoid any issues during the interview.<br />");
+        emailContent.append("Sincerely.");
+        emailContent.append("</div>");
+        // CenteredText 끝
+
+        // FooterText 시작
+        emailContent.append("<div style=\"text-align: center;");
+        emailContent.append(" color: #D9D9D9;");
+        emailContent.append(" font-size: 15px;");
+        emailContent.append(" font-weight: 400;");
+        emailContent.append(" margin-top: 30px; margin-bottom: 20px;\">");
+        emailContent.append("<p>2024 AIT · Terms of Service · Guide for private information collection and use</p>");
         emailContent.append("</div>");
 
         // ContentContainer 끝

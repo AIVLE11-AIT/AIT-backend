@@ -1,6 +1,7 @@
 package aivle.ait.Controller;
 
 import aivle.ait.Dto.InterviewerDTO;
+import aivle.ait.Entity.InterviewGroup;
 import aivle.ait.Entity.Interviewer;
 import aivle.ait.Repository.InterviewGroupRepository;
 import aivle.ait.Security.Auth.CustomUserDetails;
@@ -28,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -220,8 +222,13 @@ public class InterviewerController {
         }
     }
 
+
+
     public void sendEmailAsync(Long interviewGroup_id, Long companyId) {
         List<InterviewerDTO> InterviewerDTOs = interviewerService.readAll(companyId, interviewGroup_id);
+        Optional<InterviewGroup> groupOptional = interviewGroupRepository.findInterviewGroupByIdAndCompanyId(interviewGroup_id, companyId);
+        InterviewGroup interviewGroup = groupOptional.get();
+
         for (InterviewerDTO interviewerDTO : InterviewerDTOs) {
             Long interviewerId = interviewerDTO.getId(); // /interview/{interviewGroup_id}/{interviewer_id}
             String url = "https://www.ait11.co.kr/pretest/" + interviewGroup_id + "/" + interviewerId;
