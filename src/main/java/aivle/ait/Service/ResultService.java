@@ -32,7 +32,7 @@ public class ResultService {
 
     @Async
     @Transactional
-    public void analyze(Long interviewGroupId, Long interviewerId){
+    public void analyze(Long interviewGroupId, Long interviewerId) {
         System.out.println("analyze 실행 " + interviewerId);
         Optional<InterviewGroup> interviewGroups = interviewGroupRepository.findById(interviewGroupId);
         if (interviewGroups.isEmpty()){

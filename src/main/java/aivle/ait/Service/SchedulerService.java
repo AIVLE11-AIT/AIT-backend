@@ -48,6 +48,11 @@ public class SchedulerService {
                 Optional<Result> resultOptional = resultRepository.findByInterviewerId(interviewer.getId());
                 if (!resultOptional.isEmpty()) continue; // 최종 레포트가 이미 있으면 분석하지 않음
                 System.out.println(interviewer.getId());
+                Optional<Interviewer> interviewerOptional = interviewerRepository.findById(interviewer.getId());
+
+                // file의 개수가 6개가 아니면 분석하지 않음.
+                int fileCnt = interviewerOptional.get().getFiles().size();
+                if (fileCnt != 6) continue;
                 resultService.analyze(group.getId(), interviewer.getId());
             }
         }
