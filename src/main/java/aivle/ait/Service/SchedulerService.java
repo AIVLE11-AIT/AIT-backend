@@ -50,9 +50,9 @@ public class SchedulerService {
                 System.out.println(interviewer.getId());
                 Optional<Interviewer> interviewerOptional = interviewerRepository.findById(interviewer.getId());
 
-                // file의 개수가 6개가 아니면 분석하지 않음.
+                // file이 1개라도 있으면 분석
                 int fileCnt = interviewerOptional.get().getFiles().size();
-                if (fileCnt != 6) continue;
+                if (fileCnt <= 0) continue;
                 resultService.analyze(group.getId(), interviewer.getId());
             }
         }
