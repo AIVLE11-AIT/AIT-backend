@@ -1,6 +1,7 @@
 package aivle.ait.Controller;
 
 import aivle.ait.Dto.CompanyDTO;
+import aivle.ait.Dto.LoginDTO;
 import aivle.ait.Entity.Company;
 import aivle.ait.Repository.CompanyRepository;
 import aivle.ait.Security.Auth.CustomUserDetails;
@@ -68,6 +69,23 @@ public class CompanyController {
         }
         else{
             return false;
+        }
+    }
+
+    @PostMapping("/isPossible")
+    public ResponseEntity<?> checkPossible(@RequestBody LoginDTO loginDTO){
+        boolean isExist = companyRepository.existsByEmail(loginDTO.getUsername());
+        if (isExist){
+            Company company = companyRepository.findByEmail(loginDTO.getUsername());
+            if (company.getRole().equals("ROLE_COMMON")){
+                return ResponseEntity.status(HttpStatus.OK).body("false");
+            }
+            else{
+                return ResponseEntity.status(HttpStatus.OK).body("true");
+            }
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ID does not exist");
         }
     }
 

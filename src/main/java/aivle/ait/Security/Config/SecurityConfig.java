@@ -60,7 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/question/*/answer/create", "/question/*/answer/*/update/**", "/question/*/answer/*/delete/**").hasRole("ADMIN")
                         .requestMatchers("/interviewGroup/*/*/interviewerQna/*/update", "/interviewGroup/*/companyQna/*/delete").hasRole("USER")
                         .requestMatchers("/interviewGroup/*/interviewer/*/introduce/update", "/interviewGroup/*/interviewer/*/introduce/delete").hasRole("USER")
-                        .requestMatchers("/signup/**", "/login", "/update", "/sendTempPassword/**",
+                        .requestMatchers("/signup/**", "/login", "/update", "/isPossible", "/sendTempPassword/**",
                                 "/interviewGroup/*/interviewer/*/image",
                                 "/interviewGroup/*/interviewer/readOne/*",
                                 "/interviewGroup/readOne/*",
