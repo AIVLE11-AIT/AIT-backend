@@ -80,7 +80,7 @@ public class Result extends Time {
     @OneToMany(mappedBy = "result")
     private List<ActionResult> actionResults = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "interviewer_id")
     private Interviewer interviewer;
 

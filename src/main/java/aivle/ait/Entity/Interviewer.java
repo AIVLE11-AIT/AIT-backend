@@ -34,7 +34,7 @@ public class Interviewer extends Time {
     private String cover_letter;
 
     // 읽기 전용
-    @OneToOne(mappedBy = "interviewer", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "interviewer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Result result;
 
     // Interview_group:Interviewer = 1:N
@@ -48,7 +48,7 @@ public class Interviewer extends Time {
     @OneToMany(mappedBy = "interviewer", cascade = CascadeType.ALL)
     private List<InterviewerQna> interviewerQnas = new ArrayList<>();
 
-    @OneToOne(mappedBy = "interviewer", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "interviewer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private IntroductionVideo introductionVideo;
 
     public void setDtoToObject(InterviewerDTO interviewerDTO){

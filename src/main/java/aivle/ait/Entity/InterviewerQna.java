@@ -18,11 +18,11 @@ public class InterviewerQna extends Time {
     private String question;
 
     // 읽기 전용
-    @OneToOne(mappedBy = "interviewerQna")
+    @OneToOne(mappedBy = "interviewerQna", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private File file;
 
     // Interviewer:InterviewerQna = 1:N
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "interviewer_id")
     private Interviewer interviewer;
 

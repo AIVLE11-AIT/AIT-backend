@@ -32,7 +32,7 @@ public class File extends Time {
     private ActionResult actionResult;
 
     // CompanyQna:File = 1:N
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "company_qna_id")
     private CompanyQna companyQna;
 
@@ -41,7 +41,7 @@ public class File extends Time {
     @JoinColumn(name = "interviewer_id")
     private Interviewer interviewer;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "interviewer_qna_id")
     private InterviewerQna interviewerQna;
 
