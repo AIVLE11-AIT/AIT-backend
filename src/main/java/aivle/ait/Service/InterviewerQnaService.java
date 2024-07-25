@@ -8,10 +8,12 @@ import aivle.ait.Repository.InterviewerRepository;
 import aivle.ait.Util.RestAPIUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -27,11 +29,12 @@ import java.util.Optional;
 public class InterviewerQnaService {
     private final InterviewerQnaRepository interviewerQnaRepository;
     private final InterviewerRepository interviewerRepository;
+    private final EntityManager entityManager;
 
     @Value("${ait.server.createQuestionServer}")
     private String baseUrl;
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Async
     public void create(Interviewer interviewer) {
         String llmUrl = baseUrl + "/personal_question";
@@ -63,7 +66,7 @@ public class InterviewerQnaService {
                     // 저장
                     InterviewerQna interviewerQna = new InterviewerQna();
                     interviewerQna.setQuestion(question);
-                    interviewerQna.setInterviewer(interviewer);
+                    interviewerQna.setInterviewer(entityManager.merge(interviewer)); // 영속성 재부여하는 코드 추가
                     interviewerQnaRepository.save(interviewerQna);
                 }
             }
