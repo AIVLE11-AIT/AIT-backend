@@ -31,4 +31,8 @@ public class Answer extends Time{
         this.question = question;
         question.setAnswer(this);
     }
+    public void deleteQuestion(){
+        this.question.setAnswer(null);
+        this.question = null;
+    }
 }

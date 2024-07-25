@@ -69,6 +69,7 @@ public class AnswerService {
         }
 
         Answer answer = comments.get();
+        answer.deleteQuestion();
         answerRepository.delete(answer);
 
         AnswerDTO answerDto = new AnswerDTO(answer);
