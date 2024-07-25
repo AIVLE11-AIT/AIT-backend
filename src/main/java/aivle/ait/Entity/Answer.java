@@ -18,7 +18,7 @@ public class Answer extends Time{
     private String content;
 
     // 외래키 소유
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private Question question;
 
