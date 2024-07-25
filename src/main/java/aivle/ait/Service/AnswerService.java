@@ -63,12 +63,12 @@ public class AnswerService {
 
     @Transactional
     public AnswerDTO delete(Long id){
-        answerRepository.detachAnswerFromQuestion(id);
         Optional<Answer> comments = answerRepository.findById(id);
         if (comments.isEmpty()){
             return null;
         }
 
+        answerRepository.detachAnswerFromQuestion(id);
         Answer answer = comments.get();
         answerRepository.delete(answer);
 
