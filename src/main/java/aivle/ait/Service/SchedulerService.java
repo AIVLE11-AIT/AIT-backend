@@ -47,7 +47,6 @@ public class SchedulerService {
             for(Interviewer interviewer: interviewers) {
                 Optional<Result> resultOptional = resultRepository.findByInterviewerId(interviewer.getId());
                 if (!resultOptional.isEmpty()) continue; // 최종 레포트가 이미 있으면 분석하지 않음
-                System.out.println(interviewer.getId());
                 Optional<Interviewer> interviewerOptional = interviewerRepository.findById(interviewer.getId());
 
                 // file이 1개라도 있으면 분석
