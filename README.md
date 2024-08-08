@@ -8,7 +8,7 @@ AI 면접 시스템 구성 서버 중 BackEnd 서버로 Spring Boot로 구현.
 - `database` == MySQL
 
 ### ERD
-
+![AIVLE11조_ERD drawio](https://github.com/user-attachments/assets/7a32ec95-7702-44ed-b8cf-a27320c9bdc5)
 
 ### Building the project
 Clone the project
