@@ -3,6 +3,9 @@
 # 둘이 똑같이 생겼다
 # 아함 ~ 쉽다 쉬워 ~
 
+# 끼얏호~
+![2024-08-01_170724](https://github.com/user-attachments/assets/ecc8fef1-75ad-4a18-8aff-8efeeaf00f0c)
+
 # 성공적인 닮은꼴 찾기!~~~~~
 ![image](https://github.com/AIVLE11-AIT/AIT-backend/assets/87623609/cd61533a-6ca4-468f-8db5-bc147af2f58d)
 ![dfdfdf](https://github.com/AIVLE11-AIT/AIT-backend/assets/87623609/53b6716e-1e24-479a-8c55-1e61ba0bf2b6)
