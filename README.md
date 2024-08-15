@@ -27,7 +27,7 @@ https://youtu.be/8Z8Ex54-4CM
 
 build
 
-<img src="https://img.shields.io/badge/gradle-02303A?style=flat-square&logo=gradle&logoColor=white"> 
+<img src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=gradle&logoColor=white"> 
 
 
 database
